@@ -7,6 +7,8 @@ from mainwindow import Ui_PICK
 import sys
 
 rad = 20
+
+#test
  
 # class mywindow(QtWidgets.QMainWindow):
  
