@@ -9,10 +9,10 @@
 
 ## Build
 
-##Deployment
+## Deployment
 
-##Installing
+## Installing
 
-##Versioning
+## Versioning
 
-##Acknowledegements
+## Acknowledegements
