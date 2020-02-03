@@ -2,19 +2,17 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_PICK(object):
     def setupUi(self, PICK):
         PICK.setObjectName("PICK")
         PICK.setWindowModality(QtCore.Qt.ApplicationModal)
-        PICK.resize(1252, 705)
+        PICK.resize(1254, 690)
         PICK.setAutoFillBackground(True)
         PICK.setAnimated(True)
         PICK.setTabShape(QtWidgets.QTabWidget.Triangular)
@@ -163,9 +161,11 @@ class Ui_PICK(object):
         self.vc_table = QtWidgets.QTableWidget(self.vc_frame)
         self.vc_table.setObjectName("vc_table")
         self.vc_table.setColumnCount(3)
-        self.vc_table.setRowCount(1)
+        self.vc_table.setRowCount(2)
         item = QtWidgets.QTableWidgetItem()
         self.vc_table.setVerticalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.vc_table.setVerticalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
         self.vc_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -175,6 +175,9 @@ class Ui_PICK(object):
         item = QtWidgets.QTableWidgetItem()
         item.setCheckState(QtCore.Qt.Checked)
         self.vc_table.setItem(0, 0, item)
+        item = QtWidgets.QTableWidgetItem()
+        item.setCheckState(QtCore.Qt.Checked)
+        self.vc_table.setItem(1, 0, item)
         self.horizontalLayout_9.addWidget(self.vc_table)
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
         self.verticalLayout_3.setObjectName("verticalLayout_3")
@@ -331,7 +334,9 @@ class Ui_PICK(object):
         self.tableWidget_2 = QtWidgets.QTableWidget(self.frame_2)
         self.tableWidget_2.setObjectName("tableWidget_2")
         self.tableWidget_2.setColumnCount(2)
-        self.tableWidget_2.setRowCount(0)
+        self.tableWidget_2.setRowCount(1)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_2.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_2.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -347,7 +352,7 @@ class Ui_PICK(object):
         self.horizontalLayout_2.addWidget(self.pushButton_3)
         self.pushButton_4 = QtWidgets.QPushButton(self.frame_2)
         self.pushButton_4.setMinimumSize(QtCore.QSize(130, 0))
-        self.pushButton_4.setProperty("tabletTracking", True)
+        self.pushButton_4.setTabletTracking(True)
         self.pushButton_4.setObjectName("pushButton_4")
         self.horizontalLayout_2.addWidget(self.pushButton_4)
         self.gridLayout_4.addLayout(self.horizontalLayout_2, 3, 0, 1, 1)
@@ -462,11 +467,11 @@ class Ui_PICK(object):
         self.lec_groupbox = QtWidgets.QGroupBox(self.log_entry_tab)
         self.lec_groupbox.setMinimumSize(QtCore.QSize(600, 450))
         self.lec_groupbox.setObjectName("lec_groupbox")
-        self.horizontalLayout_41 = QtWidgets.QHBoxLayout(self.lec_groupbox)
-        self.horizontalLayout_41.setObjectName("horizontalLayout_41")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.lec_groupbox)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.lec_logentry_table = QtWidgets.QTableWidget(self.lec_groupbox)
         self.lec_logentry_table.setMinimumSize(QtCore.QSize(550, 400))
-        self.lec_logentry_table.setMaximumSize(QtCore.QSize(900, 16777215))
+        self.lec_logentry_table.setMaximumSize(QtCore.QSize(14243231, 16777215))
         self.lec_logentry_table.setObjectName("lec_logentry_table")
         self.lec_logentry_table.setColumnCount(5)
         self.lec_logentry_table.setRowCount(5)
@@ -537,7 +542,7 @@ class Ui_PICK(object):
         self.lec_logentry_table.setItem(4, 4, item)
         self.lec_logentry_table.horizontalHeader().setDefaultSectionSize(120)
         self.lec_logentry_table.verticalHeader().setMinimumSectionSize(32)
-        self.horizontalLayout_41.addWidget(self.lec_logentry_table)
+        self.verticalLayout.addWidget(self.lec_logentry_table)
         self.verticalLayout_61.addWidget(self.lec_groupbox)
         self.horizontalLayout_71.addLayout(self.verticalLayout_61)
         self.verticalLayout_71 = QtWidgets.QVBoxLayout()
@@ -703,7 +708,9 @@ class Ui_PICK(object):
         self.vc_node_table.setFont(font)
         self.vc_node_table.setObjectName("vc_node_table")
         self.vc_node_table.setColumnCount(10)
-        self.vc_node_table.setRowCount(0)
+        self.vc_node_table.setRowCount(1)
+        item = QtWidgets.QTableWidgetItem()
+        self.vc_node_table.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.vc_node_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -739,7 +746,9 @@ class Ui_PICK(object):
         self.vc_relationship_table.setFont(font)
         self.vc_relationship_table.setObjectName("vc_relationship_table")
         self.vc_relationship_table.setColumnCount(4)
-        self.vc_relationship_table.setRowCount(0)
+        self.vc_relationship_table.setRowCount(1)
+        item = QtWidgets.QTableWidgetItem()
+        self.vc_relationship_table.setVerticalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.vc_relationship_table.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -754,7 +763,7 @@ class Ui_PICK(object):
         self.horizontalLayout_3.addWidget(self.tabWidget)
         PICK.setCentralWidget(self.centralwidget)
         self.menuBar = QtWidgets.QMenuBar(PICK)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1252, 26))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1254, 21))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -798,6 +807,8 @@ class Ui_PICK(object):
         self.vc_label.setText(_translate("PICK", "Vector Configuration"))
         item = self.vc_table.verticalHeaderItem(0)
         item.setText(_translate("PICK", "Log 1 "))
+        item = self.vc_table.verticalHeaderItem(1)
+        item.setText(_translate("PICK", "Log 2"))
         item = self.vc_table.horizontalHeaderItem(0)
         item.setText(_translate("PICK", "-"))
         item = self.vc_table.horizontalHeaderItem(1)
@@ -854,13 +865,13 @@ class Ui_PICK(object):
         self.fc_starttimestamp_text.setHtml(_translate("PICK", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Roboto\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt;\">Start Timestamp</span></p></body></html>"))
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Start Timestamp</p></body></html>"))
         self.fc_endtimestamp_text.setHtml(_translate("PICK", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Roboto\'; font-size:11pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt;\">End Timestamp</span></p></body></html>"))
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">End Timestamp</p></body></html>"))
         self.fc_applyfilter_button.setText(_translate("PICK", "Apply Filter"))
         self.fc_creator_label.setText(_translate("PICK", "Creator:"))
         self.fc_creatorred_checkbox.setText(_translate("PICK", "Red"))
@@ -973,12 +984,3 @@ class Ui_PICK(object):
         self.actionExit.setText(_translate("PICK", "Exit"))
         self.actionExit.setShortcut(_translate("PICK", "Ctrl+E"))
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    PICK = QtWidgets.QMainWindow()
-    ui = Ui_PICK()
-    ui.setupUi(PICK)
-    PICK.show()
-    sys.exit(app.exec_())

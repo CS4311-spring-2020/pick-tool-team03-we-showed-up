@@ -1,21 +1,23 @@
+import math
+
 from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
- 
+
 from mainwindow import Ui_PICK
- 
+
 import sys
 
 rad = 20
- 
+
 # class mywindow(QtWidgets.QMainWindow):
- 
+
 #     def __init__(self):
-    
+
 #         super(mywindow, self).__init__()
-        
+
 #         self.ui = Ui_PICK()
-        
+
 #         self.ui.setupUi(self)
 
 #         self.ui.label.setFont(QtGui.QFont('SansSerif', 30)) # change font type and size
@@ -24,7 +26,7 @@ class functionality(Ui_PICK):
     def setupUi(self, PICK):
         super().setupUi(PICK)
         self.vc_search_box.setPlainText("hello")
-        
+
         path.moveTo(0,0)
         #path.cubicTo(-30, 70, 35, 115, 100, 100);
         path.lineTo(200, 100);
@@ -32,7 +34,7 @@ class functionality(Ui_PICK):
         path.lineTo(100, 200);
         #path.cubicTo(200, 30, 150, -35, 60, -30);
 
-        
+
         scene.addItem(Path(path, scene))
 
         self.vc_graph_view.setScene(scene)
@@ -48,6 +50,82 @@ class functionality(Ui_PICK):
         import random
         path.lineTo(random.randint(50,300), random.randint(50,300));
         scene.addItem(Path(path, scene))
+
+    def resize_ui_components(self, PICK):
+        self.set_column_widths_log_entry_tab()
+        self.set_column_widths_event_tab()
+        self.set_column_widths_vector_view_tab()
+
+    def set_column_widths_log_entry_tab(self):
+        # Sets columns width for the log entry table
+        # logentry_table_width = self.lec_logentry_table.width()
+        logentry_table_width = 1036
+        logentry_table_width -= 5
+        column_width = math.floor(logentry_table_width * .06)
+        self.lec_logentry_table.setColumnWidth(0, column_width)
+        column_width = math.floor(logentry_table_width * .10)
+        self.lec_logentry_table.setColumnWidth(1, column_width)
+        column_width = math.floor(logentry_table_width * .24)
+        self.lec_logentry_table.setColumnWidth(2, column_width)
+        column_width = math.floor(logentry_table_width * .53)
+        self.lec_logentry_table.setColumnWidth(3, column_width)
+        column_width = math.floor(logentry_table_width * .07)
+        self.lec_logentry_table.setColumnWidth(4, column_width)
+
+    def set_column_widths_event_tab(self):
+        # for Vector Configuration table
+        # vc_table_width = self.vc_table.width()
+        vc_table_width = 440
+        vc_table_width -= 5
+        column_width = math.floor(vc_table_width * .07)
+        self.vc_table.setColumnWidth(0, column_width)
+        column_width = math.floor(vc_table_width * .30)
+        self.vc_table.setColumnWidth(1, column_width)
+        column_width = math.floor(vc_table_width * .63)
+        self.vc_table.setColumnWidth(2, column_width)
+
+        # for Enforcement Action Report
+        # ear_table_width = self.tableWidget_2.width()
+        ear_table_width = 560
+        ear_table_width -= 5
+        column_width = math.floor(ear_table_width * .25)
+        self.tableWidget_2.setColumnWidth(0, column_width)
+        column_width = math.floor(ear_table_width * .75)
+        self.tableWidget_2.setColumnWidth(1, column_width)
+
+        # for Log File Configuration
+        # lfc_table_width = self.tableWidget.width()
+        lfc_table_width = 540
+        lfc_table_width -= 5
+        column_width = math.floor(lfc_table_width * .15)
+        self.tableWidget.setColumnWidth(0, column_width)
+        column_width = math.floor(lfc_table_width * .18)
+        self.tableWidget.setColumnWidth(1, column_width)
+        column_width = math.floor(lfc_table_width * .18)
+        self.tableWidget.setColumnWidth(2, column_width)
+        column_width = math.floor(lfc_table_width * .18)
+        self.tableWidget.setColumnWidth(3, column_width)
+        column_width = math.floor(lfc_table_width * .18)
+        self.tableWidget.setColumnWidth(4, column_width)
+        column_width = math.floor(lfc_table_width * .13)
+        self.tableWidget.setColumnWidth(5, column_width)
+
+    def set_column_widths_vector_view_tab(self):
+        # for Vector Node table
+        # vnode_table_width = self.vc_node_table.width()
+        vnode_table_width = 850
+        vnode_table_width -= 5
+        column_width = math.floor(vnode_table_width * .1)
+        for i in range(0, 10):
+            self.vc_node_table.setColumnWidth(i, column_width)
+
+        # for Relationship Table
+        # vrelationship_table_width = self.vc_relationship_table.width()
+        vrelationship_table_width = 600
+        vrelationship_table_width -= 5
+        column_width = math.floor(vrelationship_table_width * .25)
+        for i in range (0, 4):
+            self.vc_relationship_table.setColumnWidth(i, column_width)
 
 
 class Node(QtWidgets.QGraphicsEllipseItem):
@@ -75,30 +153,30 @@ class Path(QtWidgets.QGraphicsPathItem):
             node = Node(self, i)
             node.setPos(QPointF(path.elementAt(i)))
             scene.addItem(node)
-        self.setPen(QtGui.QPen(Qt.black, 1.75))        
+        self.setPen(QtGui.QPen(Qt.black, 1.75))
 
     def updateElement(self, index, pos):
         path.setElementPositionAt(index, pos.x(), pos.y())
         self.setPath(path)
- 
+
 # app = QtWidgets.QApplication([])
- 
+
 # application = mywindow()
- 
+
 # application.show()
- 
+
 # sys.exit(app.exec())
 
 if __name__ == "__main__":
 
     app = QApplication([])
-
     PICK = QtWidgets.QMainWindow()
     path = QtGui.QPainterPath()
     scene = QtWidgets.QGraphicsScene()
     ui = functionality()
     ui.setupUi(PICK)
     PICK.show()
+    ui.resize_ui_components(PICK)
     sys.exit(app.exec_())
 
 

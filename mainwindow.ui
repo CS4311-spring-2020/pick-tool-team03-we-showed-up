@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1252</width>
-    <height>705</height>
+    <width>1254</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,7 +39,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="movable">
        <bool>false</bool>
@@ -381,6 +381,11 @@
                      <string>Log 1 </string>
                     </property>
                    </row>
+                   <row>
+                    <property name="text">
+                     <string>Log 2</string>
+                    </property>
+                   </row>
                    <column>
                     <property name="text">
                      <string>-</string>
@@ -397,6 +402,14 @@
                     </property>
                    </column>
                    <item row="0" column="0">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="checkState">
+                     <enum>Checked</enum>
+                    </property>
+                   </item>
+                   <item row="1" column="0">
                     <property name="text">
                      <string/>
                     </property>
@@ -773,6 +786,11 @@
                  <layout class="QGridLayout" name="gridLayout_4">
                   <item row="2" column="0">
                    <widget class="QTableWidget" name="tableWidget_2">
+                    <row>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </row>
                     <column>
                      <property name="text">
                       <string>Line Number</string>
@@ -821,11 +839,11 @@
                         <height>0</height>
                        </size>
                       </property>
+                      <property name="tabletTracking">
+                       <bool>true</bool>
+                      </property>
                       <property name="text">
                        <string>Cancel</string>
-                      </property>
-                      <property name="tabletTracking" stdset="0">
-                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -963,8 +981,8 @@
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Roboto'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;Start Timestamp&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Start Timestamp&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -986,8 +1004,8 @@ p, li { white-space: pre-wrap; }
                   <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Roboto'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;End Timestamp&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;End Timestamp&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>
@@ -1195,7 +1213,7 @@ p, li { white-space: pre-wrap; }
             <property name="title">
              <string>Log Entry Configuration</string>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QVBoxLayout" name="verticalLayout">
              <item>
               <widget class="QTableWidget" name="lec_logentry_table">
                <property name="minimumSize">
@@ -1206,7 +1224,7 @@ p, li { white-space: pre-wrap; }
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>900</width>
+                 <width>14243231</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -1842,6 +1860,11 @@ p, li { white-space: pre-wrap; }
             <attribute name="horizontalHeaderDefaultSectionSize">
              <number>80</number>
             </attribute>
+            <row>
+             <property name="text">
+              <string/>
+             </property>
+            </row>
             <column>
              <property name="text">
               <string>NodeID</string>
@@ -1914,6 +1937,11 @@ p, li { white-space: pre-wrap; }
               <pointsize>9</pointsize>
              </font>
             </property>
+            <row>
+             <property name="text">
+              <string/>
+             </property>
+            </row>
             <column>
              <property name="text">
               <string>Relationship Type</string>
@@ -1949,8 +1977,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1252</width>
-     <height>26</height>
+     <width>1254</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
