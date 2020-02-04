@@ -5,10 +5,16 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from mainwindow import Ui_PICK
+from IP_Error_ConnectionLimitReached import Ui_Dialog as ui_connection_limit
+from IP_Error_duplicateLeadIP import Ui_Dialog as ui_duplicate_lead_ip
+from IP_Error_LeadIPBoxSelected import Ui_Dialog as ui_lead_ip_selected
+from IP_Error_LeadIPNotProvided import Ui_Dialog as ui_lead_ip_not_provided
+from icon_Configuration import Ui_icon_configuration
 
 import sys
 
 rad = 20
+
 
 # class mywindow(QtWidgets.QMainWindow):
 
@@ -27,13 +33,12 @@ class functionality(Ui_PICK):
         super().setupUi(PICK)
         self.vc_search_box.setPlainText("hello")
 
-        path.moveTo(0,0)
-        #path.cubicTo(-30, 70, 35, 115, 100, 100);
+        path.moveTo(0, 0)
+        # path.cubicTo(-30, 70, 35, 115, 100, 100);
         path.lineTo(200, 100);
         path.lineTo(100, 100);
         path.lineTo(100, 200);
-        #path.cubicTo(200, 30, 150, -35, 60, -30);
-
+        # path.cubicTo(200, 30, 150, -35, 60, -30);
 
         scene.addItem(Path(path, scene))
 
@@ -48,13 +53,14 @@ class functionality(Ui_PICK):
 
     def add_node(self):
         import random
-        path.lineTo(random.randint(50,300), random.randint(50,300));
+        path.lineTo(random.randint(50, 300), random.randint(50, 300));
         scene.addItem(Path(path, scene))
 
     def resize_ui_components(self, PICK):
         self.set_column_widths_log_entry_tab()
         self.set_column_widths_event_tab()
         self.set_column_widths_vector_view_tab()
+        self.button_connect_to_ip.clicked.connect(self.connect_button_triggered)
 
     def set_column_widths_log_entry_tab(self):
         # Sets columns width for the log entry table
@@ -124,13 +130,49 @@ class functionality(Ui_PICK):
         vrelationship_table_width = 600
         vrelationship_table_width -= 5
         column_width = math.floor(vrelationship_table_width * .25)
-        for i in range (0, 4):
+        for i in range(0, 4):
             self.vc_relationship_table.setColumnWidth(i, column_width)
 
+    def connect_button_triggered(self):
+        lead_ip = "64.233. 160.0"  # currently Google's IP
+        no_connections = 10  # temporary placeholder for number of connections
+
+        bt_dialog = QtWidgets.QDialog()
+
+        if self.textbox_ip.toPlainText() == lead_ip:
+            print("open same ip error prompt")
+            bt_ui = ui_duplicate_lead_ip()
+            bt_ui.setupUi(bt_dialog)
+            bt_ui.pushButton.clicked.connect(bt_dialog.close)
+            bt_dialog.exec_()
+
+        elif self.textbox_ip.toPlainText() == "":
+            print("no lead ip error prompt")
+            bt_ui = ui_lead_ip_not_provided()
+            bt_ui.setupUi(bt_dialog)
+            bt_ui.pushButton.clicked.connect(bt_dialog.close)
+            bt_dialog.exec_()
+
+        elif self.checkBox_lead.isChecked():
+            print("lead checked error prompt")
+            bt_ui = ui_lead_ip_selected()
+            bt_ui.setupUi(bt_dialog)
+            bt_ui.pushButton.clicked.connect(bt_dialog.close)
+            bt_dialog.exec_()
+
+        elif no_connections > 20:
+            print("max connections error prompt")
+            bt_ui = ui_connection_limit()
+            bt_ui.setupUi(bt_dialog)
+            bt_ui.pushButton.clicked.connect(bt_dialog.close)
+            bt_dialog.exec_()
+
+        else:
+            print("successful connection should take place.")
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):
-        super(Node, self).__init__(-rad, -rad, 2*rad, 2*rad)
+        super(Node, self).__init__(-rad, -rad, 2 * rad, 2 * rad)
 
         self.rad = rad
         self.path = path
@@ -146,6 +188,7 @@ class Node(QtWidgets.QGraphicsEllipseItem):
             self.path.updateElement(self.index, value.toPoint())
         return QtWidgets.QGraphicsEllipseItem.itemChange(self, change, value)
 
+
 class Path(QtWidgets.QGraphicsPathItem):
     def __init__(self, path, scene):
         super(Path, self).__init__(path)
@@ -159,6 +202,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         path.setElementPositionAt(index, pos.x(), pos.y())
         self.setPath(path)
 
+
 # app = QtWidgets.QApplication([])
 
 # application = mywindow()
@@ -168,7 +212,6 @@ class Path(QtWidgets.QGraphicsPathItem):
 # sys.exit(app.exec())
 
 if __name__ == "__main__":
-
     app = QApplication([])
     PICK = QtWidgets.QMainWindow()
     path = QtGui.QPainterPath()
@@ -178,5 +221,3 @@ if __name__ == "__main__":
     PICK.show()
     ui.resize_ui_components(PICK)
     sys.exit(app.exec_())
-
-
