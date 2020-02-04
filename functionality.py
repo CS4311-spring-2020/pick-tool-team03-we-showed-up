@@ -9,7 +9,7 @@ from IP_Error_ConnectionLimitReached import Ui_Dialog as ui_connection_limit
 from IP_Error_duplicateLeadIP import Ui_Dialog as ui_duplicate_lead_ip
 from IP_Error_LeadIPBoxSelected import Ui_Dialog as ui_lead_ip_selected
 from IP_Error_LeadIPNotProvided import Ui_Dialog as ui_lead_ip_not_provided
-from icon_Configuration import Ui_icon_configuration
+from icon_Configuration_Dialog import Ui_Dialog as ui_icon_config_dialog
 
 import sys
 
@@ -60,7 +60,9 @@ class functionality(Ui_PICK):
         self.set_column_widths_log_entry_tab()
         self.set_column_widths_event_tab()
         self.set_column_widths_vector_view_tab()
+
         self.button_connect_to_ip.clicked.connect(self.connect_button_triggered)
+        # self.button_connect_to_ip.clicked.connect(self.icon_edit_button_triggered)
 
     def set_column_widths_log_entry_tab(self):
         # Sets columns width for the log entry table
@@ -169,6 +171,14 @@ class functionality(Ui_PICK):
 
         else:
             print("successful connection should take place.")
+
+    def icon_edit_button_triggered(self):
+        ic_dialog = QtWidgets.QDialog()
+        ic_ui = ui_icon_config_dialog()
+        ic_ui.setupUi(ic_dialog)
+        ic_dialog.exec_()
+
+
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):
