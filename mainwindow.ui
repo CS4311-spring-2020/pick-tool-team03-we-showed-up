@@ -388,7 +388,7 @@
                    </row>
                    <column>
                     <property name="text">
-                     <string>-</string>
+                     <string/>
                     </property>
                    </column>
                    <column>
@@ -786,6 +786,11 @@
                  <layout class="QGridLayout" name="gridLayout_4">
                   <item row="2" column="0">
                    <widget class="QTableWidget" name="tableWidget_2">
+                    <row>
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </row>
                     <row>
                      <property name="text">
                       <string/>
@@ -1595,374 +1600,455 @@ p, li { white-space: pre-wrap; }
        <attribute name="title">
         <string>Vector View</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_8">
-        <item row="0" column="0">
-         <layout class="QVBoxLayout" name="vc_verticalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout_14">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <layout class="QHBoxLayout" name="vc_toolbar_layout">
+           <layout class="QVBoxLayout" name="vc_verticalLayout">
             <item>
-             <widget class="QComboBox" name="vc_vector_drop_down">
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="editable">
-               <bool>true</bool>
-              </property>
-              <property name="currentText">
-               <string>Vector</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>10</width>
-                <height>10</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_undo_button">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Undo</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_redo_button">
-              <property name="minimumSize">
-               <size>
-                <width>40</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Redo</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="vc_spacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>5</width>
-                <height>5</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_add_button">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Add</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_delete_button">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Delete</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>10</width>
-                <height>24</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_create_button">
-              <property name="maximumSize">
-               <size>
-                <width>45</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Create</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_push_button">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Push</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_pull_button">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Pull</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_export_button">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Export</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="vc_searchbar_layout">
-            <item>
-             <widget class="QPlainTextEdit" name="vc_search_box">
-              <property name="minimumSize">
-               <size>
-                <width>20</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>250</width>
-                <height>30</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vc_keyword_button">
-              <property name="maximumSize">
-               <size>
-                <width>90</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Keyword Filter</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="vc_filter_dropdown">
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-               </font>
-              </property>
-              <property name="currentText">
-               <string>Filter by Attribute</string>
-              </property>
+             <layout class="QHBoxLayout" name="vc_toolbar_layout">
               <item>
-               <property name="text">
-                <string>Filter by Attribute</string>
-               </property>
+               <widget class="QComboBox" name="vc_vector_drop_down">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="currentText">
+                 <string>Vector</string>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>10</width>
+                  <height>10</height>
+                 </size>
+                </property>
+               </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="vc_undo_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Undo</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_redo_button">
+                <property name="minimumSize">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Redo</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="vc_spacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Minimum</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>5</width>
+                  <height>5</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_add_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Add</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_delete_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Delete</string>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>10</width>
+                  <height>24</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_create_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Create</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_push_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Push</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_pull_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Pull</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_export_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>40</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Export</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="vc_searchbar_layout">
+              <item>
+               <widget class="QPlainTextEdit" name="vc_search_box">
+                <property name="minimumSize">
+                 <size>
+                  <width>20</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>250</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="plainText">
+                 <string>Keyword</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vc_keyword_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>90</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Keyword Filter</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="vc_filter_dropdown">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="currentText">
+                 <string>Filter by Attribute</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Filter by Attribute</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="vc_node_table">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>80</number>
+              </attribute>
+              <row>
+               <property name="text">
+                <string/>
+               </property>
+              </row>
+              <column>
+               <property name="text">
+                <string>NodeID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Name</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Date/Time</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Description</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Reference</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>New Column</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Creator</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Icon Type</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Artifact</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Visibility</string>
+               </property>
+              </column>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QTableWidget" name="vc_node_table">
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-             </font>
-            </property>
-            <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>80</number>
-            </attribute>
-            <row>
-             <property name="text">
-              <string/>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>NodeID</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Name</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Date/Time</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Description</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Reference</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>New Column</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Creator</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Icon Type</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Artifact</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Visibility</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="2">
-         <layout class="QVBoxLayout" name="vc_graph_layout">
-          <item>
-           <widget class="QGraphicsView" name="vc_graph_view"/>
-          </item>
-          <item>
-           <widget class="QTableWidget" name="vc_relationship_table">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>235</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-             </font>
-            </property>
-            <row>
-             <property name="text">
-              <string/>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>Relationship Type</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Relationship ID</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Parent ID</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Child ID</string>
-             </property>
-            </column>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QGraphicsView" name="vc_graph_view"/>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <item>
+               <widget class="QPlainTextEdit" name="nc_interval_textedit">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="plainText">
+                 <string>Interval</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="nc_units_dropdown">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="currentText">
+                 <string>Units</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Units</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="nc_zoomin_button_2">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Zoom In</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="nc_zoomin_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Zoom Out</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="nc_iconchange_button">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Change Icon</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="vc_relationship_table">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>235</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+               </font>
+              </property>
+              <row>
+               <property name="text">
+                <string/>
+               </property>
+              </row>
+              <column>
+               <property name="text">
+                <string>Relationship Type</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Relationship ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Parent ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Child ID</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>

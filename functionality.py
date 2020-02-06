@@ -5,11 +5,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
 from mainwindow import Ui_PICK
-from IP_Error_ConnectionLimitReached import Ui_Dialog as ui_connection_limit
-from IP_Error_duplicateLeadIP import Ui_Dialog as ui_duplicate_lead_ip
-from IP_Error_LeadIPBoxSelected import Ui_Dialog as ui_lead_ip_selected
-from IP_Error_LeadIPNotProvided import Ui_Dialog as ui_lead_ip_not_provided
-from icon_Configuration_Dialog import Ui_Dialog as ui_icon_config_dialog
+from IP_Error_ConnectionLimitReached import Ui_Dialog as UIConnectionLimit
+from IP_Error_duplicateLeadIP import Ui_Dialog as UIDuplicateLeadIP
+from IP_Error_LeadIPBoxSelected import Ui_Dialog as UILeadIPSelected
+from IP_Error_LeadIPNotProvided import Ui_Dialog as UILeadIPNotProvided
+from icon_Configuration_Dialog import Ui_Dialog as UIIconConfigDialog
 
 import sys
 
@@ -31,7 +31,6 @@ rad = 20
 class functionality(Ui_PICK):
     def setupUi(self, PICK):
         super().setupUi(PICK)
-        self.vc_search_box.setPlainText("hello")
 
         path.moveTo(0, 0)
         # path.cubicTo(-30, 70, 35, 115, 100, 100);
@@ -62,7 +61,7 @@ class functionality(Ui_PICK):
         self.set_column_widths_vector_view_tab()
 
         self.button_connect_to_ip.clicked.connect(self.connect_button_triggered)
-        # self.button_connect_to_ip.clicked.connect(self.icon_edit_button_triggered)
+        self.nc_iconchange_button.clicked.connect(self.icon_edit_button_triggered)
 
     def set_column_widths_log_entry_tab(self):
         # Sets columns width for the log entry table
@@ -143,28 +142,28 @@ class functionality(Ui_PICK):
 
         if self.textbox_ip.toPlainText() == lead_ip:
             print("open same ip error prompt")
-            bt_ui = ui_duplicate_lead_ip()
+            bt_ui = UIDuplicateLeadIP()
             bt_ui.setupUi(bt_dialog)
             bt_ui.pushButton.clicked.connect(bt_dialog.close)
             bt_dialog.exec_()
 
         elif self.textbox_ip.toPlainText() == "":
             print("no lead ip error prompt")
-            bt_ui = ui_lead_ip_not_provided()
+            bt_ui = UILeadIPNotProvided()
             bt_ui.setupUi(bt_dialog)
             bt_ui.pushButton.clicked.connect(bt_dialog.close)
             bt_dialog.exec_()
 
         elif self.checkBox_lead.isChecked():
             print("lead checked error prompt")
-            bt_ui = ui_lead_ip_selected()
+            bt_ui = UILeadIPSelected()
             bt_ui.setupUi(bt_dialog)
             bt_ui.pushButton.clicked.connect(bt_dialog.close)
             bt_dialog.exec_()
 
         elif no_connections > 20:
             print("max connections error prompt")
-            bt_ui = ui_connection_limit()
+            bt_ui = UIConnectionLimit()
             bt_ui.setupUi(bt_dialog)
             bt_ui.pushButton.clicked.connect(bt_dialog.close)
             bt_dialog.exec_()
@@ -174,7 +173,7 @@ class functionality(Ui_PICK):
 
     def icon_edit_button_triggered(self):
         ic_dialog = QtWidgets.QDialog()
-        ic_ui = ui_icon_config_dialog()
+        ic_ui = UIIconConfigDialog()
         ic_ui.setupUi(ic_dialog)
         ic_dialog.exec_()
 
