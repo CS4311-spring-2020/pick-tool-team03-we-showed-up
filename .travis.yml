@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.6"
+
+install:
+  - python --version
+  - python -m pip install --upgrade pip
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install codecov
+  - easy_install distribute
+  - pip install -r requirements.txt
+  
+script:
+  - python3 src/main.py
