@@ -69,11 +69,7 @@ class SPLUNKInterface:
         return log_entry
 
     def askUsernamePassword(self):
-        """
         self.username = input("Splunk Username:")
         self.password = input("Splunk Password:")
         self.index = input("Index name:")
-        """
-        self.username = "ralvarezlo"
-        self.password = "@-Slowmotion03"
-        self.index = "tempindex"
+
