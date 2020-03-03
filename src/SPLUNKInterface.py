@@ -4,7 +4,7 @@ import subprocess
 import splunklib.client as client
 import splunklib.results as results
 import json as json
-import LogEntry
+from logentry import LogEntry
 
 
 class SPLUNKInterface:
@@ -20,8 +20,6 @@ class SPLUNKInterface:
         self.splunkClient = client.connect(username=self.username, password=self.password)
         if len(self.index) > 1:
             self.get_entries()
-
-
 
     # creating a new index (event)
     # on CLI ./splunk add index "event name"ArithmeticError
@@ -54,23 +52,28 @@ class SPLUNKInterface:
 
         for result in reader:
             if isinstance(result, dict):
-                print(result)
-                #entry = self.entry_from_dict(result)
-                #print("Added Entry #", entry.number, " Content is: ", entry.content)
-                #r_list.append(entry)
+                #print(result)
+                entry = self.entry_from_dict(result)
+                print("Added Entry #", entry.serial, " Content is: ", entry.content)
+                r_list.append(entry)
 
         return r_list
 
     def entry_from_dict(self, dict_entry):
-        log_entry = LogEntry(number=int(dict_entry['_serial']),
-                 timestamp=dict_entry['_time'],
-                 content=dict_entry['_raw'],
-                 host=dict_entry['host'],
-                 source=dict_entry['source'],
-                 sourcetype=dict_entry['sourcetype'])
+        log_entry = LogEntry(serial=int(dict_entry['_serial']),
+                             timestamp=dict_entry['_time'],
+                             content=dict_entry['_raw'],
+                             host=dict_entry['host'],
+                             source=dict_entry['source'],
+                             sourcetype=dict_entry['sourcetype'])
         return log_entry
 
     def askUsernamePassword(self):
+        """
         self.username = input("Splunk Username:")
         self.password = input("Splunk Password:")
         self.index = input("Index name:")
+        """
+        self.username = "ralvarezlo"
+        self.password = "@-Slowmotion03"
+        self.index = "tempindex"
