@@ -43,7 +43,6 @@ class functionality(Ui_PICK):
 
     def setupUi(self, PICK):
         super().setupUi(PICK)
-
         path.moveTo(0, 0)
         # path.cubicTo(-30, 70, 35, 115, 100, 100);
         path.lineTo(200, 100);
@@ -62,7 +61,7 @@ class functionality(Ui_PICK):
 
         self.vc_add_button.clicked.connect(self.add_node)
         self.table_manager.populate_lfc_table(self.tableWidget)
-        self.table_manager.populate_logentry_table(self.lec_logentry_table)
+        self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
         self.table_manager.populate_relationship_table(self.vc_relationship_table, 0)
         self.table_manager.populate_vector_table(self.vc_node_table, 0)
         self.table_manager.populate_vectorconfiguration_table(self.vc_table)

@@ -3,7 +3,6 @@ import os
 import subprocess
 import splunklib.client as client
 import splunklib.results as results
-import json as json
 from logentry import LogEntry
 
 
@@ -19,7 +18,7 @@ class SPLUNKInterface:
         self.askUsernamePassword()
         self.splunkClient = client.connect(username=self.username, password=self.password)
         if len(self.index) > 1:
-            self.get_entries()
+            self.logentries = self.get_entries()
 
     # creating a new index (event)
     # on CLI ./splunk add index "event name"ArithmeticError
@@ -69,6 +68,7 @@ class SPLUNKInterface:
         return log_entry
 
     def askUsernamePassword(self):
+
         self.username = input("Splunk Username:")
         self.password = input("Splunk Password:")
         self.index = input("Index name:")

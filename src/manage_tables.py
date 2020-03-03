@@ -38,6 +38,7 @@ class manage_tables:
             else:
                 table_widget.item(i,5).setCheckState(QtCore.Qt.Unchecked)
 
+    """
     def populate_logentry_table(self, table_widget):
         table_widget.setRowCount(len(self.log_entries))
         for i in range(len(self.log_entries)):
@@ -51,6 +52,21 @@ class manage_tables:
                 table_widget.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
 
             table_widget.setItem(i, 4, QTableWidgetItem(', '.join(str(e) for e in self.log_entries[i][4])))
+    """
+
+    def populate_logentry_table(self, table_widget, logentries):
+        table_widget.setRowCount(len(logentries))
+
+        for i in range(len(logentries)):
+            table_widget.setItem(i, 1, QTableWidgetItem(str(logentries[i].serial)))
+            table_widget.setItem(i, 2, QTableWidgetItem(logentries[i].timestamp))
+            table_widget.setItem(i, 3, QTableWidgetItem(logentries[i].content))
+
+            table_widget.setItem(i, 0, QTableWidgetItem(""))
+            if logentries[i].checked:
+                table_widget.item(i, 0).setCheckState(QtCore.Qt.Checked)
+            else:
+                table_widget.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
 
     def populate_vector_table(self, table_widget, vector_num):
         if vector_num <0:
