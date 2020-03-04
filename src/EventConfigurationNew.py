@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'EventConfigurationNew.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -143,6 +143,21 @@ class Ui_Dialog(object):
         self.textbox_white_team_folder.setObjectName("textbox_white_team_folder")
         self.verticalLayout_13.addWidget(self.textbox_white_team_folder)
         self.horizontalLayout_6.addLayout(self.verticalLayout_13)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.root_directory_pushButton = QtWidgets.QPushButton(self.dc_frame)
+        self.root_directory_pushButton.setObjectName("root_directory_pushButton")
+        self.verticalLayout_2.addWidget(self.root_directory_pushButton)
+        self.red_team_directory_pushButton = QtWidgets.QPushButton(self.dc_frame)
+        self.red_team_directory_pushButton.setObjectName("red_team_directory_pushButton")
+        self.verticalLayout_2.addWidget(self.red_team_directory_pushButton)
+        self.blue_team_directory_pushButton = QtWidgets.QPushButton(self.dc_frame)
+        self.blue_team_directory_pushButton.setObjectName("blue_team_directory_pushButton")
+        self.verticalLayout_2.addWidget(self.blue_team_directory_pushButton)
+        self.white_team_directory_pushButton = QtWidgets.QPushButton(self.dc_frame)
+        self.white_team_directory_pushButton.setObjectName("white_team_directory_pushButton")
+        self.verticalLayout_2.addWidget(self.white_team_directory_pushButton)
+        self.horizontalLayout_6.addLayout(self.verticalLayout_2)
         self.verticalLayout_9.addLayout(self.horizontalLayout_6)
         self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_13.setObjectName("horizontalLayout_13")
@@ -181,4 +196,8 @@ class Ui_Dialog(object):
         self.label_red_team_folder.setText(_translate("Dialog", "Red Team Folder"))
         self.label_blue_team_folder.setText(_translate("Dialog", "Blue Team Folder"))
         self.label_white_team_folder.setText(_translate("Dialog", "White Team Folder "))
+        self.root_directory_pushButton.setText(_translate("Dialog", "Browse"))
+        self.red_team_directory_pushButton.setText(_translate("Dialog", "Browse"))
+        self.blue_team_directory_pushButton.setText(_translate("Dialog", "Browse"))
+        self.white_team_directory_pushButton.setText(_translate("Dialog", "Browse"))
         self.button_start_ingestion.setText(_translate("Dialog", "Start Data Ingestion"))

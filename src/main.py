@@ -78,6 +78,9 @@ class functionality(Ui_PICK):
         # Open file directory when clicking button 'export' in vector view
         self.nc_export_button.clicked.connect(self.export_graph)
         self.ec_export_button.clicked.connect(self.export_graph)
+        self.vc_export_pushButton.clicked.connect(self.export_graph)
+        self.log_file_export_pushButton.clicked.connect(self.export_graph)
+        self.ear_export_pushButton.clicked.connect(self.export_graph)
         self.tableWidget.itemChanged.connect(self.printItemChanged)
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
 
@@ -85,7 +88,7 @@ class functionality(Ui_PICK):
         self.actionNew.triggered.connect(self.open_new_event_config)
         self.actionOpen.triggered.connect(self.open_events_config)
         self.actionEdit.triggered.connect(self.edit_event_config)
-
+        
         # SPLUNK WEIRD AF, DO NOT TOUCH
 
     #SPLUNK - New Event
@@ -95,6 +98,11 @@ class functionality(Ui_PICK):
         ec_ui.setupUi(ec_dialog)
         ec_ui.button_save_event.clicked.connect(lambda: self.call_create_index(ec_ui))
         ec_ui.button_start_ingestion.clicked.connect(lambda: self.start_ingestion(ec_ui))
+        #save directories of teams
+        ec_ui.root_directory_pushButton.clicked.connect(self.openDirectorySelector)
+        ec_ui.red_team_directory_pushButton.clicked.connect(self.openDirectorySelector)
+        ec_ui.blue_team_directory_pushButton.clicked.connect(self.openDirectorySelector)
+        ec_ui.white_team_directory_pushButton.clicked.connect(self.openDirectorySelector)
         ec_dialog.exec_()
 
     def call_create_index(self, ec_ui):
@@ -352,6 +360,12 @@ class functionality(Ui_PICK):
     def createrelationship_button_triggered(self):
         self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
+    
+    #Open file directory when clicking button '...' in new Event Configuration
+    def openDirectorySelector(self):
+        option = QFileDialog.Options()
+        directory = QFileDialog.getOpenFileName(None, 'Select Folder', '','All Files (*)', options=option)
+        print(directory)
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):
