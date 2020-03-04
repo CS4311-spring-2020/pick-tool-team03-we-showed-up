@@ -29,11 +29,10 @@ class SPLUNKInterface:
     def createEvent(self, event_name, event_description):
         for index in self.splunkClient.indexes.list():
             if (event_name == index.name):
-                return 1;
+                return 1
         self.event_name = event_name
         self.splunkClient.indexes.create(name=event_name)
         self.event_description = event_description
-        return 0;
 
     #open an event
     def open_event(self, event_name):
@@ -95,3 +94,10 @@ class SPLUNKInterface:
         #dude, why did you put this here?
         #self.index = input("Index name:")
 
+    def add_file_to_index(self, filepath, index):
+        try:
+            currInd = self.splunkClient.indexes[index]
+            currInd.upload(filepath)
+            print("Uploaded to index: ", index)
+        except Exception as e:
+            print("Failed to upload, error ", str(e))
