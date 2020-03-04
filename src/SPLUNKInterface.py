@@ -12,20 +12,41 @@ class SPLUNKInterface:
     def __init__(self):
         # starting splunk session (need to login)
         # subprocess.run(["./splunk start", event_name])
+
+        #Event Data.. should we make a class?
+        # are can event_name and index vars be merged?
         self.event_name = ""
-        self.path = ""
-        self.index = ""
+        self.index = "main"
+        self.event_description = ""
         self.askUsernamePassword()
+        self.path = ""
         self.splunkClient = client.connect(username=self.username, password=self.password)
         if len(self.index) > 1:
             self.logentries = self.get_entries()
 
     # creating a new index (event)
-    # on CLI ./splunk add index "event name"ArithmeticError
-    def createEvent(self, event_name):
+    # need to add date time-frames
+    def createEvent(self, event_name, event_description):
+        for index in self.splunkClient.indexes.list():
+            if (event_name == index.name):
+                return 1;
         self.event_name = event_name
         self.splunkClient.indexes.create(name=event_name)
-        print("index ", self.event_name, " added")
+        self.event_description = event_description
+        return 0;
+
+    #open an event
+    def open_event(self, event_name):
+        self.event_name = event_name
+        self.event_description = "Event description for " + event_name + "goes here"
+        return self.event_description
+
+    def getIndexList(self):
+        index_list = []
+        for i in self.splunkClient.indexes.list():
+            index_list.append(i.name)
+        return index_list
+
 
     def addFilesMonitorDirectory(red_path, blue_path, white_path,  root_path):
         subprocess.run(["./splunk add oneshot", red_path])
@@ -71,5 +92,6 @@ class SPLUNKInterface:
 
         self.username = input("Splunk Username:")
         self.password = input("Splunk Password:")
-        self.index = input("Index name:")
+        #dude, why did you put this here?
+        #self.index = input("Index name:")
 
