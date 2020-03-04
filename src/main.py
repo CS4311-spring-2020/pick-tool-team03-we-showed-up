@@ -4,7 +4,6 @@ from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-
 from mainwindow import Ui_PICK
 from choose_Vector_Screen import Ui_Dialog as UI_ChooseVector
 from IP_Error_ConnectionLimitReached import Ui_Dialog as UIConnectionLimit
@@ -99,10 +98,10 @@ class functionality(Ui_PICK):
         ec_ui.button_save_event.clicked.connect(lambda: self.call_create_index(ec_ui))
         ec_ui.button_start_ingestion.clicked.connect(lambda: self.start_ingestion(ec_ui))
         #save directories of teams
-        ec_ui.root_directory_pushButton.clicked.connect(self.openDirectorySelector)
-        ec_ui.red_team_directory_pushButton.clicked.connect(self.openDirectorySelector)
-        ec_ui.blue_team_directory_pushButton.clicked.connect(self.openDirectorySelector)
-        ec_ui.white_team_directory_pushButton.clicked.connect(self.openDirectorySelector)
+        ec_ui.root_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_root_directory))
+        ec_ui.red_team_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_red_team_folder))
+        ec_ui.blue_team_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_blue_team_folder))
+        ec_ui.white_team_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_white_team_folder))
         ec_dialog.exec_()
 
     def call_create_index(self, ec_ui):
@@ -362,10 +361,12 @@ class functionality(Ui_PICK):
         self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
     
     #Open file directory when clicking button '...' in new Event Configuration
-    def openDirectorySelector(self):
-        option = QFileDialog.Options()
-        directory = QFileDialog.getOpenFileName(None, 'Select Folder', '','All Files (*)', options=option)
-        print(directory)
+    def openDirectorySelector(self, textbox_widget=None):
+        directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
+        if textbox_widget is None:
+            print(directory)
+        else:
+            textbox_widget.setPlainText(str(directory))
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):
