@@ -18,6 +18,8 @@ from manage_tables import manage_tables
 from SPLUNKInterface import SPLUNKInterface
 from logentrydescription import Ui_Dialog as LogEntryDescription
 from EventConfigurationNew import Ui_Dialog as UiEventConfigNew
+from EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
+from EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 
 import sys
 
@@ -81,10 +83,12 @@ class functionality(Ui_PICK):
 
         # SPLUNK
         self.actionNew.triggered.connect(self.open_new_event_config)
+        self.actionOpen.triggered.connect(self.open_events_config)
+        self.actionEdit.triggered.connect(self.edit_event_config)
 
         # SPLUNK WEIRD AF, DO NOT TOUCH
 
-
+    #SPLUNK - New Event
     def open_new_event_config(self):
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigNew()
@@ -94,10 +98,14 @@ class functionality(Ui_PICK):
         ec_dialog.exec_()
 
     def call_create_index(self, ec_ui):
-        # try:
-        #    if event_name ==
         event_name = ec_ui.textbox_event_name.toPlainText()
-        self.splunk.createEvent(event_name)
+        event_description = ec_ui.textbox_event_description.toPlainText()
+        flag = self.splunk.createEvent(event_name, event_description)
+        if flag == 1:
+            ec_ui.event_creation_status_label.setText("Sorry, event name is taken.")
+        else:
+            text = "Event " + event_name + " added."
+            ec_ui.event_creation_status_label.setText(text)
 
     def start_ingestion(self, ec_ui):
         red_path = ec_ui.textbox_red_team_folder.toPlainText()
@@ -106,7 +114,34 @@ class functionality(Ui_PICK):
         root_path = ec_ui.textbox_root_directory.toPlainText()
         self.splunk.addFilesMonitorDirectory(red_team_path, blue_team_path, white_team_path, root_path)
 
+    #SPLUNK - Open Event
+    def open_events_config(self):
+        ec_dialog = QtWidgets.QDialog()
+        ec_ui = UiEventConfigOpen()
+        ec_ui.setupUi(ec_dialog)
+        #call list of indexes and display event
+        events = self.splunk.getIndexList()
+        for event in events:
+            ec_ui.comboBox.addItem(event)
+        #ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui)
+        ec_dialog.exec_()
 
+    def update_open_event_config(self, ec_ui):
+        text = ec_ui.comboBox.currentData
+        ec_ui.label_3.setText(text)
+
+    #SPLUNK - Edit Event
+    def edit_event_config(self):
+        ec_dialog = QtWidgets.QDialog()
+        ec_ui = UiEventConfigEdit()
+        ec_ui.setupUi(ec_dialog)
+        events = self.splunk.getIndexList()
+        for event in events:
+            ec_ui.comboBox.addItem(event)
+        ec_ui.button_save_event.clicked.connect
+        ec_dialog.exec_()
+
+    #Vector
     def add_vector(self):
         self.table_manager.add_vector()
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)

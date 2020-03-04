@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.1, 2020-03-01T19:37:24. -->
+<!-- Written by QtCreator 4.11.1, 2020-03-03T23:11:00. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -141,11 +141,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/main.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/main.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">demo_data2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/demo_data.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/demo_data.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{43c26985-6107-4be2-acef-791143ca0878}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/main.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/demo_data.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -155,7 +155,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
     <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
@@ -217,11 +217,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">vector_DB_Lead</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/vector_DB_Lead.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/vector_DB_Lead.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IP_Error_duplicateLeadIP2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_duplicateLeadIP.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_duplicateLeadIP.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/vector_DB_Lead.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_duplicateLeadIP.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -293,11 +293,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">demo_data</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/demo_data.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/demo_data.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IP_Error_LeadIPBoxSelected2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_LeadIPBoxSelected.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_LeadIPBoxSelected.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/demo_data.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_LeadIPBoxSelected.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -369,11 +369,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">icon_Configuration</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/icon_Configuration.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/icon_Configuration.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">vector_DB_Lead2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/vector_DB_Lead.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/vector_DB_Lead.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/icon_Configuration.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/vector_DB_Lead.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -445,11 +445,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IP_Error_ConnectionLimitReached</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_ConnectionLimitReached.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_ConnectionLimitReached.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">icon_Configuration2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/icon_Configuration.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/icon_Configuration.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_ConnectionLimitReached.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/icon_Configuration.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -521,11 +521,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">icon_Configuration_Dialog</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/icon_Configuration_Dialog.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/icon_Configuration_Dialog.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">manage_tables2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/manage_tables.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/manage_tables.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/icon_Configuration_Dialog.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/manage_tables.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -597,11 +597,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IP_Error_duplicateLeadIP</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_duplicateLeadIP.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_duplicateLeadIP.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">icon_Configuration_Dialog2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/icon_Configuration_Dialog.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/icon_Configuration_Dialog.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_duplicateLeadIP.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/icon_Configuration_Dialog.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -673,11 +673,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IP_Error_LeadIPBoxSelected</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_LeadIPBoxSelected.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_LeadIPBoxSelected.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">IP_Error_ConnectionLimitReached2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_ConnectionLimitReached.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_ConnectionLimitReached.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/IP_Error_LeadIPBoxSelected.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/IP_Error_ConnectionLimitReached.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -749,11 +749,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SPLUNKInterface</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/SPLUNKInterface.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/SPLUNKInterface.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/main.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/main.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/SPLUNKInterface.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/main.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -825,11 +825,11 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">manage_tables</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/manage_tables.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/manage_tables.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SPLUNKInterface2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration./home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/SPLUNKInterface.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/SPLUNKInterface.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter"></value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/pick-tool-team03-we-showed-up/src/manage_tables.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">/home/gummo/OneDrive/Spring 2020/SW 2/pick-splunk-implementation/src/SPLUNKInterface.py</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
