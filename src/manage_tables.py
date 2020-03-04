@@ -13,13 +13,6 @@ class manage_tables:
                 ["observer_log_2.txt", "c:\logs\observer\marchlogs", "100%", "100%", "100%", False],
                 ["observer_log_3.txt", "c:\logs\\redteam\\feblogs", "100%", "100%", "100%", False]]
 
-    log_entries = [[True, "A-0001", "11/01/2019 17:01:12", "", [1]],
-                   [True, "A-0002", "11/01/2019 17:01:50", "", [1]],
-                   [True, "A-0003", "11/01/2019 17:02:05", "", [2]],
-                   [True, "A-0004", "11/01/2019 17:02:00", "", [1]],
-                   [True, "A-0005", "11/01/2019 17:02:45", "", [1]],
-                   [True, "A-0006", "11/01/2019 17:03:10", "", [2]]]
-
     enforcement_action_1 = [["00006", "Timestamp out of range"],
                             ["1012", "Empty line"],
                             ["1210", "Unreadable line format"]]
@@ -38,26 +31,12 @@ class manage_tables:
             else:
                 table_widget.item(i,5).setCheckState(QtCore.Qt.Unchecked)
 
-    """
-    def populate_logentry_table(self, table_widget):
-        table_widget.setRowCount(len(self.log_entries))
-        for i in range(len(self.log_entries)):
-            for j in range(1, 4):
-                table_widget.setItem(i, j, QTableWidgetItem(self.log_entries[i][j]))
-
-            table_widget.setItem(i, 0, QTableWidgetItem(""))
-            if self.log_entries[i][0]:
-                table_widget.item(i, 0).setCheckState(QtCore.Qt.Checked)
-            else:
-                table_widget.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
-
-            table_widget.setItem(i, 4, QTableWidgetItem(', '.join(str(e) for e in self.log_entries[i][4])))
-    """
-
+    # Takes a list of log entries and a table widget, populates the table widget with the log entries in the list
     def populate_logentry_table(self, table_widget, logentries):
         table_widget.setRowCount(len(logentries))
 
         for i in range(len(logentries)):
+            table_widget.setRowHeight(i, 60)
             table_widget.setItem(i, 1, QTableWidgetItem(str(logentries[i].serial)))
             table_widget.setItem(i, 2, QTableWidgetItem(logentries[i].timestamp))
             table_widget.setItem(i, 3, QTableWidgetItem(logentries[i].content))
@@ -67,6 +46,8 @@ class manage_tables:
                 table_widget.item(i, 0).setCheckState(QtCore.Qt.Checked)
             else:
                 table_widget.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
+
+            table_widget.setItem(i, 4, QTableWidgetItem(logentries[i].get_vector_list_str()))
 
     def populate_vector_table(self, table_widget, vector_num):
         if vector_num <0:
@@ -132,4 +113,3 @@ class manage_tables:
 
     def edit_node_table(self, row, column, value, vector_num):
         self.fake_data.vector_list[vector_num].nodes[row][column] = value
-
