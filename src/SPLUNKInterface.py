@@ -8,14 +8,14 @@ from logentry import LogEntry
 
 class SPLUNKInterface:
 
-    def __init__(self):
+    def __init__(self, event_name="main"):
         # starting splunk session (need to login)
         # subprocess.run(["./splunk start", event_name])
 
         #Event Data.. should we make a class?
-        self.event_name = "main"
+        self.event_name = event_name
         self.event_description = ""
-        self.askUsernamePassword()
+        self.ask_username_password()
         self.path = ""
         self.logentries = []
         if len(self.username) < 1:
@@ -28,7 +28,7 @@ class SPLUNKInterface:
     # need to add date time-frames
     def createEvent(self, event_name, event_description):
         for index in self.splunkClient.indexes.list():
-            if (event_name == index.name):
+            if event_name == index.name:
                 return 1
         self.event_name = event_name
         self.splunkClient.indexes.create(name=event_name)
@@ -81,7 +81,7 @@ class SPLUNKInterface:
                              sourcetype=dict_entry['sourcetype'])
         return log_entry
 
-    def askUsernamePassword(self):
+    def ask_username_password(self):
 
         self.username = input("Splunk Username:")
         self.password = input("Splunk Password:")

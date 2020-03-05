@@ -4,6 +4,7 @@ from PyQt5.QtCore import *
 import math
 from demo_data import DemoData
 from random import randint
+import csv
 
 class manage_tables:
     fake_data = DemoData()
@@ -113,3 +114,8 @@ class manage_tables:
 
     def edit_node_table(self, row, column, value, vector_num):
         self.fake_data.vector_list[vector_num].nodes[row][column] = value
+
+    def export_table_to_csv(self, list2d, filename="output.csv"):
+        with open(filename, "w") as f:
+            writer = csv.writer(f)
+            writer.writerows(list2d)

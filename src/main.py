@@ -20,6 +20,7 @@ from EventConfigurationNew import Ui_Dialog as UiEventConfigNew
 from EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from ingestion_functionality import IngestionFunctionality as Ingest
+from eventconfiguration import EventConfiguration
 
 import sys
 
@@ -42,6 +43,7 @@ class functionality(Ui_PICK):
     table_manager = manage_tables()
     splunk = SPLUNKInterface()
     user_change = True
+    event_config = EventConfiguration()
 
     def setupUi(self, PICK):
         super().setupUi(PICK)
@@ -73,10 +75,11 @@ class functionality(Ui_PICK):
         self.button_add_vector.clicked.connect(self.add_vector)
         self.vc_add_relationship_button.clicked.connect(self.createrelationship_button_triggered)
 
+
         self.lec_logentry_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
         # Open file directory when clicking button 'export' in vector view
-        self.nc_export_button.clicked.connect(self.export_graph)
+        self.nc_export_button.clicked.connect(self.export_vector)
         self.ec_export_button.clicked.connect(self.export_graph)
         self.vc_export_pushButton.clicked.connect(self.export_graph)
         self.log_file_export_pushButton.clicked.connect(self.export_graph)
@@ -113,6 +116,7 @@ class functionality(Ui_PICK):
             ec_ui.event_creation_status_label.setText("Sorry, event name is taken.")
         else:
             text = "Event " + event_name + " added."
+            self.event_config.name = event_name
             ec_ui.event_creation_status_label.setText(text)
 
     def start_ingestion(self, ec_ui):
@@ -167,7 +171,6 @@ class functionality(Ui_PICK):
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
 
     def showVectorOptions(self):
-        vector_dialog = QtWidgets.QDialog()
         self.ui_svo = UI_ChooseVector()
         self.ui_svo.setupUi(vector_dialog)
         self.table_manager.populate_vector_dropdowns(self.ui_svo.comboBox)
@@ -348,10 +351,14 @@ class functionality(Ui_PICK):
     def export_graph(self):
         self.openSaveDialog()
 
+    def export_vector(self):
+        print(self.openSaveDialog())
+
     def openSaveDialog(self):
         option = QFileDialog.Options()
-        filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', 'All Files (*)', options=option)
-        print (filename)
+        filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', '"CSV (*.csv)"', options=option)
+        filename = str(filename[0])
+        self.table_manager.export_table_to_csv( self.table_manager.fake_data.vector_list[0].nodes, filename=filename)
 
     def createnode_button_triggered(self):
         self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())

@@ -1,4 +1,7 @@
 from random import randint
+import csv
+
+
 class Vector:
     vector_checked = True
     vector_name = ''
@@ -36,3 +39,4 @@ class DemoData:
     def add_vector(self):
         new_vector = Vector(len(self.vector_list)+1)
         self.vector_list.append(new_vector)
+
