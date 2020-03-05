@@ -29,18 +29,6 @@ import time
 rad = 20
 
 
-# class mywindow(QtWidgets.QMainWindow):
-
-#     def __init__(self):
-
-#         super(mywindow, self).__init__()
-
-#         self.ui = Ui_PICK()
-
-#         self.ui.setupUi(self)
-
-#         self.ui.label.setFont(QtGui.QFont('SansSerif', 30)) # change font type and size
-
 class functionality(Ui_PICK):
     table_manager = manage_tables()
     splunk = SPLUNKInterface()
@@ -392,6 +380,7 @@ class functionality(Ui_PICK):
             if change == 1:
                 self.splunk.refresh_log_entries()
                 self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
+
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):

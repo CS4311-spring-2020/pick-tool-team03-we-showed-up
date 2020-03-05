@@ -12,7 +12,7 @@ class SPLUNKInterface:
         # starting splunk session (need to login)
         # subprocess.run(["./splunk start", event_name])
 
-        #Event Data.. should we make a class?
+        # Event Data.. should we make a class?
         self.event_name = event_name
         self.event_description = ""
         self.ask_username_password()
@@ -62,11 +62,9 @@ class SPLUNKInterface:
         reader = results.ResultsReader(export_search_results)
 
         r_list = []
-        # r_iter = iter(reader)
 
         for result in reader:
             if isinstance(result, dict):
-                #print(result)
                 entry = self.entry_from_dict(result)
                 print("Added Entry #", entry.serial, " Content is: ", entry.content)
                 r_list.append(entry)
@@ -86,7 +84,6 @@ class SPLUNKInterface:
         return log_entry
 
     def ask_username_password(self):
-
         self.username = input("Splunk Username:")
         self.password = input("Splunk Password:")
 
@@ -100,7 +97,11 @@ class SPLUNKInterface:
 
     def get_log_count(self):
         if not self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
-            self.count = self.splunkClient.indexes[self.event_name].totalEventCount
-            self.refresh_log_entries()
-            return 1
+            try:
+                self.count = self.splunkClient.indexes[self.event_name].totalEventCount
+                self.refresh_log_entries()
+                return 1
+            except Exception as e:
+                print("Unable to refresh log entries, error is: ", str(e))
+                return 0
         return 0
