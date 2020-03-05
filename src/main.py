@@ -19,6 +19,7 @@ from logentrydescription import Ui_Dialog as LogEntryDescription
 from EventConfigurationNew import Ui_Dialog as UiEventConfigNew
 from EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
+from ingestion_functionality import IngestionFunctionality as Ingest
 
 import sys
 
@@ -367,6 +368,7 @@ class functionality(Ui_PICK):
             print(directory)
         else:
             textbox_widget.setPlainText(str(directory))
+            Ingest.get_file_paths_from_folder(str(directory))
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):

@@ -13,7 +13,6 @@ class SPLUNKInterface:
         # subprocess.run(["./splunk start", event_name])
 
         #Event Data.. should we make a class?
-        # are can event_name and index vars be merged?
         self.event_name = "main"
         self.event_description = ""
         self.askUsernamePassword()
@@ -49,12 +48,6 @@ class SPLUNKInterface:
         subprocess.run(["./splunk add oneshot", red_path])
         #keep on adding files, but need to know if you need to sleep between path ingestions
         subprocess.run(["add monitor [-source]", path])
-
-    def exportLogs(self):
-        # https://docs.splunk.com/Documentation/Splunk/8.0.2/Search/ExportdatausingCLI
-        # example : splunk search [eventdata] -preview 0 -maxout 0 -output [rawdata|json|csv|xml] > [myfilename.log] ...
-        # will retrieve json files
-        return
 
     def get_entries(self, keyword=""):
         kwargs_export = {"earliest_time": "-1000h",
