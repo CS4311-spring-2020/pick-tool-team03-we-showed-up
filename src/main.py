@@ -411,7 +411,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         for i in range(path.elementCount()):
             node = Node(self, i)
             node.setPos(QPointF(path.elementAt(i)))
-            node_name = "node " + str(i)
+            node_name = "node " + str(i+1)
             node.setBrush(QBrush(QColor(colors[i])))
             text = QGraphicsSimpleTextItem(node_name)
             text.setParentItem(node)
