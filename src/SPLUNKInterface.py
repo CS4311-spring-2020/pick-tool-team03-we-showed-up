@@ -17,6 +17,9 @@ class SPLUNKInterface:
         self.event_description = ""
         self.askUsernamePassword()
         self.path = ""
+        self.logentries = []
+        if len(self.username) < 1:
+            return
         self.splunkClient = client.connect(username=self.username, password=self.password)
         if len(self.event_name) > 1:
             self.logentries = self.get_entries()

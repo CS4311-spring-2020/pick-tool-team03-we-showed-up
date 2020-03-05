@@ -19,4 +19,5 @@ class IngestionFunctionality:
     def ingest_directory_to_splunk(self, folder_path, index,  sourcetype="", source=""):
         files = self.get_file_paths_from_folder(folder_path)
         splunk = SPLUNKInterface()
-        splunk.add_file_to_index(folder_path, index)
+        for file in files:
+            splunk.add_file_to_index(file, index)
