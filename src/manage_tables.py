@@ -119,3 +119,5 @@ class manage_tables:
         with open(filename, "w") as f:
             writer = csv.writer(f)
             writer.writerows(list2d)
+           
+        
