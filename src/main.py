@@ -21,6 +21,8 @@ from EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from ingestion_functionality import IngestionFunctionality as Ingest
 from eventconfiguration import EventConfiguration
+from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
+
 
 import sys
 import threading
@@ -402,14 +404,20 @@ class Node(QtWidgets.QGraphicsEllipseItem):
 
 
 class Path(QtWidgets.QGraphicsPathItem):
+    
     def __init__(self, path, scene):
+        colors = ["red","white", "blue","red","blue","white","red","blue","white"]
         super(Path, self).__init__(path)
         for i in range(path.elementCount()):
             node = Node(self, i)
             node.setPos(QPointF(path.elementAt(i)))
+            node_name = "node " + str(i)
+            node.setBrush(QBrush(QColor(colors[i])))
+            text = QGraphicsSimpleTextItem(node_name)
+            text.setParentItem(node)
+            text.setPen(QPen(QPen(QColor("black"))))
             scene.addItem(node)
         self.setPen(QtGui.QPen(Qt.black, 1.75))
-
     def updateElement(self, index, pos):
         path.setElementPositionAt(index, pos.x(), pos.y())
         self.setPath(path)
