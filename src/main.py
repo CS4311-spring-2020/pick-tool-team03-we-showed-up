@@ -23,6 +23,8 @@ from ingestion_functionality import IngestionFunctionality as Ingest
 from eventconfiguration import EventConfiguration
 
 import sys
+import threading
+import time
 
 rad = 20
 
@@ -44,6 +46,8 @@ class functionality(Ui_PICK):
     splunk = SPLUNKInterface()
     user_change = True
     event_config = EventConfiguration()
+    event_config.name = "main"
+    ingest_funct = Ingest()
 
     def setupUi(self, PICK):
         super().setupUi(PICK)
@@ -91,7 +95,9 @@ class functionality(Ui_PICK):
         self.actionNew.triggered.connect(self.open_new_event_config)
         self.actionOpen.triggered.connect(self.open_events_config)
         self.actionEdit.triggered.connect(self.edit_event_config)
-        
+
+        thread = threading.Thread(target=self.update_tables_periodically)
+        thread.start()
         # SPLUNK WEIRD AF, DO NOT TOUCH
 
     #SPLUNK - New Event
@@ -375,7 +381,17 @@ class functionality(Ui_PICK):
             print(directory)
         else:
             textbox_widget.setPlainText(str(directory))
-            Ingest.get_file_paths_from_folder(str(directory))
+            self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
+            # Ingest.get_file_paths_from_folder(str(directory))
+
+    def update_tables_periodically(self):
+        while True:
+            time.sleep(20)
+            change = self.splunk.get_log_count()
+            print("Should UPDATE NOW")
+            if change == 1:
+                self.splunk.refresh_log_entries()
+                self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
 
 class Node(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):

@@ -18,6 +18,7 @@ class SPLUNKInterface:
         self.ask_username_password()
         self.path = ""
         self.logentries = []
+        self.count = 0
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
@@ -72,6 +73,9 @@ class SPLUNKInterface:
 
         return r_list
 
+    def refresh_log_entries(self):
+        self.logentries = self.get_entries()
+
     def entry_from_dict(self, dict_entry):
         log_entry = LogEntry(serial=int(dict_entry['_serial']),
                              timestamp=dict_entry['_time'],
@@ -93,3 +97,10 @@ class SPLUNKInterface:
             print("Uploaded to index: ", index)
         except Exception as e:
             print("Failed to upload, error ", str(e))
+
+    def get_log_count(self):
+        if not self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
+            self.count = self.splunkClient.indexes[self.event_name].totalEventCount
+            self.refresh_log_entries()
+            return 1
+        return 0
