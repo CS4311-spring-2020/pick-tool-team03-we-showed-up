@@ -98,14 +98,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="date_event_start_edit">
-            <property name="maximumSize">
-             <size>
-              <width>150</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
+           <widget class="QDateTimeEdit" name="date_event_start_edit"/>
           </item>
          </layout>
         </item>
@@ -125,14 +118,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QDateEdit" name="date_event_end_edit">
-            <property name="maximumSize">
-             <size>
-              <width>150</width>
-              <height>16777215</height>
-             </size>
-            </property>
-           </widget>
+           <widget class="QDateTimeEdit" name="date_event_end_edit"/>
           </item>
          </layout>
         </item>
