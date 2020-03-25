@@ -376,11 +376,10 @@ class functionality(Ui_PICK):
 
     def update_tables_periodically(self):
         while True:
-            time.sleep(20)
+            time.sleep(5)
             change = self.splunk.get_log_count()
-            print("Should UPDATE NOW")
+            print("Update check")
             if change == 1:
-                self.splunk.refresh_log_entries()
                 self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
 
 

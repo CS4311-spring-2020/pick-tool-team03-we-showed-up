@@ -19,11 +19,13 @@ class SPLUNKInterface:
         self.path = ""
         self.logentries = []
         self.count = 0
+        self.count_changed = False
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
         if len(self.event_name) > 1:
             self.logentries = self.get_entries()
+            self.count = self.splunkClient.indexes[self.event_name].totalEventCount
 
     # creating a new index (event)
     # need to add date time-frames
@@ -96,12 +98,18 @@ class SPLUNKInterface:
             print("Failed to upload, error ", str(e))
 
     def get_log_count(self):
-        if not self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
+        if self.count_changed and self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
             try:
-                self.count = self.splunkClient.indexes[self.event_name].totalEventCount
                 self.refresh_log_entries()
+                self.count_changed = False
                 return 1
             except Exception as e:
                 print("Unable to refresh log entries, error is: ", str(e))
                 return 0
+
+        if not self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
+            self.count_changed = True
+            self.count = self.splunkClient.indexes[self.event_name].totalEventCount
+            print("Updated total count atm is: ", self.count)
+
         return 0
