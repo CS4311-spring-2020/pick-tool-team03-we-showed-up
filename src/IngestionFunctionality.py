@@ -3,6 +3,7 @@ import shutil
 
 from LogFile import LogFile
 from SPLUNKInterface import SPLUNKInterface
+from EventConfiguration import EventConfiguration
 
 
 class IngestionFunctionality:
@@ -51,12 +52,14 @@ class IngestionFunctionality:
 
     def ingest_directory_to_splunk(self, directory, index, splunk, sourcetype="", source=""):
         self.read_log_files_from_directory(directory)
-        print("called ingest_directory_to_splunk")
-        for log_file in self.logFiles:
-            splunk.add_file_to_index(log_file.get_path(), index)
+        self.validate_files(self, EventConfiguration.starttime, EventConfiguration.endtime, EventConfiguration.name)
+        #print("called ingest_directory_to_splunk")
+        #for log_file in self.logFiles:
+            #splunk.add_file_to_index(log_file.get_path(), index)
 
     def validate_files(self, start_date, end_date, index):
         for log_file in self.logFiles:
+            print(logFile.get_path(log_file))
             # Validate "file" (this is the filepath) send enforcement
             # action report as parameter to make sure we append the lines
             # maybe return a list of validated files that are set to be ingested to Splunk?

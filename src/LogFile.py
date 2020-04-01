@@ -12,6 +12,9 @@ class LogFile:
         self.acknowledgement_status = False
         pass
 
+    def get_name(self):
+        return self.name
+
     def get_path(self):
         return self.path
 

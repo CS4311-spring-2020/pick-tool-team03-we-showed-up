@@ -19,7 +19,7 @@ from UI.logentrydescription import Ui_Dialog as LogEntryDescription
 from UI.EventConfigurationNew import Ui_Dialog as UiEventConfigNew
 from UI.EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
-from ingestion_functionality import IngestionFunctionality as Ingest
+from IngestionFunctionality import IngestionFunctionality as Ingest
 from eventconfiguration import EventConfiguration
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
 
@@ -137,6 +137,7 @@ class functionality(Ui_PICK):
         self.event_config.rootpath = ec_ui.textbox_root_directory.toPlainText()
         self.splunk.addFilesMonitorDirectory(self.event_config.redfolder, self.event_config.bluefolder,
                                              self.event_config.whitefolder, self.event_config.rootpath)
+
         # Send folders to ingestion
         # self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, sourcetype="red team")
         # self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, sourcetype="blue team")
