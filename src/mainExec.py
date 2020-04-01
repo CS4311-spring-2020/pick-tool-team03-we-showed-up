@@ -1,8 +1,8 @@
 import sys
 
 from main import functionality as UIFunctionality
-from eventconfiguration import EventConfiguration
-from ingestion_functionality import IngestionFunctionality
+from EventConfiguration import EventConfiguration
+from IngestionFunctionality import IngestionFunctionality
 from SPLUNKInterface import SPLUNKInterface
 from manage_tables import manage_tables as TableFunctionality
 

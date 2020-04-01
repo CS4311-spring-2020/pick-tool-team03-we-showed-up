@@ -1,4 +1,5 @@
 class EventConfiguration:
+
     def __init__(self, name="", description="", starttime="", endtime="", rootpath="", whitefolder="", redfolder="",
                  bluefolder="", lead=True, leadIP="", connections=0):
         self.name = name
@@ -20,3 +21,12 @@ class EventConfiguration:
             if i == "":
                 return false
         return true
+
+    def get_name(self):
+        return self.name
+
+    def get_start(self):
+        return self.starttime
+
+    def get_end(self):
+        return self.endtime
