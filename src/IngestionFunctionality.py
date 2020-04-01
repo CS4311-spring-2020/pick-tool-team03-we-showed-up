@@ -3,6 +3,7 @@ import shutil
 
 from LogFile import LogFile
 from SPLUNKInterface import SPLUNKInterface
+from Validator import Validator
 
 
 class IngestionFunctionality:
@@ -10,10 +11,12 @@ class IngestionFunctionality:
     def __init__(self, splunk=None, enforcement_action_report=None, validator=None, logFiles=[]):
         self.splunk = splunk
         self.enforcement_action_report = enforcement_action_report
-        self.validator = validator
+        self.start_date = "2020-02-20 00:00:00"
+        self.end_date = "2020-03-02 00:00:00"
+        start_date = self.start_date
+        end_date = self.end_date
+        self.validator = Validator(start_date, end_date)
         self.logFiles = logFiles
-        self.start_date = "2/20/2020 06:00:00"
-        self.end_date = "3/02/2020 06:00:00"
         print("initialized log files as ", logFiles)
 
     def add_splunk(self, splunk):
@@ -53,14 +56,14 @@ class IngestionFunctionality:
 
     def ingest_directory_to_splunk(self, directory, index, splunk, sourcetype="", source=""):
         self.read_log_files_from_directory(directory)
-        self.validate_files(self.start_date, self.end_date)
+        self.validate_files()
         #print("called ingest_directory_to_splunk")
         #for log_file in self.logFiles:
             #splunk.add_file_to_index(log_file.get_path(), index)
 
-    def validate_files(self, start_date, end_date):
+    def validate_files(self):
         for log_file in self.logFiles:
-            print(LogFile.get_path(log_file))
+            self.validator.validate_file(log_file)
             # Validate "file" (this is the filepath) send enforcement
             # action report as parameter to make sure we append the lines
             # maybe return a list of validated files that are set to be ingested to Splunk?
