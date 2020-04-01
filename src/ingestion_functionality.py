@@ -1,6 +1,8 @@
 import os
-from SPLUNKInterface import SPLUNKInterface
+import shutil
+
 from LogFile import LogFile
+from SPLUNKInterface import SPLUNKInterface
 
 
 class IngestionFunctionality:
@@ -15,21 +17,40 @@ class IngestionFunctionality:
     def add_splunk(self, splunk):
         self.splunk = splunk
 
-    def get_file_paths_from_folder(self, folder_path):
+    def get_temp_path(self, filepath):
+        filepath_split = filepath.split("/")
+        filepath_split[len(filepath_split)-1] = "_"+filepath_split[len(filepath_split)-1]
+        separator = "/"
+        new_path = separator.join(filepath_split)
+        print("old path is: ", filepath)
+        print("new path is: ", new_path)
+        return new_path
+
+
+    def read_log_files_from_directory(self, folder_path):
+        new_path = self.get_temp_path(folder_path)
+
+        # Creates the new directory if it doesn't exist yet
+        if not os.path.exists(new_path):
+            print("made new folder: ", new_path)
+            os.mkdir(new_path)
+
         for f in os.listdir(folder_path):
             if os.path.isfile(os.path.join(folder_path, f)):
-                print("trying to add file", f)
                 if not (any(x.name == f for x in self.logFiles)):
+                    # Check if it's an audio or image file
                     if (".mp3" in f) or (".wav" in f) or (".png" in f) or (".jpg" in f) or (".jpeg" in f):
                         print("Transcribing ... ", f)
                         # TODO: Transcribe here
 
                     else:
+                        # Copy the file into the hidden directory and appends it to the logFile list
                         print("Added file directly  ", f)
-                        self.logFiles.append(LogFile(f, folder_path + "/" + f))
+                        shutil.copy(os.path.join(folder_path, f), new_path)
+                        self.logFiles.append(LogFile(f, new_path + "/" + f))
 
     def ingest_directory_to_splunk(self, directory, index, splunk, sourcetype="", source=""):
-        self.get_file_paths_from_folder(directory)
+        self.read_log_files_from_directory(directory)
         print("called ingest_directory_to_splunk")
         for log_file in self.logFiles:
             splunk.add_file_to_index(log_file.get_path(), index)
