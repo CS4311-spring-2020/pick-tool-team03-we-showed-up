@@ -12,8 +12,8 @@ from PyQt5.QtCore import *
 
 if __name__ == "__main__":
     event_config = EventConfiguration(name="main")
-    ingestion = IngestionFunctionality()
     splunk = SPLUNKInterface()
+    ingestion = IngestionFunctionality(splunk=splunk)
     table_manager = TableFunctionality()
     ui_f = UIFunctionality(table_manager=table_manager, splunk=splunk,
                            ingest_funct=ingestion, event_config=event_config)

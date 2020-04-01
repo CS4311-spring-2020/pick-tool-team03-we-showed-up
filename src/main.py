@@ -40,7 +40,7 @@ class functionality(Ui_PICK):
         self.splunk = splunk
         self.event_config = event_config
         self.ingest_funct = ingest_funct
-        # self.super()
+        pass
 
     def set_splunk(self, splunk):
         self.splunk = splunk
@@ -389,7 +389,6 @@ class functionality(Ui_PICK):
         else:
             textbox_widget.setPlainText(str(directory))
             self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
-            # Ingest.get_file_paths_from_folder(str(directory))
 
     def update_tables_periodically(self):
         while True:
