@@ -4,21 +4,21 @@ from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from mainwindow import Ui_PICK
-from choose_Vector_Screen import Ui_Dialog as UI_ChooseVector
-from IP_Error_ConnectionLimitReached import Ui_Dialog as UIConnectionLimit
-from IP_Error_duplicateLeadIP import Ui_Dialog as UIDuplicateLeadIP
-from IP_Error_LeadIPBoxSelected import Ui_Dialog as UILeadIPSelected
-from IP_Error_LeadIPNotProvided import Ui_Dialog as UILeadIPNotProvided
-from icon_Configuration_Dialog import Ui_Dialog as UIIconConfigDialog
-from vector_DB_Lead import Ui_Dialog as UIVectorDBLead
-from vector_DB_Analyst import Ui_Dialog as UIVectorDBAnalyst
+from UI.mainwindow import Ui_PICK
+from UI.choose_Vector_Screen import Ui_Dialog as UI_ChooseVector
+from UI.IP_Error_ConnectionLimitReached import Ui_Dialog as UIConnectionLimit
+from UI.IP_Error_duplicateLeadIP import Ui_Dialog as UIDuplicateLeadIP
+from UI.IP_Error_LeadIPBoxSelected import Ui_Dialog as UILeadIPSelected
+from UI.IP_Error_LeadIPNotProvided import Ui_Dialog as UILeadIPNotProvided
+from UI.icon_Configuration_Dialog import Ui_Dialog as UIIconConfigDialog
+from UI.vector_DB_Lead import Ui_Dialog as UIVectorDBLead
+from UI.vector_DB_Analyst import Ui_Dialog as UIVectorDBAnalyst
 from manage_tables import manage_tables
 from SPLUNKInterface import SPLUNKInterface
-from logentrydescription import Ui_Dialog as LogEntryDescription
-from EventConfigurationNew import Ui_Dialog as UiEventConfigNew
-from EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
-from EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
+from UI.logentrydescription import Ui_Dialog as LogEntryDescription
+from UI.EventConfigurationNew import Ui_Dialog as UiEventConfigNew
+from UI.EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
+from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from ingestion_functionality import IngestionFunctionality as Ingest
 from eventconfiguration import EventConfiguration
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
@@ -32,15 +32,31 @@ rad = 20
 
 
 class functionality(Ui_PICK):
-    table_manager = manage_tables()
-    splunk = SPLUNKInterface()
+
     user_change = True
-    event_config = EventConfiguration()
-    event_config.name = "main"
-    ingest_funct = Ingest()
+
+    def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None):
+        self.table_manager = table_manager
+        self.splunk = splunk
+        self.event_config = event_config
+        self.ingest_funct = ingest_funct
+        # self.super()
+
+    def set_splunk(self, splunk):
+        self.splunk = splunk
+
+    def set_table_manager(selfs, table_manager):
+        self.table_manager = table_manager
+
+    def set_event_config(self, event_config):
+        self.event_config = event_config
+
+    def set_ingestion_funct(self, ingestion_func):
+        self.ingest_funct = ingestion_func
 
     def setupUi(self, PICK):
         super().setupUi(PICK)
+        """
         path.moveTo(0, 0)
         # path.cubicTo(-30, 70, 35, 115, 100, 100);
         path.lineTo(200, 100);
@@ -56,7 +72,7 @@ class functionality(Ui_PICK):
         # view.resize(600, 400)
         # view.show()
         # app.exec_()
-
+        """
         self.vc_add_button.clicked.connect(self.add_node)
         self.table_manager.populate_lfc_table(self.tableWidget)
         self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
@@ -78,7 +94,6 @@ class functionality(Ui_PICK):
         self.vc_export_pushButton.clicked.connect(self.export_graph)
         self.log_file_export_pushButton.clicked.connect(self.export_graph)
         self.ear_export_pushButton.clicked.connect(self.export_graph)
-        self.tableWidget.itemChanged.connect(self.printItemChanged)
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
 
         # SPLUNK
@@ -86,9 +101,9 @@ class functionality(Ui_PICK):
         self.actionOpen.triggered.connect(self.open_events_config)
         self.actionEdit.triggered.connect(self.edit_event_config)
 
+        # Starts auto-refresh logs thread
         thread = threading.Thread(target=self.update_tables_periodically)
         thread.start()
-        # SPLUNK WEIRD AF, DO NOT TOUCH
 
     #SPLUNK - New Event
     def open_new_event_config(self):
@@ -116,11 +131,16 @@ class functionality(Ui_PICK):
             ec_ui.event_creation_status_label.setText(text)
 
     def start_ingestion(self, ec_ui):
-        red_path = ec_ui.textbox_red_team_folder.toPlainText()
-        blue_path = ec_ui.textbox_blue_team_folder.toPlainText()
-        white_path = ec_ui.textbox_white_team_folder.toPlainText()
-        root_path = ec_ui.textbox_root_directory.toPlainText()
-        self.splunk.addFilesMonitorDirectory(red_team_path, blue_team_path, white_team_path, root_path)
+        self.event_config.redfolder = ec_ui.textbox_red_team_folder.toPlainText()
+        self.event_config.bluefolder = ec_ui.textbox_blue_team_folder.toPlainText()
+        self.event_config.whitefolder = ec_ui.textbox_white_team_folder.toPlainText()
+        self.event_config.rootpath = ec_ui.textbox_root_directory.toPlainText()
+        self.splunk.addFilesMonitorDirectory(self.event_config.redfolder, self.event_config.bluefolder,
+                                             self.event_config.whitefolder, self.event_config.rootpath)
+        # Send folders to ingestion
+        # self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, sourcetype="red team")
+        # self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, sourcetype="blue team")
+        # self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, sourcetype="white team")
 
     #SPLUNK - Open Event
     def open_events_config(self):
@@ -176,9 +196,6 @@ class functionality(Ui_PICK):
         import random
         path.lineTo(random.randint(50, 300), random.randint(50, 300))
         scene.addItem(Path(path, scene))
-
-    def printItemChanged(self, item):
-        print("item changed row:", item.row(), " column: ", item.column())
 
     def edit_table_node(self, item):
         if not self.user_change:
@@ -382,53 +399,6 @@ class functionality(Ui_PICK):
             if change == 1:
                 self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
 
-
-class Node(QtWidgets.QGraphicsEllipseItem):
-    def __init__(self, path, index):
-        super(Node, self).__init__(-rad, -rad, 2 * rad, 2 * rad)
-
-        self.rad = rad
-        self.path = path
-        self.index = index
-
-        self.setZValue(1)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
-        self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
-        self.setBrush(Qt.white)
-
-    def itemChange(self, change, value):
-        if change == QtWidgets.QGraphicsItem.ItemPositionChange:
-            self.path.updateElement(self.index, value.toPoint())
-        return QtWidgets.QGraphicsEllipseItem.itemChange(self, change, value)
-
-
-class Path(QtWidgets.QGraphicsPathItem):
-    
-    def __init__(self, path, scene):
-        colors = ["red","white", "blue","red","blue","white","red","blue","white"]
-        super(Path, self).__init__(path)
-        for i in range(path.elementCount()):
-            node = Node(self, i)
-            node.setPos(QPointF(path.elementAt(i)))
-            node_name = "node " + str(i+1)
-            node.setBrush(QBrush(QColor(colors[i])))
-            text = QGraphicsSimpleTextItem(node_name)
-            text.setParentItem(node)
-            text.setPen(QPen(QPen(QColor("black"))))
-            scene.addItem(node)
-        self.setPen(QtGui.QPen(Qt.black, 1.75))
-    def updateElement(self, index, pos):
-        path.setElementPositionAt(index, pos.x(), pos.y())
-        self.setPath(path)
-
-
-# app = QtWidgets.QApplication([])
-
-# application = mywindow()
-
-# application.show()
-
-# sys.exit(app.exec())
 
 if __name__ == "__main__":
     app = QApplication([])

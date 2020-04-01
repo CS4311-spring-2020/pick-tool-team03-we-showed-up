@@ -12,3 +12,11 @@ class EventConfiguration:
         self.lead = lead
         self.leadIP = leadIP
         self.connections = connections
+
+    # Checks if all the attributes are filled
+    def is_complete(self):
+        dict = self.__dict__()
+        for i in dict.values():
+            if i == "":
+                return false
+        return true
