@@ -24,7 +24,7 @@ class ImageFeeder:
             image_text = pt.image_to_string(image_file, lang ="eng") #Transcribes the image file
 
             #f_path = os.path.join(final_path,'time_'+ img + ".txt") # Set path to store in specified final_path
-            f_parsed = open(f_path,"w") # Write to specified path
+            f_parsed = open(filename,"w") # Write to specified path
             f_parsed = write(image_text)
             f_parsed.close() # f_parsed is the new transcrbed file
 

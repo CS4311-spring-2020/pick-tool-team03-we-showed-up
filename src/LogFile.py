@@ -10,6 +10,8 @@ class LogFile:
         self.ingestion_status = False
         # True if the analyst decides that this file should be treated as a validated log file
         self.acknowledgement_status = False
+        # List of line number and errors
+        self.errors = []
         pass
 
     def get_name(self):
@@ -24,6 +26,11 @@ class LogFile:
     def mark_validated(self):
         self.validation_status = 1
 
+    def mark_invalid(self):
+        self.validation_status = 3
+
     def is_validated(self):
         return self.validation_status == 1
 
+    def is_invalid(self):
+        return self.validation_status == 3
