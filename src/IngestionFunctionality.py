@@ -6,10 +6,9 @@ from SPLUNKInterface import SPLUNKInterface
 
 from Transcribers.OCRFeeder import ImageFeeder
 from Validator import Validator
-
+from Transcribers.AudioTranscriber import AudioRecognition
 
 class IngestionFunctionality:
-
     def __init__(self, splunk=None, enforcement_action_report=None, validator=None, logFiles=[]):
         self.splunk = splunk
         self.enforcement_action_report = enforcement_action_report
@@ -45,12 +44,15 @@ class IngestionFunctionality:
         for f in os.listdir(folder_path):
             if os.path.isfile(os.path.join(folder_path, f)):
                 if not (any(x.name == f for x in self.logFiles)):
-                    # Check if it's an audio or image file
-                    if (".mp3" in f) or (".wav" in f) or (".png" in f) or (".jpg" in f) or (".jpeg" in f):
-                        print("Transcribing ... ", f)
-                        # TODO: Transcribe here
-                        OCR
+                    # Check if it's an audio file
+                    if ".wav" in f:
+                        audio_path = AudioRecognition.audio_transcribe(folder_path, new_path, f)
+                        self.logFiles.append(LogFile(f, audio_path))
 
+                    elif (".png" in f) or (".jpg" in f) or (".jpeg" in f):
+                        # If Image file transcribe it with the OCR
+                        image_path = ImageFeeder.OCR_transcription(folder_path, new_path, f)
+                        self.logFiles.append(LogFile(f, image_path))
 
                     else:
                         # Copy the file into the hidden directory and appends it to the logFile list
