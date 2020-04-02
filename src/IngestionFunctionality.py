@@ -10,14 +10,14 @@ from Transcribers.AudioTranscriber import AudioRecognition
 from cleanser import Cleanser as Cleanser
 
 class IngestionFunctionality:
-    def __init__(self, splunk=None, enforcement_action_report=None, table_manager=None, validator=None, logFiles=[]):
+    def __init__(self, splunk=None, enforcement_action_report=None, table_manager=None, validator=None, logFiles=[],
+                 event_config = None):
         self.splunk = splunk
         self.enforcement_action_report = enforcement_action_report
-        self.start_date = "2000-02-20 00:00:00"
-        self.end_date = "2021-03-02 00:00:00"
-        start_date = self.start_date
-        end_date = self.end_date
-        self.validator = Validator(start_date, end_date)
+        self.event_config = event_config
+        self.event_config.starttime = "2000-02-20 00:00:00"
+        self.event_config.endtime = "2021-03-02 00:00:00"
+        self.validator = Validator(self.event_config.starttime, self.event_config.endtime)
         self.logFiles = logFiles
         self.table_manager = table_manager
         print("initialized log files as ", logFiles)
@@ -64,6 +64,7 @@ class IngestionFunctionality:
                         # Copy the file into the hidden directory and appends it to the logFile list
                         shutil.copy(os.path.join(folder_path, f), new_path)
                         self.logFiles.append(LogFile(f, new_path + "/" + f))
+        self.table_manager.populate_log_file_table(self.logFiles)
 
     def cleanse_files(self):
         for log_file in self.logFiles:
@@ -77,9 +78,12 @@ class IngestionFunctionality:
         self.read_log_files_from_directory(directory)
         self.cleanse_files()
         self.validate_files()
-        #print("called ingest_directory_to_splunk")
-        #for log_file in self.logFiles:
-            #splunk.add_file_to_index(log_file.get_path(), index)
+
+        for log_file in self.logFiles:
+            if log_file.is_validated():
+                splunk.add_file_to_index(log_file.get_path(), index)
+                log_file.mark_ingested()
+                self.table_manager.populate_log_file_table(self.logFiles)
 
     def validate_files(self):
         for log_file in self.logFiles:
@@ -100,8 +104,21 @@ class IngestionFunctionality:
                 log_file.mark_validated()
                 print("\nFile valid.\n")
 
-        # Send signal of Enforcement action report changes (this will be connected to the UI)
+            self.table_manager.populate_log_file_table(self.logFiles)
 
-        #for log_file in self.logFiles:
-            #if log_file.is_validated():
-                #splunk.add_file_to_index(f, index)
+    def validate_file_anyway(self, index, splunk):
+        marked = 0
+        for i in range(len(self.logFiles)):
+            if self.logFiles[i].is_marked():
+                marked = i
+                break
+
+        if self.logFiles[marked].is_validated():
+            return
+
+        self.logFiles[marked].mark_validated()
+        self.logFiles[marked].errors = []
+        splunk.add_file_to_index(self.logFiles[marked].get_path(), index)
+        self.logFiles[marked].mark_ingested()
+        self.table_manager.populate_log_file_table(self.logFiles)
+        self.table_manager.populate_enforcement_action_report_table(self.logFiles[marked])

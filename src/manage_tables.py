@@ -8,8 +8,13 @@ import csv
 
 
 class manage_tables:
-    def __init__(self):
-        self.enforcement_action_report_table = None
+
+    enforcement_action_report_table = None
+    log_file_table = None
+
+    def __init__(self, enforcement_action_report_table=None, log_file_table=None):
+        self.enforcement_action_report_table = enforcement_action_report_table
+        self.log_file_table = log_file_table
         pass
 
 
@@ -24,6 +29,12 @@ class manage_tables:
                             ["1210", "Unreadable line format"]]
 
     enforment_action_reports = [enforcement_action_1]
+
+    def add_enforcement_action_report_table(self, table):
+        self.enforcement_action_report_table = table
+
+    def add_log_file_table(self, table):
+        self.log_file_table = table
 
     def populate_lfc_table(self, table_widget):
         table_widget.setRowCount(len(self.log_file))
@@ -125,8 +136,23 @@ class manage_tables:
             writer = csv.writer(f)
             writer.writerows(list2d)
 
+    def populate_enforcement_action_report_table(self, log_file):
+        self.enforcement_action_report_table.setRowCount(len(log_file.errors))
+        for i in range(len(log_file.errors)):
+            self.enforcement_action_report_table.setItem(i, 0, QTableWidgetItem(str(log_file.errors[i][0])))
+            self.enforcement_action_report_table.setItem(i, 1, QTableWidgetItem(log_file.errors[i][1]))
 
-    def update_enforcement_action_report_table(self, logFiles):
-        for f in logFiles:
-            if f.is_invalid():
-                print("")
+    def populate_log_file_table(self, log_files):
+        self.log_file_table.setRowCount(len(log_files))
+        for i in range(len(log_files)):
+            self.log_file_table.setItem(i, 0, QTableWidgetItem(log_files[i].name))
+            self.log_file_table.setItem(i, 1, QTableWidgetItem(log_files[i].path))
+            self.log_file_table.setItem(i, 2, QTableWidgetItem("Cleansed"))
+            self.log_file_table.setItem(i, 3, QTableWidgetItem(log_files[i].get_validation_status()))
+            self.log_file_table.setItem(i, 4, QTableWidgetItem(log_files[i].get_ingestion_status()))
+            self.log_file_table.setItem(i, 5, QTableWidgetItem(""))
+
+            if log_files[i].is_marked():
+                self.log_file_table.item(i, 5).setCheckState(QtCore.Qt.Checked)
+            else:
+                self.log_file_table.item(i, 5).setCheckState(QtCore.Qt.Unchecked)

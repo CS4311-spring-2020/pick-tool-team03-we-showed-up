@@ -12,7 +12,27 @@ class LogFile:
         self.acknowledgement_status = False
         # List of line number and errors
         self.errors = []
+
+        self.marked = False
         pass
+
+    def is_marked(self):
+        return self.marked
+
+    def mark_ingested(self):
+        self.ingestion_status = True
+
+    def get_ingestion_status(self):
+        if self.ingestion_status:
+            return "Ingested"
+        return "Not Ingested"
+
+    def get_validation_status(self):
+        if self.validation_status == 1:
+            return "Validated"
+        elif self.validation_status == 2:
+            return "Not Validated"
+        return "Invalid"
 
     def get_folder_path(self):
         return self.path.strip(self.name)

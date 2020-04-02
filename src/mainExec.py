@@ -12,9 +12,9 @@ from PyQt5.QtCore import *
 
 if __name__ == "__main__":
     event_config = EventConfiguration(name="main")
-    splunk = SPLUNKInterface()
+    splunk = SPLUNKInterface(event_config=event_config)
     table_manager = TableFunctionality()
-    ingestion = IngestionFunctionality(splunk=splunk, table_manager=table_manager)
+    ingestion = IngestionFunctionality(splunk=splunk, table_manager=table_manager, event_config=event_config)
     ui_f = UIFunctionality(table_manager=table_manager, splunk=splunk,
                            ingest_funct=ingestion, event_config=event_config)
 

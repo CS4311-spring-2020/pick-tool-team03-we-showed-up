@@ -73,8 +73,12 @@ class functionality(Ui_PICK):
         # view.show()
         # app.exec_()
         """
+
+        self.table_manager.add_enforcement_action_report_table(self.tableWidget_2)
+        self.table_manager.add_log_file_table(self.tableWidget)
+
         self.vc_add_button.clicked.connect(self.add_node)
-        self.table_manager.populate_lfc_table(self.tableWidget)
+        # self.table_manager.populate_lfc_table(self.tableWidget)
         self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
         self.table_manager.populate_relationship_table(self.vc_relationship_table, 0)
         self.table_manager.populate_vector_table(self.vc_node_table, 0)
@@ -95,11 +99,14 @@ class functionality(Ui_PICK):
         self.log_file_export_pushButton.clicked.connect(self.export_graph)
         self.ear_export_pushButton.clicked.connect(self.export_graph)
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
+        self.tableWidget.itemChanged.connect(self.log_table_clicked)
 
         # SPLUNK
         self.actionNew.triggered.connect(self.open_new_event_config)
         self.actionOpen.triggered.connect(self.open_events_config)
         self.actionEdit.triggered.connect(self.edit_event_config)
+
+        self.pushButton_3.clicked.connect(lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
 
         # Starts auto-refresh logs thread
         thread = threading.Thread(target=self.update_tables_periodically)
@@ -111,7 +118,6 @@ class functionality(Ui_PICK):
         ec_ui = UiEventConfigNew()
         ec_ui.setupUi(ec_dialog)
         ec_ui.button_save_event.clicked.connect(lambda: self.call_create_index(ec_ui))
-        ec_ui.button_start_ingestion.clicked.connect(lambda: self.start_ingestion(ec_ui))
 
         ec_ui.textbox_root_directory.setPlainText(self.event_config.rootpath)
         ec_ui.textbox_white_team_folder.setPlainText(self.event_config.whitefolder)
@@ -119,10 +125,11 @@ class functionality(Ui_PICK):
         ec_ui.textbox_blue_team_folder.setPlainText(self.event_config.bluefolder)
 
         #save directories of teams
-        ec_ui.root_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_root_directory, team=0))
-        ec_ui.red_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_red_team_folder, team=1))
-        ec_ui.blue_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_blue_team_folder, team=2))
-        ec_ui.white_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_white_team_folder, team=3))
+        ec_ui.button_start_ingestion.clicked.connect(self.start_ingestion)
+        ec_ui.root_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_root_directory, team=0))
+        ec_ui.red_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_red_team_folder, team=1))
+        ec_ui.blue_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_blue_team_folder, team=2))
+        ec_ui.white_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_white_team_folder, team=3))
         ec_dialog.exec_()
 
     #SPLUNK - Edit Event
@@ -151,20 +158,10 @@ class functionality(Ui_PICK):
         else:
             text = "Event " + event_name + " added."
             self.event_config.name = event_name
+            self.event_config.description = event_description
+            self.event_config.starttime = ec_ui.dateTimeEdit.dateTime().toPyDateTime()
+            self.event_config.endtime = ec_ui.date_event_end.dateTime().toPyDateTime()
             ec_ui.event_creation_status_label.setText(text)
-
-    def start_ingestion(self, ec_ui):
-        self.event_config.redfolder = ec_ui.textbox_red_team_folder.toPlainText()
-        self.event_config.bluefolder = ec_ui.textbox_blue_team_folder.toPlainText()
-        self.event_config.whitefolder = ec_ui.textbox_white_team_folder.toPlainText()
-        self.event_config.rootpath = ec_ui.textbox_root_directory.toPlainText()
-        #self.splunk.addFilesMonitorDirectory(self.event_config.redfolder, self.event_config.bluefolder,
-                                             #self.event_config.whitefolder, self.event_config.rootpath)
-
-        # Send folders to ingestion
-        # self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, sourcetype="red team")
-        # self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, sourcetype="blue team")
-        # self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, sourcetype="white team")
 
     #SPLUNK - Open Event
     def open_events_config(self):
@@ -209,6 +206,28 @@ class functionality(Ui_PICK):
         import random
         path.lineTo(random.randint(50, 300), random.randint(50, 300))
         scene.addItem(Path(path, scene))
+
+    def log_table_clicked(self, item):
+        if not self.user_change:
+            return
+        print("changing log table")
+        if item.column() == 5:
+            self.user_change = False
+            self.ingest_funct.logFiles[item.row()].marked = not (item.checkState() == 0)
+
+            if not (item.checkState() == 0):
+                self.label_12.setText(self.ingest_funct.logFiles[item.row()].get_name())
+                self.table_manager.populate_enforcement_action_report_table(self.ingest_funct.logFiles[item.row()])
+
+            numlist = list(range(len(self.ingest_funct.logFiles)))
+            numlist.remove(item.row())
+
+            for i in numlist:
+                self.ingest_funct.logFiles[i].marked = False
+                self.tableWidget.setItem(i, 5, QTableWidgetItem(""))
+                self.tableWidget.item(i, 5).setCheckState(QtCore.Qt.Unchecked)
+
+            self.user_change = True
 
     def edit_table_node(self, item):
         if not self.user_change:
@@ -395,7 +414,7 @@ class functionality(Ui_PICK):
         self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
     
     #Open file directory when clicking button '...' in new Event Configuration
-    def open_ingestion_directory_directory_selector(self, textbox_widget=None, team=0):
+    def open_ingestion_directory_selector(self, textbox_widget=None, team=0):
         directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
         if textbox_widget is None:
             print(directory)
@@ -410,7 +429,13 @@ class functionality(Ui_PICK):
                 self.event_config.whitefolder = str(directory)
                 
             textbox_widget.setPlainText(str(directory))
-            self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
+            # self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
+
+    def start_ingestion(self):
+        self.ingest_funct.ingest_directory_to_splunk(self.event_config.rootpath, self.event_config.name, self.splunk)
+        self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, self.event_config.name, self.splunk)
+        self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, self.event_config.name, self.splunk)
+        self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
 
     def update_tables_periodically(self):
         while True:

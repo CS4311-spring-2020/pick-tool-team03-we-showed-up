@@ -8,12 +8,12 @@ from logentry import LogEntry
 
 class SPLUNKInterface:
 
-    def __init__(self, event_name="main"):
+    def __init__(self, event_config=None):
         # starting splunk session (need to login)
         # subprocess.run(["./splunk start", event_name])
 
         # Event Data.. should we make a class?
-        self.event_name = event_name
+        self.event_config = event_config
         self.event_description = ""
         self.ask_username_password()
         self.path = ""
@@ -23,9 +23,9 @@ class SPLUNKInterface:
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
-        if len(self.event_name) > 1:
+        if len(self.event_config.name) > 1:
             self.logentries = self.get_entries()
-            self.count = self.splunkClient.indexes[self.event_name].totalEventCount
+            self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
 
     # creating a new index (event)
     # need to add date time-frames
@@ -33,13 +33,13 @@ class SPLUNKInterface:
         for index in self.splunkClient.indexes.list():
             if event_name == index.name:
                 return 1
-        self.event_name = event_name
+        self.event_config.name = event_name
         self.splunkClient.indexes.create(name=event_name)
         self.event_description = event_description
 
     #open an event
     def open_event(self, event_name):
-        self.event_name = event_name
+        self.event_config.name = event_name
         self.event_description = "Event description for " + event_name + "goes here"
         return self.event_description
 
@@ -59,7 +59,7 @@ class SPLUNKInterface:
         kwargs_export = {"earliest_time": "-1000h",
                          "latest_time": "now",
                          "search_mode": "normal"}
-        search_query_export = "search index=" + self.event_name
+        search_query_export = "search index=" + self.event_config.name
         export_search_results = self.splunkClient.jobs.export(search_query_export, **kwargs_export)
         reader = results.ResultsReader(export_search_results)
 
@@ -98,7 +98,7 @@ class SPLUNKInterface:
             print("Failed to upload, error ", str(e))
 
     def get_log_count(self):
-        if self.count_changed and self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
+        if self.count_changed and self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount:
             try:
                 self.refresh_log_entries()
                 self.count_changed = False
@@ -107,9 +107,9 @@ class SPLUNKInterface:
                 print("Unable to refresh log entries, error is: ", str(e))
                 return 0
 
-        if not self.count == self.splunkClient.indexes[self.event_name].totalEventCount:
+        if not self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount:
             self.count_changed = True
-            self.count = self.splunkClient.indexes[self.event_name].totalEventCount
+            self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
             print("Updated total count atm is: ", self.count)
 
         return 0
