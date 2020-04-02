@@ -13,21 +13,22 @@ from IngestionFunctionality import new_path
 #f_parser.add_argument("-i", "--image", required=True, help="new_path")
 #f_args = vars(f_parser.parse_args())
 
-path = new_path # Source Folder/Directory of raw files
-final_path = new_path # Destination Folder/Directory of transcribed files
+class ImageFeeder:
+    def OCRTranscription(self, folder_path, new_path, f):
+        path = new_path # Source Folder/Directory of raw files
+        final_path = new_path # Destination Folder/Directory of transcribed files
+        for img in os.listdir(path):
+            inputPath = os.path.join(path,img)
 
-def main():
-    for img in os.listdir(path):
-        inputPath = os.path.join(path,img)
+            image_file = Image.open(inputPath) #Opens file, pre-transcription
+            image_text = pt.image_to_string(image_file, lang ="eng") #Transcribes the image file
 
-        image_file = Image.open(inputPath) #Opens file, pre-transcription
-        image_text = pt.image_to_string(image_file, lang ="eng") #Transcribes the image file
-
-        f_path = os.path.join(final_path,'time_'+ img + ".txt") # Set path to store in specified final_path
-        f_parsed = open(f_path,"w") # Write to specified path
-        f_parsed = write(image_text)
-        f_parsed.close() # f_parsed is the new transcrbed file
+            #f_path = os.path.join(final_path,'time_'+ img + ".txt") # Set path to store in specified final_path
+            f_parsed = open(f_path,"w") # Write to specified path
+            f_parsed = write(image_text)
+            f_parsed.close() # f_parsed is the new transcrbed file
 
 
-if __name__ == "__main__":
-    pass
+    if __name__ == "__main__":
+        pass
+

@@ -3,6 +3,7 @@ import shutil
 
 from LogFile import LogFile
 from SPLUNKInterface import SPLUNKInterface
+from Transcribers/OCRFeeder import ImageFeeder
 
 
 class IngestionFunctionality:
@@ -44,6 +45,8 @@ class IngestionFunctionality:
                     if (".mp3" in f) or (".wav" in f) or (".png" in f) or (".jpg" in f) or (".jpeg" in f):
                         print("Transcribing ... ", f)
                         # TODO: Transcribe here
+                        OCR
+
 
                     else:
                         # Copy the file into the hidden directory and appends it to the logFile list
