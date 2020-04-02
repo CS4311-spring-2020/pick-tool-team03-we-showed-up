@@ -22,10 +22,9 @@ class Validator:
     #This method takes a singular log file and validates the timestamp.
     def validate_file(self, log_file):
 
-        invalid_file_info = []
-
         line_number = 0
         for line in open(log_file.get_path()):
+            invalid_file_info = []
             errormessage = ""
             timestamp = ""
             #check if timestamp exists.
