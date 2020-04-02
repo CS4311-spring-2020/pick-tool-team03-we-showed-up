@@ -23,4 +23,5 @@ class ImageFeeder:
         f_parsed.write(image_text)
         f_parsed.close()  # f_parsed is the new transcrbed file
         # return the final path of the file
-        return final_path
+        return f
+

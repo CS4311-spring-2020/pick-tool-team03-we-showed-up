@@ -6,9 +6,14 @@ from demo_data import DemoData
 from random import randint
 import csv
 
-class manage_tables:
-    fake_data = DemoData()
 
+class manage_tables:
+    def __init__(self):
+        self.enforcement_action_report_table = None
+        pass
+
+
+    fake_data = DemoData()
 
     log_file = [["observer_log_1.txt", "c:\logs\observer\\feblogs", "100%", "100%", "100%", True],
                 ["observer_log_2.txt", "c:\logs\observer\marchlogs", "100%", "100%", "100%", False],
@@ -30,7 +35,7 @@ class manage_tables:
             if self.log_file[i][5]:
                 table_widget.item(i, 5).setCheckState(QtCore.Qt.Checked)
             else:
-                table_widget.item(i,5).setCheckState(QtCore.Qt.Unchecked)
+                table_widget.item(i, 5).setCheckState(QtCore.Qt.Unchecked)
 
     # Takes a list of log entries and a table widget, populates the table widget with the log entries in the list
     def populate_logentry_table(self, table_widget, logentries):
@@ -51,7 +56,7 @@ class manage_tables:
             table_widget.setItem(i, 4, QTableWidgetItem(logentries[i].get_vector_list_str()))
 
     def populate_vector_table(self, table_widget, vector_num):
-        if vector_num <0:
+        if vector_num < 0:
             return
         table_widget.setRowCount(len(self.fake_data.vector_list[vector_num].nodes))
 
@@ -105,11 +110,11 @@ class manage_tables:
             print("Vector #", i, " ", self.fake_data.vector_list[i].vector_name)
 
     def create_node(self, vector_num):
-        newNode = [str(randint(0,9999)),'','','', '','','','', '',True]
+        newNode = [str(randint(0, 9999)), '', '', '', '', '', '', '', '', True]
         self.fake_data.vector_list[vector_num].nodes.insert(0, newNode)
 
     def create_relationship(self, vector_num):
-        new_relationship = [str(randint(0,999)), '', '', '']
+        new_relationship = [str(randint(0, 999)), '', '', '']
         self.fake_data.vector_list[vector_num].relationships.insert(0, new_relationship)
 
     def edit_node_table(self, row, column, value, vector_num):
@@ -119,5 +124,9 @@ class manage_tables:
         with open(filename, "w") as f:
             writer = csv.writer(f)
             writer.writerows(list2d)
-           
-        
+
+
+    def update_enforcement_action_report_table(self, logFiles):
+        for f in logFiles:
+            if f.is_invalid():
+                print("")

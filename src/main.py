@@ -112,11 +112,34 @@ class functionality(Ui_PICK):
         ec_ui.setupUi(ec_dialog)
         ec_ui.button_save_event.clicked.connect(lambda: self.call_create_index(ec_ui))
         ec_ui.button_start_ingestion.clicked.connect(lambda: self.start_ingestion(ec_ui))
+
+        ec_ui.textbox_root_directory.setPlainText(self.event_config.rootpath)
+        ec_ui.textbox_white_team_folder.setPlainText(self.event_config.whitefolder)
+        ec_ui.textbox_red_team_folder.setPlainText(self.event_config.redfolder)
+        ec_ui.textbox_blue_team_folder.setPlainText(self.event_config.bluefolder)
+
         #save directories of teams
-        ec_ui.root_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_root_directory))
-        ec_ui.red_team_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_red_team_folder))
-        ec_ui.blue_team_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_blue_team_folder))
-        ec_ui.white_team_directory_pushButton.clicked.connect(lambda: self.openDirectorySelector(ec_ui.textbox_white_team_folder))
+        ec_ui.root_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_root_directory, team=0))
+        ec_ui.red_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_red_team_folder, team=1))
+        ec_ui.blue_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_blue_team_folder, team=2))
+        ec_ui.white_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_directory_selector(ec_ui.textbox_white_team_folder, team=3))
+        ec_dialog.exec_()
+
+    #SPLUNK - Edit Event
+    def edit_event_config(self):
+        ec_dialog = QtWidgets.QDialog()
+        ec_ui = UiEventConfigEdit()
+        ec_ui.setupUi(ec_dialog)
+
+        ec_ui.textbox_root_directory_edit.setPlainText(self.event_config.rootpath)
+        ec_ui.textbox_white_team_folder.setPlainText(self.event_config.whitefolder)
+        ec_ui.textbox_red_team_folder_edit.setPlainText(self.event_config.redfolder)
+        ec_ui.textbox_blue_team_folder_edit.setPlainText(self.event_config.bluefolder)
+
+        events = self.splunk.getIndexList()
+        for event in events:
+            ec_ui.comboBox.addItem(event)
+        ec_ui.button_save_event.clicked.connect
         ec_dialog.exec_()
 
     def call_create_index(self, ec_ui):
@@ -158,17 +181,6 @@ class functionality(Ui_PICK):
     def update_open_event_config(self, ec_ui):
         text = ec_ui.comboBox.currentData
         ec_ui.label_3.setText(text)
-
-    #SPLUNK - Edit Event
-    def edit_event_config(self):
-        ec_dialog = QtWidgets.QDialog()
-        ec_ui = UiEventConfigEdit()
-        ec_ui.setupUi(ec_dialog)
-        events = self.splunk.getIndexList()
-        for event in events:
-            ec_ui.comboBox.addItem(event)
-        ec_ui.button_save_event.clicked.connect
-        ec_dialog.exec_()
 
     #Vector
     def add_vector(self):
@@ -383,11 +395,20 @@ class functionality(Ui_PICK):
         self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
     
     #Open file directory when clicking button '...' in new Event Configuration
-    def openDirectorySelector(self, textbox_widget=None):
+    def open_ingestion_directory_directory_selector(self, textbox_widget=None, team=0):
         directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
         if textbox_widget is None:
             print(directory)
         else:
+            if team == 0:
+                self.event_config.rootpath = str(directory)
+            elif team == 1:
+                self.event_config.redfolder = str(directory)
+            elif team ==2:
+                self.event_config.bluefolder = str(directory)
+            elif team ==3:
+                self.event_config.whitefolder = str(directory)
+                
             textbox_widget.setPlainText(str(directory))
             self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
 

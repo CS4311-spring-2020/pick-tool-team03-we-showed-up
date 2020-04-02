@@ -36,5 +36,5 @@ class AudioRecognition:
         text_file.write(text)
         text_file.close()
 
-        return save_path
+        return file_name + ".txt"
 

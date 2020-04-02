@@ -14,6 +14,9 @@ class LogFile:
         self.errors = []
         pass
 
+    def get_folder_path(self):
+        return self.path.strip(self.name)
+
     def get_name(self):
         return self.name
 

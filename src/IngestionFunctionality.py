@@ -7,9 +7,10 @@ from SPLUNKInterface import SPLUNKInterface
 from Transcribers.OCRFeeder import ImageFeeder
 from Validator import Validator
 from Transcribers.AudioTranscriber import AudioRecognition
+from cleanser import Cleanser as Cleanser
 
 class IngestionFunctionality:
-    def __init__(self, splunk=None, enforcement_action_report=None, validator=None, logFiles=[]):
+    def __init__(self, splunk=None, enforcement_action_report=None, table_manager=None, validator=None, logFiles=[]):
         self.splunk = splunk
         self.enforcement_action_report = enforcement_action_report
         self.start_date = "2000-02-20 00:00:00"
@@ -18,6 +19,7 @@ class IngestionFunctionality:
         end_date = self.end_date
         self.validator = Validator(start_date, end_date)
         self.logFiles = logFiles
+        self.table_manager = table_manager
         print("initialized log files as ", logFiles)
 
     def add_splunk(self, splunk):
@@ -34,6 +36,10 @@ class IngestionFunctionality:
 
 
     def read_log_files_from_directory(self, folder_path):
+        if not os.path.exists(folder_path):
+            print(folder_path, " doesn't exist!")
+            return
+
         new_path = self.get_temp_path(folder_path)
 
         # Creates the new directory if it doesn't exist yet
@@ -46,22 +52,30 @@ class IngestionFunctionality:
                 if not (any(x.name == f for x in self.logFiles)):
                     # Check if it's an audio file
                     if ".wav" in f:
-                        audio_path = AudioRecognition.audio_transcribe(folder_path, new_path, f)
-                        self.logFiles.append(LogFile(f, audio_path))
+                        audio_name = AudioRecognition.audio_transcribe(folder_path, new_path, f)
+                        self.logFiles.append(LogFile(audio_name, os.path.join(new_path, audio_name)))
 
                     elif (".png" in f) or (".jpg" in f) or (".jpeg" in f):
                         # If Image file transcribe it with the OCR
-                        image_path = ImageFeeder.OCR_transcription(folder_path, new_path, f)
-                        self.logFiles.append(LogFile(f, image_path))
+                        image_name = ImageFeeder.OCR_transcription(folder_path, new_path, f)
+                        self.logFiles.append(LogFile(image_name, os.path.join(new_path, image_name)))
 
                     else:
                         # Copy the file into the hidden directory and appends it to the logFile list
-                        print("Added file directly  ", f)
                         shutil.copy(os.path.join(folder_path, f), new_path)
                         self.logFiles.append(LogFile(f, new_path + "/" + f))
 
+    def cleanse_files(self):
+        for log_file in self.logFiles:
+            Cleanser.reader(log_file.get_name(), log_file.get_folder_path())
+
     def ingest_directory_to_splunk(self, directory, index, splunk, sourcetype="", source=""):
+        if not os.path.exists(directory):
+            print(directory, " doesn't exist!")
+            return
+
         self.read_log_files_from_directory(directory)
+        self.cleanse_files()
         self.validate_files()
         #print("called ingest_directory_to_splunk")
         #for log_file in self.logFiles:
