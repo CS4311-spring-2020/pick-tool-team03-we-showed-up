@@ -5,8 +5,8 @@ from datetime import datetime as dt
 class Validator:
 
     def __init__(self, start_date, end_date):
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = dt.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+        self.end_date = dt.strptime(end_date, "%Y-%m-%d %H:%M:%S")
         self.expressions = []
         with open('ValidationFormats.txt',"r") as formats:
             for format in formats:
@@ -34,21 +34,19 @@ class Validator:
                 timestamp = re.search(expression,line)
                 if timestamp is not None:
                     timestamp = timestamp.group(0)
-                    time = dt.strptime(timestamp, self.date_time_styles[style_num])
-                    #print(time)
+                    log_entry_time = dt.strptime(timestamp, self.date_time_styles[style_num])
                     #compare timestamp to user timestamp
-                    #errormessage = "Timestamp invalid."
+                    if not (self.start_date <= log_entry_time <= self.end_date):
+                        errormessage = "Timestamp invalid."
                     break
                 style_num = style_num + 1
             if not timestamp:
                  errormessage = "Timestamp does not exist."
-                 #sprint(errormessage)
             if errormessage:
                  invalid_file_info.append(line_number)
                  invalid_file_info.append(errormessage)
-            #else:
-                 #print("success on line number:" + str(line_number))
-                 #print(timestamp)
+                 log_file.add_errors(invalid_file_info)
+                 log_file.mark_invalid()
             line_number = line_number + 1
 
         return log_file

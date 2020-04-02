@@ -34,3 +34,6 @@ class LogFile:
 
     def is_invalid(self):
         return self.validation_status == 3
+
+    def add_errors(self, error):
+        self.errors.append(error)
