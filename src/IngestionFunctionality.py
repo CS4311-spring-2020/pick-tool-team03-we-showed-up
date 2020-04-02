@@ -3,11 +3,9 @@ import shutil
 
 from LogFile import LogFile
 from SPLUNKInterface import SPLUNKInterface
-<<<<<<< HEAD
-from Transcribers/OCRFeeder import ImageFeeder
-=======
+
+from Transcribers.OCRFeeder import ImageFeeder
 from Validator import Validator
->>>>>>> 8c60c988c0a3e9edb356be05265101afd9a822ab
 
 
 class IngestionFunctionality:

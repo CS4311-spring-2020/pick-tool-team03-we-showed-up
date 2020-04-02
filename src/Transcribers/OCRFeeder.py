@@ -4,8 +4,6 @@ import argparse
 import difflib
 import os
 
-from IngestionFunctionality import new_path
-
 #PyTesseract uses Pillow to import the necessary packages needed for transcribing image files. The Image class in PIL
 # loads the input from disk in PIL format, required for PyTesseract.
 
