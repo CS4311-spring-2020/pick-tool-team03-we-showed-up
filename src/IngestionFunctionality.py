@@ -7,7 +7,7 @@ from SPLUNKInterface import SPLUNKInterface
 from Transcribers.OCRFeeder import ImageFeeder
 from Validator import Validator
 from Transcribers.AudioTranscriber import AudioRecognition
-from cleanser import Cleanser as Cleanser
+from Cleanser import Cleanser
 
 class IngestionFunctionality:
     def __init__(self, splunk=None, enforcement_action_report=None, table_manager=None, validator=None, logFiles=[],

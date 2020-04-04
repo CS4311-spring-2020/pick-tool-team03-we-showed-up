@@ -150,6 +150,9 @@ class functionality(Ui_PICK):
         ec_dialog.exec_()
 
     def call_create_index(self, ec_ui):
+        if (ec_ui.dateTimeEdit.dateTime() >= ec_ui.date_event_end.dateTime()):
+            ec_ui.event_creation_status_label.setText("Sorry, time range is invalid.")
+            return
         event_name = ec_ui.textbox_event_name.toPlainText()
         event_description = ec_ui.textbox_event_description.toPlainText()
         flag = self.splunk.createEvent(event_name, event_description)

@@ -24,11 +24,7 @@ class manage_tables:
                 ["observer_log_2.txt", "c:\logs\observer\marchlogs", "100%", "100%", "100%", False],
                 ["observer_log_3.txt", "c:\logs\\redteam\\feblogs", "100%", "100%", "100%", False]]
 
-    enforcement_action_1 = [["00006", "Timestamp out of range"],
-                            ["1012", "Empty line"],
-                            ["1210", "Unreadable line format"]]
-
-    enforment_action_reports = [enforcement_action_1]
+    enforment_action_reports = [[]]
 
     def add_enforcement_action_report_table(self, table):
         self.enforcement_action_report_table = table

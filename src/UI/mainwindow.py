@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.0
+# Created by: PyQt5 UI code generator 5.14.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -216,6 +216,7 @@ class Ui_PICK(object):
         self.horizontalLayout_2.addWidget(self.pushButton_4)
         self.gridLayout_4.addLayout(self.horizontalLayout_2, 3, 0, 1, 1)
         self.frame_3 = QtWidgets.QFrame(self.frame_2)
+        self.frame_3.setMinimumSize(QtCore.QSize(0, 40))
         self.frame_3.setMaximumSize(QtCore.QSize(16777215, 30))
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -595,7 +596,7 @@ class Ui_PICK(object):
         self.horizontalLayout_20.addWidget(self.tabWidget)
         PICK.setCentralWidget(self.centralwidget)
         self.menuBar = QtWidgets.QMenuBar(PICK)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1280, 20))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1280, 22))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -624,7 +625,7 @@ class Ui_PICK(object):
         self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(PICK)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(PICK)
 
     def retranslateUi(self, PICK):
@@ -775,13 +776,3 @@ class Ui_PICK(object):
         self.actionExit.setText(_translate("PICK", "Exit"))
         self.actionExit.setShortcut(_translate("PICK", "Ctrl+E"))
         self.actionEdit.setText(_translate("PICK", "Edit Event"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    PICK = QtWidgets.QMainWindow()
-    ui = Ui_PICK()
-    ui.setupUi(PICK)
-    PICK.show()
-    sys.exit(app.exec_())
