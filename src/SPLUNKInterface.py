@@ -56,7 +56,7 @@ class SPLUNKInterface:
         subprocess.run(["add monitor [-source]", path])
 
     def get_entries(self, keyword=""):
-        kwargs_export = {"earliest_time": "-1000h",
+        kwargs_export = {"earliest_time": "-5y",
                          "latest_time": "now",
                          "search_mode": "normal"}
         search_query_export = "search index=" + self.event_config.name
