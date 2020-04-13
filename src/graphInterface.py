@@ -1,4 +1,10 @@
-class Node(QtWidgets.QGraphicsEllipseItem):
+import os
+from PyQt5 import QtWidgets, QtGui, uic, QtCore
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+
+
+class GraphNode(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, path, index):
         super(Node, self).__init__(-rad, -rad, 2 * rad, 2 * rad)
 
@@ -36,3 +42,18 @@ class Path(QtWidgets.QGraphicsPathItem):
     def updateElement(self, index, pos):
         path.setElementPositionAt(index, pos.x(), pos.y())
         self.setPath(path)
+
+
+class GraphInterface:
+    def __init__(self, nodes=[]):
+        self.nodes = nodes
+        pass
+
+    def add_node(self, node):
+        print("must add node to graph")
+
+    def zoom(self, percentage):
+        print("must update view to: ", percentage, "%")
+
+    def export_graph(self, folder_path, file_name):
+        print("Must export graph to: ", os.path.join(folder_path, file_name))
