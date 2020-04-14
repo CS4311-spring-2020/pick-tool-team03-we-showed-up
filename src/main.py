@@ -35,11 +35,12 @@ class functionality(Ui_PICK):
 
     user_change = True
 
-    def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None):
+    def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None, network=None):
         self.table_manager = table_manager
         self.splunk = splunk
         self.event_config = event_config
         self.ingest_funct = ingest_funct
+        self.network = network
         pass
 
     def set_splunk(self, splunk):
