@@ -454,16 +454,20 @@ class functionality(Ui_PICK):
             ec_ui = SPLUNKLoginDialog()
             ec_ui.setupUi(ec_dialog)
             ec_ui.push_button_connect.clicked.connect(lambda: self.connect_lead(ec_ui))
+            ec_ui.push_button_cancel.clicked.connect(lambda: self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked))
             ec_dialog.exec_()
         else:
             print("lead unchecked, must disconnect")
 
     def connect_lead(self, ec_ui):
         print("Connecting client to Splunk ...")
-        self.splunk.connect_client(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text())
-        # Starts auto-refresh logs thread
-        thread = threading.Thread(target=self.update_tables_periodically)
-        thread.start()
+        if self.splunk.connect_client(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
+            # Starts auto-refresh logs thread
+            thread = threading.Thread(target=self.update_tables_periodically)
+            thread.start()
+        else:
+            print("Splunk connection failed")
+            self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)
 
 
 if __name__ == "__main__":

@@ -63,3 +63,5 @@ class Ui_Dialog(object):
 
         self.push_button_connect.clicked.connect(Dialog.accept)
         self.push_button_cancel.clicked.connect(Dialog.reject)
+        self.push_button_cancel.setDefault(False)
+        self.push_button_cancel.setAutoDefault(False)
