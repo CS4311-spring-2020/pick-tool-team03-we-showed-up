@@ -19,6 +19,7 @@ from UI.logentrydescription import Ui_Dialog as LogEntryDescription
 from UI.EventConfigurationNew import Ui_Dialog as UiEventConfigNew
 from UI.EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
+from UI.SPLUNK_Login_Dialog import Ui_Dialog as SPLUNKLoginDialog
 from IngestionFunctionality import IngestionFunctionality as Ingest
 from EventConfiguration import EventConfiguration
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
@@ -108,7 +109,7 @@ class functionality(Ui_PICK):
         self.actionEdit.triggered.connect(self.edit_event_config)
 
         self.pushButton_3.clicked.connect(lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
-        self.checkBox_lead.stateChanged.connect(self.connect_lead)
+        self.checkBox_lead.stateChanged.connect(self.connect_lead_triggered)
 
 
     #SPLUNK - New Event
@@ -447,15 +448,22 @@ class functionality(Ui_PICK):
             if change == 1:
                 self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
 
-    def connect_lead(self):
+    def connect_lead_triggered(self):
         if self.checkBox_lead.isChecked():
-            print("Connecting client to Splunk ...")
-            self.splunk.connect_client()
-            # Starts auto-refresh logs thread
-            thread = threading.Thread(target=self.update_tables_periodically)
-            thread.start()
+            ec_dialog = QtWidgets.QDialog()
+            ec_ui = SPLUNKLoginDialog()
+            ec_ui.setupUi(ec_dialog)
+            ec_ui.push_button_connect.clicked.connect(lambda: self.connect_lead(ec_ui))
+            ec_dialog.exec_()
         else:
             print("lead unchecked, must disconnect")
+
+    def connect_lead(self, ec_ui):
+        print("Connecting client to Splunk ...")
+        self.splunk.connect_client(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text())
+        # Starts auto-refresh logs thread
+        thread = threading.Thread(target=self.update_tables_periodically)
+        thread.start()
 
 
 if __name__ == "__main__":

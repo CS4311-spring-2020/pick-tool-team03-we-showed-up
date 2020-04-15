@@ -34,12 +34,20 @@ class SPLUNKInterface:
         self.connected = True
 
     def connect_client(self, username="", password=""):
-        self.ask_username_password()
-        self.splunkClient = client.connect(username=self.username, password=self.password)
-        if len(self.event_config.name) > 1:
-            self.logentries = self.get_entries()
-            self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
-        self.connected = True
+        try:
+            self.username = username
+            self.password = password
+
+            self.splunkClient = client.connect(username=self.username, password=self.password)
+            if len(self.event_config.name) > 1:
+                self.logentries = self.get_entries()
+                self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+            self.connected = True
+            print("Succesfully connected to SPLUNK: ", username)
+            return True
+        except:
+            print("Login error to SPLUNK")
+            return False
 
     # creating a new index (event)
     # need to add date time-frames
