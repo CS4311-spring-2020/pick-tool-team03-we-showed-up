@@ -108,10 +108,8 @@ class functionality(Ui_PICK):
         self.actionEdit.triggered.connect(self.edit_event_config)
 
         self.pushButton_3.clicked.connect(lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
+        self.checkBox_lead.stateChanged.connect(self.connect_lead)
 
-        # Starts auto-refresh logs thread
-        thread = threading.Thread(target=self.update_tables_periodically)
-        thread.start()
 
     #SPLUNK - New Event
     def open_new_event_config(self):
@@ -448,6 +446,16 @@ class functionality(Ui_PICK):
             print("Update check")
             if change == 1:
                 self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
+
+    def connect_lead(self):
+        if self.checkBox_lead.isChecked():
+            print("Connecting client to Splunk ...")
+            self.splunk.connect_client()
+            # Starts auto-refresh logs thread
+            thread = threading.Thread(target=self.update_tables_periodically)
+            thread.start()
+        else:
+            print("lead unchecked, must disconnect")
 
 
 if __name__ == "__main__":

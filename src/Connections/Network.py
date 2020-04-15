@@ -58,5 +58,6 @@ class Network:
 
         # receive data from the server
         print (s.recv(1024))
+        print("here?")
         # close the connection
         # s.close()

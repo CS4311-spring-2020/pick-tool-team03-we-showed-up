@@ -1,4 +1,5 @@
 class Node:
+    # Found this in the SRS :( "[SRS 45]	A node shall be part of at least one graph. "
     def __init__(self, id="", name="", timestamp="", description="", log_entry_reference="", log_creator="",
                  event_type="", source="", visibility=True, x=0, y=0):
         self.id = id

@@ -15,17 +15,31 @@ class SPLUNKInterface:
         # Event Data.. should we make a class?
         self.event_config = event_config
         self.event_description = ""
-        self.ask_username_password()
+        # self.ask_username_password()
+
+        self.username = ""
+        self.password = ""
+
         self.path = ""
         self.logentries = []
         self.count = 0
         self.count_changed = False
+        self.connected = False
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
         if len(self.event_config.name) > 1:
             self.logentries = self.get_entries()
             self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+        self.connected = True
+
+    def connect_client(self, username="", password=""):
+        self.ask_username_password()
+        self.splunkClient = client.connect(username=self.username, password=self.password)
+        if len(self.event_config.name) > 1:
+            self.logentries = self.get_entries()
+            self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+        self.connected = True
 
     # creating a new index (event)
     # need to add date time-frames
@@ -56,7 +70,7 @@ class SPLUNKInterface:
         subprocess.run(["add monitor [-source]", path])
 
     def get_entries(self, keyword=""):
-        kwargs_export = {"earliest_time": "-5y",
+        kwargs_export = {"earliest_time": "-30y",
                          "latest_time": "now",
                          "search_mode": "normal"}
         search_query_export = "search index=" + self.event_config.name
@@ -98,6 +112,8 @@ class SPLUNKInterface:
             print("Failed to upload, error ", str(e))
 
     def get_log_count(self):
+        if not self.connected:
+            return 0
         if self.count_changed and self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount:
             try:
                 self.refresh_log_entries()
