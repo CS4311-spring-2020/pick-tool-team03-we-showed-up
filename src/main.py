@@ -80,7 +80,6 @@ class functionality(Ui_PICK):
         self.table_manager.add_log_file_table(self.tableWidget)
 
         self.vc_add_button.clicked.connect(self.add_node)
-        # self.table_manager.populate_lfc_table(self.tableWidget)
         self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
         self.table_manager.populate_relationship_table(self.vc_relationship_table, 0)
         self.table_manager.populate_vector_table(self.vc_node_table, 0)
@@ -90,9 +89,9 @@ class functionality(Ui_PICK):
         self.button_add_vector.clicked.connect(self.add_vector)
         self.vc_add_relationship_button.clicked.connect(self.createrelationship_button_triggered)
 
-
         self.lec_logentry_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
+
         # Open file directory when clicking button 'export' in vector view
         self.nc_export_button.clicked.connect(self.export_vector)
         self.ec_export_button.clicked.connect(self.export_graph)
@@ -186,6 +185,7 @@ class functionality(Ui_PICK):
         self.table_manager.add_vector()
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.table_manager.populate_vectorconfiguration_table(self.vc_table)
+        self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
 
     def rightClickLogEntry(self, point):
         index = self.lec_logentry_table.indexAt(point)
@@ -194,15 +194,8 @@ class functionality(Ui_PICK):
             return
 
         menu = QtWidgets.QMenu()
-        menu.addAction("Add to vector", self.showVectorOptions)
         menu.addAction("Show full description", self.log_entry_description_button_triggered)
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
-
-    def showVectorOptions(self):
-        self.ui_svo = UI_ChooseVector()
-        self.ui_svo.setupUi(vector_dialog)
-        self.table_manager.populate_vector_dropdowns(self.ui_svo.comboBox)
-        vector_dialog.exec_()
 
     def add_node(self):
         import random
@@ -255,6 +248,23 @@ class functionality(Ui_PICK):
         self.nc_iconchange_button.clicked.connect(self.icon_edit_button_triggered)
         self.vc_push_button.clicked.connect(self.vector_db_button_triggered)
         self.vc_add_button.clicked.connect(self.createnode_button_triggered)
+        self.lec_add_to_vector_button.clicked.connect(self.add_log_entry_to_vector)
+
+    def add_log_entry_to_vector(self):
+        selected_entries = []
+        for i in range(self.lec_logentry_table.rowCount()):
+            if not self.lec_logentry_table.item(i, 0).checkState() == 0:
+                print("Checked item at position: ", i)
+                selected_entries.append(i)
+
+        selected_vectors = []
+        for i in range(self.lec_add_to_vector_table.rowCount()):
+            if not self.lec_add_to_vector_table.item(i, 0).checkState() == 0:
+                print("Checked item at position: ", i)
+                selected_vectors.append(i)
+
+        self.table_manager.add_log_entries_to_vectors(selected_entries, self.splunk.logentries, selected_vectors)
+        return
 
     def set_column_widths_log_entry_tab(self):
         # Sets columns width for the log entry table
@@ -440,7 +450,7 @@ class functionality(Ui_PICK):
 
     def update_tables_periodically(self):
         while True:
-            time.sleep(5)
+            time.sleep(10)
             change = self.splunk.get_log_count()
             print("Update check")
             if change == 1:

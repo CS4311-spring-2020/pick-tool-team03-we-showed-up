@@ -39,7 +39,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="movable">
        <bool>false</bool>
@@ -864,22 +864,22 @@ p, li { white-space: pre-wrap; }
                </column>
                <column>
                 <property name="text">
-                 <string>▲ List Number</string>
+                 <string>List Number</string>
                 </property>
                </column>
                <column>
                 <property name="text">
-                 <string>▲ Timestamp</string>
+                 <string>Timestamp</string>
                 </property>
                </column>
                <column>
                 <property name="text">
-                 <string>▲ Log Entry Event</string>
+                 <string>Log Entry Event</string>
                 </property>
                </column>
                <column>
                 <property name="text">
-                 <string>▲ Vector</string>
+                 <string>Vector</string>
                 </property>
                </column>
               </widget>
@@ -1062,11 +1062,11 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
             <property name="title">
-             <string>Add as Node to Vector</string>
+             <string>Add as Nodes to Vector</string>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <item>
-              <widget class="QTableWidget" name="tableWidget_3">
+              <widget class="QTableWidget" name="lec_add_to_vector_table">
                <property name="maximumSize">
                 <size>
                  <width>150</width>
@@ -1075,14 +1075,22 @@ p, li { white-space: pre-wrap; }
                </property>
                <column>
                 <property name="text">
-                 <string/>
-                </property>
-               </column>
-               <column>
-                <property name="text">
                  <string>Name</string>
                 </property>
                </column>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="lec_add_to_vector_button">
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Add to Vector</string>
+               </property>
               </widget>
              </item>
             </layout>

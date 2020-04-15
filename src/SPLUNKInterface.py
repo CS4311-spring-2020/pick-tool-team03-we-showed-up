@@ -99,7 +99,7 @@ class SPLUNKInterface:
         self.logentries = self.get_entries()
 
     def entry_from_dict(self, dict_entry):
-        log_entry = LogEntry(serial=int(dict_entry['_serial']),
+        log_entry = LogEntry(serial=int(dict_entry['_cd'].replace(":", "")),
                              timestamp=dict_entry['_time'],
                              content=dict_entry['_raw'],
                              host=dict_entry['host'],

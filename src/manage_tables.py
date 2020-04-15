@@ -5,6 +5,7 @@ import math
 from demo_data import DemoData
 from random import randint
 from Vector import Vector
+from Node import Node as Node
 import csv
 
 
@@ -56,16 +57,16 @@ class manage_tables:
             table_widget.setItem(i, 4, QTableWidgetItem(logentries[i].get_vector_list_str()))
 
     def populate_vector_table(self, table_widget, vector_num):
-        if len(self.vectors) == 0 or vector_num < 0:
+        if len(self.vectors) == 0 or vector_num < 0 or vector_num >= len(self.vectors):
             return
 
         table_widget.setRowCount(len(self.vectors[vector_num].get_nodes()))
         for i in range(len(self.vectors[vector_num].get_nodes())):
-            table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].id))
+            table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].get_id()))
             table_widget.setItem(i, 1, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].name))
             table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].get_timestamp()))
             table_widget.setItem(i, 3, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].description))
-            table_widget.setItem(i, 4, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].log_entry_reference))
+            table_widget.setItem(i, 4, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].get_reference()))
             table_widget.setItem(i, 5, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].log_creator))
             table_widget.setItem(i, 6, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].event_type))
             table_widget.setItem(i, 7, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].icon_type))
@@ -91,7 +92,7 @@ class manage_tables:
             table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[i].description))
 
     def populate_relationship_table(self, table_widget, vector_num):
-        if len(self.vectors) == 0 or vector_num < 0:
+        if len(self.vectors) == 0 or vector_num < 0 or vector_num >= len(self.vectors):
             return
 
         table_widget.setRowCount(len(self.vectors[vector_num].get_relationships()))
@@ -106,6 +107,15 @@ class manage_tables:
 
         for i in range(len(self.vectors)):
             combo_box.addItem(self.vectors[i].name)
+
+    def populate_add_to_vector_table(self, table_widget):
+        table_widget.setRowCount(len(self.vectors))
+        for i in range(len(self.vectors)):
+            table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[i].name))
+            if self.vectors[i].is_checked_add_log_entry():
+                table_widget.item(i, 0).setCheckState(QtCore.Qt.Checked)
+            else:
+                table_widget.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
 
     def add_vector(self):
         self.vectors.append(Vector(name="Vector " + str(len(self.vectors)+1)))
@@ -151,3 +161,8 @@ class manage_tables:
                 self.log_file_table.item(i, 5).setCheckState(QtCore.Qt.Checked)
             else:
                 self.log_file_table.item(i, 5).setCheckState(QtCore.Qt.Unchecked)
+
+    def add_log_entries_to_vectors(self, selected_log_entries, log_entries, selected_vectors):
+        for i in selected_log_entries:
+            for j in selected_vectors:
+                self.vectors[j].add_node(Node.node_from_log_entry(log_entries[i]))

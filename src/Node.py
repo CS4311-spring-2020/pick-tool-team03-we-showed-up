@@ -24,9 +24,26 @@ class Node:
 
     def node_from_log_entry(log_entry):
         print("Must create node from given log entry")
+        id = log_entry.serial
+        return Node(
+            id=id, name="Node " + str(id),
+            timestamp=log_entry.timestamp,
+            description=log_entry.content,
+            log_entry_reference=log_entry.serial,
+            log_creator=log_entry.source,
+            source=log_entry.source,
+            event_type=log_entry.sourcetype,
+        )
+
+    def get_id(self):
+        return str(self.id)
+
+    def get_reference(self):
+        return str(self.log_entry_reference)
 
     def get_timestamp(self):
-        return self.timestamp.strftime("%m/%d/%Y, %H:%M:%S")
+        # return self.timestamp.strftime("%m/%d/%Y, %H:%M:%S")
+        return self.timestamp
 
     def set_icon(self, icon):
         self.icon = icon
