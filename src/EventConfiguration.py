@@ -19,8 +19,8 @@ class EventConfiguration:
         dict = self.__dict__()
         for i in dict.values():
             if i == "":
-                return false
-        return true
+                return False
+        return True
 
     def get_name(self):
         return self.name
