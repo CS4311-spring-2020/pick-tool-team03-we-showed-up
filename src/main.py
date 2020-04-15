@@ -85,7 +85,6 @@ class functionality(Ui_PICK):
         self.table_manager.populate_relationship_table(self.vc_relationship_table, 0)
         self.table_manager.populate_vector_table(self.vc_node_table, 0)
         self.table_manager.populate_vectorconfiguration_table(self.vc_table)
-        self.table_manager.populate_enforcementactionreports_table(self.tableWidget_2, 0)
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.vc_vector_drop_down.currentIndexChanged.connect(self.vector_dropdown_select)
         self.button_add_vector.clicked.connect(self.add_vector)
@@ -207,8 +206,8 @@ class functionality(Ui_PICK):
 
     def add_node(self):
         import random
-        path.lineTo(random.randint(50, 300), random.randint(50, 300))
-        scene.addItem(Path(path, scene))
+        #path.lineTo(random.randint(50, 300), random.randint(50, 300))
+        #scene.addItem(Path(path, scene))
 
     def log_table_clicked(self, item):
         if not self.user_change:
@@ -235,7 +234,6 @@ class functionality(Ui_PICK):
     def edit_table_node(self, item):
         if not self.user_change:
             return
-        print("changing table")
         if item.column() == 0:
             self.user_change = False
             self.table_manager.populate_vector_table(self.vc_node_table, self.vc_vector_drop_down.currentIndex())

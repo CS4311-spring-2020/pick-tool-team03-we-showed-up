@@ -4,27 +4,20 @@ from PyQt5.QtCore import *
 import math
 from demo_data import DemoData
 from random import randint
+from Vector import Vector
 import csv
 
 
 class manage_tables:
-
     enforcement_action_report_table = None
     log_file_table = None
 
     def __init__(self, enforcement_action_report_table=None, log_file_table=None):
         self.enforcement_action_report_table = enforcement_action_report_table
         self.log_file_table = log_file_table
+        self.vectors = []
         pass
 
-
-    fake_data = DemoData()
-
-    log_file = [["observer_log_1.txt", "c:\logs\observer\\feblogs", "100%", "100%", "100%", True],
-                ["observer_log_2.txt", "c:\logs\observer\marchlogs", "100%", "100%", "100%", False],
-                ["observer_log_3.txt", "c:\logs\\redteam\\feblogs", "100%", "100%", "100%", False]]
-
-    enforment_action_reports = [[]]
 
     def add_enforcement_action_report_table(self, table):
         self.enforcement_action_report_table = table
@@ -63,69 +56,75 @@ class manage_tables:
             table_widget.setItem(i, 4, QTableWidgetItem(logentries[i].get_vector_list_str()))
 
     def populate_vector_table(self, table_widget, vector_num):
-        if vector_num < 0:
+        if len(self.vectors) == 0 or vector_num < 0:
             return
-        table_widget.setRowCount(len(self.fake_data.vector_list[vector_num].nodes))
 
-        for i in range(len(self.fake_data.vector_list[vector_num].nodes)):
-            for j in range(9):
-                table_widget.setItem(i, j, QTableWidgetItem(self.fake_data.vector_list[vector_num].nodes[i][j]))
+        table_widget.setRowCount(len(self.vectors[vector_num].get_nodes()))
+        for i in range(len(self.vectors[vector_num].get_nodes())):
+            table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].id))
+            table_widget.setItem(i, 1, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].name))
+            table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].get_timestamp()))
+            table_widget.setItem(i, 3, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].description))
+            table_widget.setItem(i, 4, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].log_entry_reference))
+            table_widget.setItem(i, 5, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].log_creator))
+            table_widget.setItem(i, 6, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].event_type))
+            table_widget.setItem(i, 7, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].icon_type))
+            table_widget.setItem(i, 8, QTableWidgetItem(self.vectors[vector_num].get_nodes()[i].source))
 
             table_widget.setItem(i, 9, QTableWidgetItem(""))
-            if self.fake_data.vector_list[vector_num].nodes[i][9]:
+            if self.vectors[vector_num].get_nodes()[i].is_visible():
                 table_widget.item(i, 9).setCheckState(QtCore.Qt.Checked)
             else:
                 table_widget.item(i, 9).setCheckState(QtCore.Qt.Unchecked)
 
     def populate_vectorconfiguration_table(self, table_widget):
-        table_widget.setRowCount(len(self.fake_data.vector_list))
+        table_widget.setRowCount(len(self.vectors))
 
-        for i in range(len(self.fake_data.vector_list)):
+        for i in range(len(self.vectors)):
             table_widget.setItem(i, 0, QTableWidgetItem(""))
-            if self.fake_data.vector_list[i].vector_checked:
+            if self.vectors[i].is_checked_config():
                 table_widget.item(i, 0).setCheckState(QtCore.Qt.Checked)
             else:
                 table_widget.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
 
-            table_widget.setItem(i, 1, QTableWidgetItem(self.fake_data.vector_list[i].vector_name))
-            table_widget.setItem(i, 2, QTableWidgetItem(self.fake_data.vector_list[i].vector_description))
-
-    def populate_enforcementactionreports_table(self, table_widget, vector_num):
-        table_widget.setRowCount(len(self.enforment_action_reports[vector_num]))
-
-        for i in range(len(self.enforment_action_reports[vector_num])):
-            for j in range(2):
-                table_widget.setItem(i, j, QTableWidgetItem(self.enforment_action_reports[vector_num][i][j]))
+            table_widget.setItem(i, 1, QTableWidgetItem(self.vectors[i].name))
+            table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[i].description))
 
     def populate_relationship_table(self, table_widget, vector_num):
-        table_widget.setRowCount(len(self.fake_data.vector_list[vector_num].relationships))
+        if len(self.vectors) == 0 or vector_num < 0:
+            return
 
-        for i in range(len(self.fake_data.vector_list[vector_num].relationships)):
-            for j in range(4):
-                table_widget.setItem(i, j, QTableWidgetItem(self.fake_data.vector_list[vector_num].relationships[i][j]))
+        table_widget.setRowCount(len(self.vectors[vector_num].get_relationships()))
+        for i in range(len(self.vectors[vector_num].get_relationships())):
+            table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_id_str()))
+            table_widget.setItem(i, 1, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_name()))
+            table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_parent_name()))
+            table_widget.setItem(i, 3, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_child_name()))
 
     def populate_vector_dropdowns(self, combo_box):
         combo_box.clear()
 
-        for i in range(len(self.fake_data.vector_list)):
-            combo_box.addItem(self.fake_data.vector_list[i].vector_name)
+        for i in range(len(self.vectors)):
+            combo_box.addItem(self.vectors[i].name)
 
     def add_vector(self):
-        self.fake_data.add_vector()
+        self.vectors.append(Vector(name="Vector " + str(len(self.vectors)+1)))
         print("added vector")
-        for i in range(len(self.fake_data.vector_list)):
-            print("Vector #", i, " ", self.fake_data.vector_list[i].vector_name)
 
     def create_node(self, vector_num):
-        newNode = [str(randint(0, 9999)), '', '', '', '', '', '', '', '', True]
-        self.fake_data.vector_list[vector_num].nodes.insert(0, newNode)
+        if len(self.vectors) == 0:
+            print("No existent vector")
+            return
+        self.vectors[vector_num].add_node()
 
     def create_relationship(self, vector_num):
-        new_relationship = [str(randint(0, 999)), '', '', '']
-        self.fake_data.vector_list[vector_num].relationships.insert(0, new_relationship)
+        if len(self.vectors) == 0:
+            print("No existent vector")
+            return
+        self.vectors[vector_num].add_relationship()
 
     def edit_node_table(self, row, column, value, vector_num):
-        self.fake_data.vector_list[vector_num].nodes[row][column] = value
+        return
 
     def export_table_to_csv(self, list2d, filename="output.csv"):
         with open(filename, "w") as f:
