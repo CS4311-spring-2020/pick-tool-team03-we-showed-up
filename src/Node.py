@@ -36,6 +36,12 @@ class Node:
             event_type=log_entry.sourcetype,
         )
 
+    def get_log_creator(self):
+        return str(self.log_creator)
+
+    def get_name(self):
+        return str(self.name)
+
     def get_id(self):
         return str(self.id)
 

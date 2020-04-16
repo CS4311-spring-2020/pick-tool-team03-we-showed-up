@@ -98,6 +98,7 @@ class manage_tables:
 
         table_widget.setRowCount(len(self.vectors[vector_num].get_relationships()))
         for i in range(len(self.vectors[vector_num].get_relationships())):
+            print(self.vectors[vector_num].get_relationships()[i].get_name())
             table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_id_str()))
             table_widget.setItem(i, 1, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_name()))
             table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_parent_id()))

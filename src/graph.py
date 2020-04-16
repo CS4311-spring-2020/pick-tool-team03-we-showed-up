@@ -7,6 +7,7 @@ from QGraphViz.DotParser import Graph, GraphType
 from QGraphViz.Engines import Dot
 from PyQt5.QtGui import QScreen
 from PyQt5.QtGui import QPixmap
+from Vector import Vector
 import sys
 import os
 
@@ -14,11 +15,76 @@ class graph(QWidget):
 
     def __init__(self, layout, vector=None):
         self.vector = vector
-        self.create_QGraphViz(layout)
+        qgv = self.create_QGraphViz()
+        self.read_vector_table(layout,vector,qgv)
         
-        
+    def read_vector_table(self,layout,vector,qgv):
+        if(vector == None):
+            show_subgraphs=True
+            qgv.setStyleSheet("background-color:white;")
+            # Create A new Graph using Dot layout engine
+            qgv.new(Dot(Graph("Main_Graph"), show_subgraphs=show_subgraphs))
+            
+            # Define some graph
+            n1 = qgv.addNode(qgv.engine.graph, "Node1", label="N1", fillcolor="red")
+            n2 = qgv.addNode(qgv.engine.graph, "Node2", label="N2", fillcolor="blue:white:red")
+            n3 = qgv.addNode(qgv.engine.graph, "Node3", label="N3")
+            n4 = qgv.addNode(qgv.engine.graph, "Node4", label="N4")
+            n5 = qgv.addNode(qgv.engine.graph, "Node5", label="N5")
+            n6 = qgv.addNode(qgv.engine.graph, "Node6", label="N6")
 
-    def create_QGraphViz(self,layout):
+            sub = qgv.addSubgraph(qgv.engine.graph, "sub graph", qgv.engine.graph.graph_type, label="Subgraph", fillcolor="blue:white:red")
+            n7 = qgv.addNode(sub, "Node7", label="N7")
+            n8 = qgv.addNode(sub, "Node8", label="N8")
+
+            # Adding nodes with an image as its shape
+            icon_path = os.path.dirname(os.path.abspath(__file__)) + r"\icon\dbicon.png"
+            n9 = qgv.addNode(qgv.engine.graph, "Node9", label="N9", shape=icon_path)
+
+            qgv.addEdge(n1, n2, {})
+            qgv.addEdge(n3, n2, {})
+            qgv.addEdge(n2, n4, {"width":2})
+            qgv.addEdge(n4, n5, {"width":4})
+            qgv.addEdge(n4, n6, {"width":5,"color":"red"})
+            qgv.addEdge(n3, n6, {"width":2})
+            qgv.addEdge(n6, n9, {"width":5,"color":"red"})
+
+
+            # Build the graph (the layout engine organizes where the nodes and connections are)
+            qgv.build()
+            # Save it to a file to be loaded by Graphviz if needed
+            qgv.save("test.gv")
+
+            # Add the QGraphViz object to the layout
+            layout.addWidget(qgv)
+        else:
+            show_subgraphs=True
+
+            qgv.setStyleSheet("background-color:white;")
+            # Create A new Graph using Dot layout engine
+            
+            vector_name = vector.name
+            qgv.new(Dot(Graph(vector_name, "_Graph"), show_subgraphs=show_subgraphs))
+            
+            #adding nodes to graph
+            for i in range(len(vector.get_relationships())):
+                node_name = (vector.get_nodes()[i].get_name())
+                node_type = (vector.get_nodes[i].get_log_creator())
+                n = qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=node_type)
+
+            # Build the graph (the layout engine organizes where the nodes and connections are)
+            qgv.build()
+
+            # Save it to a file to be loaded by Graphviz if needed
+            qgv.save(vector_name , ".gv")
+
+            # Add the QGraphViz object to the layout
+            layout.addWidget(qgv)
+
+              
+
+
+    def create_QGraphViz(self):
         def node_selected(node):
             if(qgv.manipulation_mode==QGraphVizManipulationMode.Node_remove_Mode):
                 print("Node {} removed".format(node))
@@ -54,42 +120,9 @@ class graph(QWidget):
             hilight_Nodes=True,
             hilight_Edges=True
             )
-        qgv.setStyleSheet("background-color:white;")
-        # Create A new Graph using Dot layout engine
-        qgv.new(Dot(Graph("Main_Graph"), show_subgraphs=show_subgraphs))
-        
-        # Define some graph
-        n1 = qgv.addNode(qgv.engine.graph, "Node1", label="N1", fillcolor="red")
-        n2 = qgv.addNode(qgv.engine.graph, "Node2", label="N2", fillcolor="blue:white:red")
-        n3 = qgv.addNode(qgv.engine.graph, "Node3", label="N3")
-        n4 = qgv.addNode(qgv.engine.graph, "Node4", label="N4")
-        n5 = qgv.addNode(qgv.engine.graph, "Node5", label="N5")
-        n6 = qgv.addNode(qgv.engine.graph, "Node6", label="N6")
 
-        sub = qgv.addSubgraph(qgv.engine.graph, "sub graph", qgv.engine.graph.graph_type, label="Subgraph", fillcolor="blue:white:red")
-        n7 = qgv.addNode(sub, "Node7", label="N7")
-        n8 = qgv.addNode(sub, "Node8", label="N8")
-
-        # Adding nodes with an image as its shape
-        icon_path = os.path.dirname(os.path.abspath(__file__)) + r"\icon\dbicon.png"
-        n9 = qgv.addNode(qgv.engine.graph, "Node9", label="N9", shape=icon_path)
-
-        qgv.addEdge(n1, n2, {})
-        qgv.addEdge(n3, n2, {})
-        qgv.addEdge(n2, n4, {"width":2})
-        qgv.addEdge(n4, n5, {"width":4})
-        qgv.addEdge(n4, n6, {"width":5,"color":"red"})
-        qgv.addEdge(n3, n6, {"width":2})
-        qgv.addEdge(n6, n9, {"width":5,"color":"red"})
-
-
-        # Build the graph (the layout engine organizes where the nodes and connections are)
-        qgv.build()
-        # Save it to a file to be loaded by Graphviz if needed
-        qgv.save("test.gv")
-
-        # Add the QGraphViz object to the layout
-        layout.addWidget(qgv)
+        return qgv
+       
 
     def manipulate():
         qgv.manipulation_mode=QGraphVizManipulationMode.Nodes_Move_Mode

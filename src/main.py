@@ -63,7 +63,7 @@ class functionality(Ui_PICK):
     def setupUi(self, PICK):
         super().setupUi(PICK)
 
-        self.vc_graph_widget = graph(self.verticalLayout_8)
+        self.vc_graph_widget = graph(self.horizontalLayout_13)
 
         self.table_manager.add_enforcement_action_report_table(self.tableWidget_2)
         self.table_manager.add_log_file_table(self.tableWidget)

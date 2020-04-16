@@ -530,9 +530,12 @@ class Ui_PICK(object):
         self.horizontalLayout_12.addLayout(self.vc_verticalLayout)
         self.verticalLayout_8 = QtWidgets.QVBoxLayout()
         self.verticalLayout_8.setObjectName("verticalLayout_8")
+        self.horizontalLayout_13 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_13.setObjectName("horizontalLayout_13")
         self.vc_graph_widget = QtWidgets.QWidget(self.vc_tab)
         self.vc_graph_widget.setObjectName("vc_graph_widget")
-        self.verticalLayout_8.addWidget(self.vc_graph_widget)
+        self.horizontalLayout_13.addWidget(self.vc_graph_widget)
+        self.verticalLayout_8.addLayout(self.horizontalLayout_13)
         self.horizontalLayout_11 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.nc_interval_textedit = QtWidgets.QPlainTextEdit(self.vc_tab)
@@ -607,7 +610,7 @@ class Ui_PICK(object):
         self.horizontalLayout_20.addWidget(self.tabWidget)
         PICK.setCentralWidget(self.centralwidget)
         self.menuBar = QtWidgets.QMenuBar(PICK)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1280, 20))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1280, 22))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
@@ -783,4 +786,14 @@ class Ui_PICK(object):
         self.actionExit.setText(_translate("PICK", "Exit"))
         self.actionExit.setShortcut(_translate("PICK", "Ctrl+E"))
         self.actionEdit.setText(_translate("PICK", "Edit Event"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    PICK = QtWidgets.QMainWindow()
+    ui = Ui_PICK()
+    ui.setupUi(PICK)
+    PICK.show()
+    sys.exit(app.exec_())
 
