@@ -94,13 +94,14 @@ class functionality(Ui_PICK):
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
 
         # Open file directory when clicking button 'export' in vector view
-        self.nc_export_button.clicked.connect(self.export_vector)
-        self.ec_export_button.clicked.connect(self.export_graph)
-        self.vc_export_pushButton.clicked.connect(self.export_graph)
-        self.log_file_export_pushButton.clicked.connect(self.export_graph)
-        self.ear_export_pushButton.clicked.connect(self.export_graph)
+        # self.nc_export_button.clicked.connect(self.export_vector)
+        # self.ec_export_button.clicked.connect(self.export_graph)
+        # self.vc_export_pushButton.clicked.connect(self.export_graph)
+        # self.log_file_export_pushButton.clicked.connect(self.export_graph)
+        # self.ear_export_pushButton.clicked.connect(self.export_graph)
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
         self.tableWidget.itemChanged.connect(self.log_table_clicked)
+        self.vc_table.itemChanged.connect(self.edit_table_vector_configuration)
 
         # SPLUNK
         self.actionNew.triggered.connect(self.open_new_event_config)
@@ -200,7 +201,9 @@ class functionality(Ui_PICK):
 
     #Vector
     def add_vector(self):
+        self.user_change = False
         self.table_manager.add_vector()
+        self.user_change = True
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.table_manager.populate_vectorconfiguration_table(self.vc_table)
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
@@ -250,12 +253,19 @@ class functionality(Ui_PICK):
             self.table_manager.populate_vector_table(self.vc_node_table, self.vc_vector_drop_down.currentIndex())
             self.user_change = True
         elif item.column() == 9:
-            if item.checkState() == 0:
-                self.table_manager.edit_node_table(item.row(), item.column(), False, self.vc_vector_drop_down.currentIndex())
-            else:
-                self.table_manager.edit_node_table(item.row(), item.column(), True, self.vc_vector_drop_down.currentIndex())
+            self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0), self.vc_vector_drop_down.currentIndex())
         else:
             self.table_manager.edit_node_table(item.row(), item.column(), item.text(), self.vc_vector_drop_down.currentIndex())
+
+    def edit_table_vector_configuration(self, item):
+        if not self.user_change:
+            return
+        if item.column() == 0:
+            self.table_manager.edit_vector_table(item.row(), item.column(), (not item.checkState() == 0))
+        else:
+            self.table_manager.edit_vector_table(item.row(), item.column(), item.text())
+        self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
+        self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
 
     def resize_ui_components(self, PICK):
         self.set_column_widths_log_entry_tab()

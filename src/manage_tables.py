@@ -144,6 +144,21 @@ class manage_tables:
         self.vectors[vector_num].add_relationship(relationship)
 
     def edit_node_table(self, row, column, value, vector_num):
+        if column == 9:
+            self.vectors[vector_num].nodes[row].visibility = value
+        elif column == 1:
+            self.vectors[vector_num].nodes[row].name = value
+        elif column == 3:
+            self.vectors[vector_num].nodes[row].description = value
+        return
+
+    def edit_vector_table(self, row, column, value):
+        if column == 0:
+            self.vectors[row].checked_configuration_table = value
+        elif column == 1:
+            self.vectors[row].name = value
+        elif column == 3:
+            self.vectors[row].description = value
         return
 
     def export_table_to_csv(self, list2d, filename="output.csv"):
