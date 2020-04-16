@@ -1,5 +1,7 @@
 #Connect event config (Team directories)
 from EventConfiguration import EventConfiguration
+from UI.vector_DB_Lead import Ui_Dialog as UIVectorDBLead
+from UI.vector_DB_Analyst import Ui_Dialog as UIVectorDBAnalyst
 #Connect vector table
 from Vector import Vector
 #Connect node table 
@@ -9,16 +11,19 @@ from pymongo import MongoClient
 
 class Database:
     def __init__(self):
-        #Connection 
+        #Connection
+		#NOTE: You will need to install mongoDB, make an account in mongoDB and create a cluster
         client = MongoClient('mongodb+srv://localhost:localhost@cluster0-kycow.mongodb.net/test?retryWrites=true&w=majority')
         pick_database = client['PICK-Tool-Vector-Database']
         #Vector
         vd = Vector();
 		
         #Push vector to db (Right side of window)
-        VectorDBUser.pushButtonclicked.connect(self.insert_vector(pick_database, vd))
+        UIVectorDBAnalyst.pushButtonclicked.connect(self.insert_vector(pick_database, vd))
         #Pull vector to db (Right side)
-        VectorDBUser.vdbc_button_pull.clicked.connect(self.update_vector(pick_database, vd))
+        UIVectorDBAnalyst.vdbc_button_pull.clicked.connect(self.update_vector(pick_database, vd))
+        #Push vector to db (Lead)
+        UIVectorDBAnalyst.vdbcl_button_commit.clicked.connect(self.insert_vector(pick_database,vd))
 
     # This method gets the database specified in OpenEvent
     # For this demo the network will be setup this way instead of automatically choosing the event that the lead is working on
