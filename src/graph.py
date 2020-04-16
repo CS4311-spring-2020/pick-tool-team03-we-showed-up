@@ -18,9 +18,6 @@ class graph(QWidget):
                 print("Node {} removed".format(node))
             else:
                 print("Node selected {}".format(node))
-                if self.vector is None:
-                    return
-                print("Used vector is: ", self.vector.name)
 
         def edge_selected(edge):
             if(qgv.manipulation_mode==QGraphVizManipulationMode.Edge_remove_Mode):
