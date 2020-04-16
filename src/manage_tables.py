@@ -7,6 +7,7 @@ from random import randint
 from Vector import Vector
 from Node import Node as Node
 from Relationship import Relationship
+from graph import graph as graph
 import csv
 
 
@@ -192,3 +193,4 @@ class manage_tables:
         for i in selected_log_entries:
             for j in selected_vectors:
                 self.vectors[j].add_node(Node.node_from_log_entry(log_entries[i]))
+                # graph.set_vector(self.vectors[j])

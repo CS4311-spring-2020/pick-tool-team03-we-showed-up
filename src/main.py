@@ -285,13 +285,16 @@ class functionality(Ui_PICK):
                 selected_entries.append(i)
 
         selected_vectors = []
+
         for i in range(self.lec_add_to_vector_table.rowCount()):
             if not self.lec_add_to_vector_table.item(i, 0).checkState() == 0:
                 print("Checked item at position: ", i)
                 selected_vectors.append(i)
+                # graph(self.horizontalLayout_13).set_vector(manage_tables.vectors[i])
 
         self.table_manager.add_log_entries_to_vectors(selected_entries, self.splunk.logentries, selected_vectors)
         self.vector_dropdown_select()
+
         return
 
     def set_column_widths_log_entry_tab(self):
@@ -441,6 +444,8 @@ class functionality(Ui_PICK):
         if sel_vec >= 0:
             self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
+        sel_vec = self.vc_vector_drop_down.currentIndex()
+        self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
         self.user_change = True
 
     #Open file directory when clicking button 'export' in vector view
@@ -466,6 +471,9 @@ class functionality(Ui_PICK):
     def createnode_button_triggered(self):
         self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_vector_table(self.vc_node_table, self.vc_vector_drop_down.currentIndex())
+        sel_vec = self.vc_vector_drop_down.currentIndex()
+        self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        # self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
     def createrelationship_button_triggered(self):
         ec_dialog = QtWidgets.QDialog()
@@ -481,6 +489,8 @@ class functionality(Ui_PICK):
             ec_ui.name_line_edit.text()
         ))
         ec_dialog.exec_()
+        sel_vec = self.vc_vector_drop_down.currentIndex()
+        self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
     def create_relationship(self, selected_vector, parent_id, child_id, name):
         self.table_manager.create_relationship(
