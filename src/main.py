@@ -25,7 +25,7 @@ from IngestionFunctionality import IngestionFunctionality as Ingest
 from EventConfiguration import EventConfiguration
 from graph import graph
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
-
+from Connections.Database import Database
 
 import sys
 import threading
@@ -411,6 +411,8 @@ class functionality(Ui_PICK):
             vdb_ui = UIVectorDBAnalyst()
         vdb_ui.setupUi(vdb_dialog)
         vdb_dialog.exec_()
+        db = Database()
+        db.__init__(self)
 
     def vector_dropdown_select(self):
         self.user_change = False
