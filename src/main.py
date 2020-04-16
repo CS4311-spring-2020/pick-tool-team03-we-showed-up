@@ -30,6 +30,8 @@ from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
 import sys
 import threading
 import time
+from PyQt5.QtGui import QScreen
+from PyQt5.QtGui import QPixmap
 
 rad = 20
 
@@ -80,7 +82,7 @@ class functionality(Ui_PICK):
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
 
         # Open file directory when clicking button 'export' in vector view
-        # self.nc_export_button.clicked.connect(self.export_vector)
+        # self.nc_export_button.clicked.connect(self.export_graph)
         # self.ec_export_button.clicked.connect(self.export_graph)
         # self.vc_export_pushButton.clicked.connect(self.export_graph)
         # self.log_file_export_pushButton.clicked.connect(self.export_graph)
@@ -424,7 +426,14 @@ class functionality(Ui_PICK):
 
     #Open file directory when clicking button 'export' in vector view
     def export_graph(self):
-        self.openSaveDialog()
+        print("must export graph")
+        # self.openSaveDialog()
+        # def export_graph_jpg(self, filepath=""):
+        p = QPixmap()
+        self.vc_graph_widget.render(p)
+        p.save("screenshot.jpg", 'jpg')
+        return
+
 
     def export_vector(self):
         print(self.openSaveDialog())
@@ -480,8 +489,14 @@ class functionality(Ui_PICK):
 
     def start_ingestion(self):
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.rootpath, self.event_config.name, self.splunk)
+        if self.event_config.redfolder == "":
+            self.event_config.redfolder = self.event_config.rootpath+"/red"
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, self.event_config.name, self.splunk)
+        if self.event_config.bluefolder == "":
+            self.event_config.bluefolder = self.event_config.rootpath+"/blue"
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, self.event_config.name, self.splunk)
+        if self.event_config.whitefolder == "":
+            self.event_config.whitefolder = self.event_config.rootpath+"/white"
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
 
     def update_tables_periodically(self):

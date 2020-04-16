@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import QFileDialog, QDialog, QApplication, QWidget, QMainWi
 from QGraphViz.QGraphViz import QGraphViz, QGraphVizManipulationMode
 from QGraphViz.DotParser import Graph, GraphType
 from QGraphViz.Engines import Dot
+from PyQt5.QtGui import QScreen
+from PyQt5.QtGui import QPixmap
 import sys
 import os
 
@@ -83,7 +85,7 @@ class graph(QWidget):
         qgv.build()
         # Save it to a file to be loaded by Graphviz if needed
         qgv.save("test.gv")
-       
+
         # Add the QGraphViz object to the layout
         layout.addWidget(qgv)
 
@@ -99,7 +101,7 @@ class graph(QWidget):
             #fname = QFileDialog.getSaveFileName(qgv, "Save", "", "*.gv")
             #if(fname[0]!=""):
             #    qgv.save(fname[0])
-            
+
         def new():
             qgv.engine.graph = Graph("MainGraph")
             qgv.build()
@@ -154,9 +156,9 @@ class graph(QWidget):
                 dlg.OK=True
                 dlg.node_name = leNodeName.text()
                 dlg.node_label = leNodeLabel.text()
-                if(leImagePath.text()): 
+                if(leImagePath.text()):
                     dlg.node_type = leImagePath.text()
-                else: 
+                else:
                     dlg.node_type = cbxNodeType.currentText()
                 dlg.close()
 
@@ -223,13 +225,13 @@ class graph(QWidget):
             l.setWidget(0, QFormLayout.FieldRole, leSubgraphName)
             l.setWidget(1, QFormLayout.LabelRole, QLabel("Subgraph Label"))
             l.setWidget(1, QFormLayout.FieldRole, leSubgraphLabel)
-      
+
             def ok():
                 dlg.OK=True
                 dlg.subgraph_name = leSubgraphName.text()
                 dlg.subgraph_label = leSubgraphLabel.text()
                 dlg.close()
-        
+
             def cancel():
                 dlg.OK=False
                 dlg.close()
@@ -252,4 +254,4 @@ class graph(QWidget):
             btnRemSubGraph.setChecked(True)
 
     def set_vector(self, vector):
-        self.vector=vector
+        self.vector = vector
