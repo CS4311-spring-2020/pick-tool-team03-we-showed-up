@@ -60,23 +60,6 @@ class functionality(Ui_PICK):
 
     def setupUi(self, PICK):
         super().setupUi(PICK)
-        """
-        path.moveTo(0, 0)
-        # path.cubicTo(-30, 70, 35, 115, 100, 100);
-        path.lineTo(200, 100);
-        path.lineTo(100, 100);
-        path.lineTo(100, 200);
-        # path.cubicTo(200, 30, 150, -35, 60, -30);
-
-        scene.addItem(Path(path, scene))
-
-        self.vc_graph_view.setScene(scene)
-        # view = QGraphicsView(scene)
-        # view.setRenderHint(QtGui.QPainter.Antialiasing)
-        # view.resize(600, 400)
-        # view.show()
-        # app.exec_()
-        """
 
         self.vc_graph_widget = graph(self.verticalLayout_8)
 
@@ -433,6 +416,10 @@ class functionality(Ui_PICK):
         print("Changed vector to: ", sel_vec)
         self.table_manager.populate_relationship_table(self.vc_relationship_table, sel_vec)
         self.table_manager.populate_vector_table(self.vc_node_table, sel_vec)
+
+        if sel_vec >= 0:
+            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+
         self.user_change = True
 
     #Open file directory when clicking button 'export' in vector view

@@ -11,7 +11,7 @@ fillcolor=blue:white:red
     Node7 [label=N7]
     Node8 [label=N8]
     }
-    Node9 [label=N9,shape=/home/dgarciaher/pick-splunk-implementation/src\icon\dbicon.png]
+    Node9 [label=N9,shape=/home/kali/Desktop/pick-splunk-implementation/src\icon\dbicon.png]
     Node1 -- Node2
     Node3 -- Node2
     Node2 -- Node4 [width=2]

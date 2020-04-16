@@ -10,12 +10,17 @@ import os
 
 class graph(QWidget): 
 
-    def __init__(self, layout):
+    def __init__(self, layout, vector=None):
+        self.vector = vector
+
         def node_selected(node):
             if(qgv.manipulation_mode==QGraphVizManipulationMode.Node_remove_Mode):
                 print("Node {} removed".format(node))
             else:
                 print("Node selected {}".format(node))
+                if self.vector is None:
+                    return
+                print("Used vector is: ", self.vector.name)
 
         def edge_selected(edge):
             if(qgv.manipulation_mode==QGraphVizManipulationMode.Edge_remove_Mode):
@@ -248,4 +253,6 @@ class graph(QWidget):
             for btn in buttons_list:
                 btn.setChecked(False)
             btnRemSubGraph.setChecked(True)
-            
+
+    def set_vector(self, vector):
+        self.vector=vector
