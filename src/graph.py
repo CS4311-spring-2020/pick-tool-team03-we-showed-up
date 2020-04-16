@@ -14,7 +14,11 @@ class graph(QWidget):
 
     def __init__(self, layout, vector=None):
         self.vector = vector
+        self.create_QGraphViz(layout)
+        
+        
 
+    def create_QGraphViz(self,layout):
         def node_selected(node):
             if(qgv.manipulation_mode==QGraphVizManipulationMode.Node_remove_Mode):
                 print("Node {} removed".format(node))
@@ -36,11 +40,8 @@ class graph(QWidget):
         def edge_removed(node):
             print("Edge removed")
 
-
-        # Create QGraphViz widget
-
         show_subgraphs=True
-        qgv = QGraphViz(
+        qgv= QGraphViz(
             show_subgraphs=show_subgraphs,
             auto_freeze= True, # show autofreeze capability
             node_selected_callback=node_selected,
@@ -56,7 +57,8 @@ class graph(QWidget):
         qgv.setStyleSheet("background-color:white;")
         # Create A new Graph using Dot layout engine
         qgv.new(Dot(Graph("Main_Graph"), show_subgraphs=show_subgraphs))
-        # Define sone graph
+        
+        # Define some graph
         n1 = qgv.addNode(qgv.engine.graph, "Node1", label="N1", fillcolor="red")
         n2 = qgv.addNode(qgv.engine.graph, "Node2", label="N2", fillcolor="blue:white:red")
         n3 = qgv.addNode(qgv.engine.graph, "Node3", label="N3")
@@ -89,169 +91,168 @@ class graph(QWidget):
         # Add the QGraphViz object to the layout
         layout.addWidget(qgv)
 
+    def manipulate():
+        qgv.manipulation_mode=QGraphVizManipulationMode.Nodes_Move_Mode
 
-        def manipulate():
-            qgv.manipulation_mode=QGraphVizManipulationMode.Nodes_Move_Mode
+    def save():
+        fname = QFileDialog.getSaveFileName(qgv, "Save", "", "*.json")
+        if(fname[0]!=""):
+            qgv.saveAsJson(fname[0])
 
-        def save():
-            fname = QFileDialog.getSaveFileName(qgv, "Save", "", "*.json")
-            if(fname[0]!=""):
-                qgv.saveAsJson(fname[0])
+        #fname = QFileDialog.getSaveFileName(qgv, "Save", "", "*.gv")
+        #if(fname[0]!=""):
+        #    qgv.save(fname[0])
 
-            #fname = QFileDialog.getSaveFileName(qgv, "Save", "", "*.gv")
-            #if(fname[0]!=""):
-            #    qgv.save(fname[0])
+    def new():
+        qgv.engine.graph = Graph("MainGraph")
+        qgv.build()
+        qgv.repaint()
 
-        def new():
-            qgv.engine.graph = Graph("MainGraph")
-            qgv.build()
-            qgv.repaint()
+    def load():
+        fname = QFileDialog.getOpenFileName(qgv, "Open", "", "*.json")
+        if(fname[0]!=""):
+            qgv.loadAJson(fname[0])
 
-        def load():
-            fname = QFileDialog.getOpenFileName(qgv, "Open", "", "*.json")
-            if(fname[0]!=""):
-                qgv.loadAJson(fname[0])
+        #fname = QFileDialog.getOpenFileName(qgv, "Open", "", "*.gv")
+        #if(fname[0]!=""):
+        #    qgv.load_file(fname[0])
 
-            #fname = QFileDialog.getOpenFileName(qgv, "Open", "", "*.gv")
-            #if(fname[0]!=""):
-            #    qgv.load_file(fname[0])
+    def add_node():
+        dlg = QDialog()
+        dlg.ok=False
+        dlg.node_name=""
+        dlg.node_label=""
+        dlg.node_type="None"
+        # Layouts
+        main_layout = QVBoxLayout()
+        l = QFormLayout()
+        buttons_layout = QHBoxLayout()
 
-        def add_node():
-            dlg = QDialog()
-            dlg.ok=False
-            dlg.node_name=""
-            dlg.node_label=""
-            dlg.node_type="None"
-            # Layouts
-            main_layout = QVBoxLayout()
-            l = QFormLayout()
-            buttons_layout = QHBoxLayout()
+        main_layout.addLayout(l)
+        main_layout.addLayout(buttons_layout)
+        dlg.setLayout(main_layout)
 
-            main_layout.addLayout(l)
-            main_layout.addLayout(buttons_layout)
-            dlg.setLayout(main_layout)
+        leNodeName = QLineEdit()
+        leNodeLabel = QLineEdit()
+        cbxNodeType = QComboBox()
+        leImagePath = QLineEdit()
 
-            leNodeName = QLineEdit()
-            leNodeLabel = QLineEdit()
-            cbxNodeType = QComboBox()
-            leImagePath = QLineEdit()
+        pbOK = QPushButton()
+        pbCancel = QPushButton()
 
-            pbOK = QPushButton()
-            pbCancel = QPushButton()
+        cbxNodeType.addItems(["None","circle","box"])
+        pbOK.setText("&OK")
+        pbCancel.setText("&Cancel")
 
-            cbxNodeType.addItems(["None","circle","box"])
-            pbOK.setText("&OK")
-            pbCancel.setText("&Cancel")
+        l.setWidget(0, QFormLayout.LabelRole, QLabel("Node Name"))
+        l.setWidget(0, QFormLayout.FieldRole, leNodeName)
+        l.setWidget(1, QFormLayout.LabelRole, QLabel("Node Label"))
+        l.setWidget(1, QFormLayout.FieldRole, leNodeLabel)
+        l.setWidget(2, QFormLayout.LabelRole, QLabel("Node Type"))
+        l.setWidget(2, QFormLayout.FieldRole, cbxNodeType)
+        l.setWidget(3, QFormLayout.LabelRole, QLabel("Node Image"))
+        l.setWidget(3, QFormLayout.FieldRole, leImagePath)
 
-            l.setWidget(0, QFormLayout.LabelRole, QLabel("Node Name"))
-            l.setWidget(0, QFormLayout.FieldRole, leNodeName)
-            l.setWidget(1, QFormLayout.LabelRole, QLabel("Node Label"))
-            l.setWidget(1, QFormLayout.FieldRole, leNodeLabel)
-            l.setWidget(2, QFormLayout.LabelRole, QLabel("Node Type"))
-            l.setWidget(2, QFormLayout.FieldRole, cbxNodeType)
-            l.setWidget(3, QFormLayout.LabelRole, QLabel("Node Image"))
-            l.setWidget(3, QFormLayout.FieldRole, leImagePath)
+        def ok():
+            dlg.OK=True
+            dlg.node_name = leNodeName.text()
+            dlg.node_label = leNodeLabel.text()
+            if(leImagePath.text()):
+                dlg.node_type = leImagePath.text()
+            else:
+                dlg.node_type = cbxNodeType.currentText()
+            dlg.close()
 
-            def ok():
-                dlg.OK=True
-                dlg.node_name = leNodeName.text()
-                dlg.node_label = leNodeLabel.text()
-                if(leImagePath.text()):
-                    dlg.node_type = leImagePath.text()
-                else:
-                    dlg.node_type = cbxNodeType.currentText()
-                dlg.close()
+        def cancel():
+            dlg.OK=False
+            dlg.close()
 
-            def cancel():
-                dlg.OK=False
-                dlg.close()
+        pbOK.clicked.connect(ok)
+        pbCancel.clicked.connect(cancel)
 
-            pbOK.clicked.connect(ok)
-            pbCancel.clicked.connect(cancel)
+        buttons_layout.addWidget(pbOK)
+        buttons_layout.addWidget(pbCancel)
+        dlg.exec_()
 
-            buttons_layout.addWidget(pbOK)
-            buttons_layout.addWidget(pbCancel)
-            dlg.exec_()
+        #node_name, okPressed = QInputDialog.getText(wi, "Node name","Node name:", QLineEdit.Normal, "")
+        if dlg.OK and dlg.node_name != '':
+                qgv.addNode(qgv.engine.graph, dlg.node_name, label=dlg.node_label, shape=dlg.node_type)
+                qgv.build()
 
-            #node_name, okPressed = QInputDialog.getText(wi, "Node name","Node name:", QLineEdit.Normal, "")
-            if dlg.OK and dlg.node_name != '':
-                    qgv.addNode(qgv.engine.graph, dlg.node_name, label=dlg.node_label, shape=dlg.node_type)
-                    qgv.build()
-
-        def rem_node():
-            qgv.manipulation_mode=QGraphVizManipulationMode.Node_remove_Mode
-            for btn in buttons_list:
-                btn.setChecked(False)
-            btnRemNode.setChecked(True)
+    def rem_node():
+        qgv.manipulation_mode=QGraphVizManipulationMode.Node_remove_Mode
+        for btn in buttons_list:
+            btn.setChecked(False)
+        btnRemNode.setChecked(True)
 
 
-        def rem_edge():
-            qgv.manipulation_mode=QGraphVizManipulationMode.Edge_remove_Mode
-            for btn in buttons_list:
-                btn.setChecked(False)
-            btnRemEdge.setChecked(True)
+    def rem_edge():
+        qgv.manipulation_mode=QGraphVizManipulationMode.Edge_remove_Mode
+        for btn in buttons_list:
+            btn.setChecked(False)
+        btnRemEdge.setChecked(True)
 
-        def add_edge():
-            qgv.manipulation_mode=QGraphVizManipulationMode.Edges_Connect_Mode
-            for btn in buttons_list:
-                btn.setChecked(False)
-            btnAddEdge.setChecked(True)
+    def add_edge():
+        qgv.manipulation_mode=QGraphVizManipulationMode.Edges_Connect_Mode
+        for btn in buttons_list:
+            btn.setChecked(False)
+        btnAddEdge.setChecked(True)
 
-        def add_subgraph():
-            dlg = QDialog()
-            dlg.ok=False
-            dlg.subgraph_name=""
-            dlg.subgraph_label=""
-            dlg.subgraph_type="None"
-            # Layouts
-            main_layout = QVBoxLayout()
-            l = QFormLayout()
-            buttons_layout = QHBoxLayout()
+    def add_subgraph():
+        dlg = QDialog()
+        dlg.ok=False
+        dlg.subgraph_name=""
+        dlg.subgraph_label=""
+        dlg.subgraph_type="None"
+        # Layouts
+        main_layout = QVBoxLayout()
+        l = QFormLayout()
+        buttons_layout = QHBoxLayout()
 
-            main_layout.addLayout(l)
-            main_layout.addLayout(buttons_layout)
-            dlg.setLayout(main_layout)
+        main_layout.addLayout(l)
+        main_layout.addLayout(buttons_layout)
+        dlg.setLayout(main_layout)
 
-            leSubgraphName = QLineEdit()
-            leSubgraphLabel = QLineEdit()
+        leSubgraphName = QLineEdit()
+        leSubgraphLabel = QLineEdit()
 
-            pbOK = QPushButton()
-            pbCancel = QPushButton()
+        pbOK = QPushButton()
+        pbCancel = QPushButton()
 
-            pbOK.setText("&OK")
-            pbCancel.setText("&Cancel")
+        pbOK.setText("&OK")
+        pbCancel.setText("&Cancel")
 
-            l.setWidget(0, QFormLayout.LabelRole, QLabel("Subgraph Name"))
-            l.setWidget(0, QFormLayout.FieldRole, leSubgraphName)
-            l.setWidget(1, QFormLayout.LabelRole, QLabel("Subgraph Label"))
-            l.setWidget(1, QFormLayout.FieldRole, leSubgraphLabel)
+        l.setWidget(0, QFormLayout.LabelRole, QLabel("Subgraph Name"))
+        l.setWidget(0, QFormLayout.FieldRole, leSubgraphName)
+        l.setWidget(1, QFormLayout.LabelRole, QLabel("Subgraph Label"))
+        l.setWidget(1, QFormLayout.FieldRole, leSubgraphLabel)
 
-            def ok():
-                dlg.OK=True
-                dlg.subgraph_name = leSubgraphName.text()
-                dlg.subgraph_label = leSubgraphLabel.text()
-                dlg.close()
+        def ok():
+            dlg.OK=True
+            dlg.subgraph_name = leSubgraphName.text()
+            dlg.subgraph_label = leSubgraphLabel.text()
+            dlg.close()
 
-            def cancel():
-                dlg.OK=False
-                dlg.close()
+        def cancel():
+            dlg.OK=False
+            dlg.close()
 
-            pbOK.clicked.connect(ok)
-            pbCancel.clicked.connect(cancel)
+        pbOK.clicked.connect(ok)
+        pbCancel.clicked.connect(cancel)
 
-            buttons_layout.addWidget(pbOK)
-            buttons_layout.addWidget(pbCancel)
-            dlg.exec_()
+        buttons_layout.addWidget(pbOK)
+        buttons_layout.addWidget(pbCancel)
+        dlg.exec_()
 
-            if dlg.OK and dlg.subgraph_name != '':
-                    qgv.addSubgraph(qgv.engine.graph, dlg.subgraph_name, subgraph_type= GraphType.SimpleGraph, label=dlg.subgraph_label)
-                    qgv.build()
+        if dlg.OK and dlg.subgraph_name != '':
+                qgv.addSubgraph(qgv.engine.graph, dlg.subgraph_name, subgraph_type= GraphType.SimpleGraph, label=dlg.subgraph_label)
+                qgv.build()
 
-        def rem_subgraph():
-            qgv.manipulation_mode=QGraphVizManipulationMode.Subgraph_remove_Mode
-            for btn in buttons_list:
-                btn.setChecked(False)
-            btnRemSubGraph.setChecked(True)
+    def rem_subgraph():
+        qgv.manipulation_mode=QGraphVizManipulationMode.Subgraph_remove_Mode
+        for btn in buttons_list:
+            btn.setChecked(False)
+        btnRemSubGraph.setChecked(True)
 
     def set_vector(self, vector):
         self.vector = vector
