@@ -23,6 +23,7 @@ from UI.SPLUNK_Login_Dialog import Ui_Dialog as SPLUNKLoginDialog
 from UI.Create_Relationship_Dialog import Ui_Dialog as RelationshipDialog
 from IngestionFunctionality import IngestionFunctionality as Ingest
 from EventConfiguration import EventConfiguration
+from graph import graph
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
 
 
@@ -76,6 +77,8 @@ class functionality(Ui_PICK):
         # view.show()
         # app.exec_()
         """
+
+        self.vc_graph_widget = graph(self.verticalLayout_8)
 
         self.table_manager.add_enforcement_action_report_table(self.tableWidget_2)
         self.table_manager.add_log_file_table(self.tableWidget)
@@ -514,6 +517,7 @@ class functionality(Ui_PICK):
         else:
             print("Splunk connection failed")
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)
+
 
 
 if __name__ == "__main__":

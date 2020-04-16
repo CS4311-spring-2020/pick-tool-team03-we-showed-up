@@ -59,7 +59,8 @@ class SPLUNKInterface:
             self.connected = True
             print("Succesfully connected to SPLUNK: ", username)
             return True
-        except:
+        except Exception as e: 
+            print(e)
             print("Login error to SPLUNK")
             return False
 

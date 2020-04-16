@@ -1,0 +1,55 @@
+Script started on Thu 03 Nov 2011 02:20:51 PM EDT
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ sudo apt-get install doxygen[./regenerate_api_docs.bash [4command[18Ppushd ../web/waffles_learn chmod og-rw ../lib/ ../bin/[10Psudo make installchmod o+rw ../binsudo make installchmod o+rw ../binsudo make installchmod og-rw ../lib/ ../bin/[13Pwaffles_learn [9Ppushd ../web/./regenerate_command_docs.bash [4Papisudo apt-get install doxygenmv foo65.arff trutwo_spectra_65_window.ar 
+rfff
+lsl *.arff
+-rw-r--r-- 1 eric bioinf 2304095 2011-11-03 14:06 foo33.arff
+-rw-r--r-- 1 eric bioinf 4373673 2011-11-03 13:47 foo65.arff
+-rw-r--r-- 1 eric bioinf 1139290 2011-11-03 13:41 foo.arff
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ lsl *.arffh *.arff
+-rw-r--r-- 1 eric bioinf 2.2M 2011-11-03 14:06 foo33.arff
+-rw-r--r-- 1 eric bioinf 4.2M 2011-11-03 13:47 foo65.arff
+-rw-r--r-- 1 eric bioinf 1.1M 2011-11-03 13:41 foo.arff
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ rm foo.arff
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ mkdir ~/DataANN_Data
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ rmdir ~/ANN_)Data/
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ mkdir ~/PkFindData
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ mv foo33.arff  ~~/PkFindData/two_spectra 
+_window_33.arff
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ mv foo365.arff ~/PkFindData/two_spectra 
+_window_65.arff
+]0ericprotein: ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6132mprotein0m:134m...ta-Sets/Synthetic Data Sets/60m$ pushd ~/PkFindData/
+~/PkFindData ~/Dropbox/NMR-Training-and-Testing-Data-Sets/Synthetic Data Sets/6
+]0ericprotein: ~/PkFindData132mprotein0m:134m~/PkFindData0m$ waffles_learn splittestreps 10stddevtrainratio .7 fo 
+o33.arffignore 0,34,35labels 36 neuralnet
+[[[[[[[
+[[
+132mprotein0m:134m~/PkFindData0m$ i[
+132mprotein0m:134m~/PkFindData0m$ t[1i
+132mprotein0m:134m~/PkFindData0m$ w [1-
+neu[7ralnet [[[[[[
+[[
+132mprotein0m:134m~/PkFindData0m$ i[
+132mprotein0m:134m~/PkFindData0m$ t[1i
+132mprotein0m:134m~/PkFindData0m$ w [1-
+neu[7ralnet [[[[[[
+[[
+132mprotein0m:134m~/PkFindData0m$ i[
+132mprotein0m:134m~/PkFindData0m$ Err[42or:_Unexpected_token,_0,34,35,_in_arg_8i^C
+]0ericprotein: ~/PkFindData132mprotein0m:134m~/PkFindData0m$ pushd ~/PkFindData/waffles_learn splittestreps 10stddevtrainratio .7 fo 
+o33.arffignore 0,34,35labels 36 neuralnet
+_________________________________
+File not found: foo33.arff
+Brief Usage Information:
+waffles_learn splittest <options> [dataset] <data_opts> [algorithm]
+   This shuffles the data, then splits it into two parts, trains with one part,
+   and tests with the other. (This also works with model-free algorithms.)
+   Results are printed to stdout for each dimension in the label vector.
+   Predictive accuracy is reported for nominal labels, and mean-squared-error
+   is reported for continuous labels.
+   <options>
+     seed [value]
+         Specify a seed for the random number generator. (Use this option to
+         ensure that your results are reproduceable.)
+     trainratio [value]
