@@ -6,6 +6,7 @@ from demo_data import DemoData
 from random import randint
 from Vector import Vector
 from Node import Node as Node
+from Relationship import Relationship
 import csv
 
 
@@ -99,14 +100,20 @@ class manage_tables:
         for i in range(len(self.vectors[vector_num].get_relationships())):
             table_widget.setItem(i, 0, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_id_str()))
             table_widget.setItem(i, 1, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_name()))
-            table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_parent_name()))
-            table_widget.setItem(i, 3, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_child_name()))
+            table_widget.setItem(i, 2, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_parent_id()))
+            table_widget.setItem(i, 3, QTableWidgetItem(self.vectors[vector_num].get_relationships()[i].get_child_id()))
 
     def populate_vector_dropdowns(self, combo_box):
         combo_box.clear()
 
         for i in range(len(self.vectors)):
             combo_box.addItem(self.vectors[i].name)
+
+    def populate_node_dropdowns(self, selected_vector, combo_box):
+        combo_box.clear()
+
+        for i in range(len(self.vectors[selected_vector].nodes)):
+            combo_box.addItem(self.vectors[selected_vector].nodes[i].name)
 
     def populate_add_to_vector_table(self, table_widget):
         table_widget.setRowCount(len(self.vectors))
@@ -127,11 +134,14 @@ class manage_tables:
             return
         self.vectors[vector_num].add_node()
 
-    def create_relationship(self, vector_num):
+    def create_relationship(self, vector_num, parent_id=None, child_id=None, name=""):
         if len(self.vectors) == 0:
             print("No existent vector")
             return
-        self.vectors[vector_num].add_relationship()
+        parent = self.vectors[vector_num].nodes[parent_id]
+        child = self.vectors[vector_num].nodes[child_id]
+        relationship = Relationship(name=name, id=None, parent=parent, child=child)
+        self.vectors[vector_num].add_relationship(relationship)
 
     def edit_node_table(self, row, column, value, vector_num):
         return

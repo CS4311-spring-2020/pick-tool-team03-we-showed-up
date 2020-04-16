@@ -18,9 +18,11 @@ class Vector:
         self.nodes.append(node)
 
     def add_relationship(self, relationship=None):
+        id = str(len(self.relationships) + 1)
         if relationship is None:
-            id = str(len(self.relationships)+1)
             relationship = Relationship(name="Relationship" + id, id=id)
+        elif relationship.id is None:
+            relationship.id = id
         self.relationships.append(relationship)
 
     def get_nodes(self):

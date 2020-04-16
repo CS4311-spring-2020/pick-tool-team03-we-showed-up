@@ -1,8 +1,9 @@
-from datetime import datetime
+import datetime
+
 
 class Node:
     # Found this in the SRS :( "[SRS 45]	A node shall be part of at least one graph. "
-    def __init__(self, id="", name="", timestamp=datetime.now(), description="", log_entry_reference="", log_creator="",
+    def __init__(self, id="", name="", timestamp=datetime.datetime.now(), description="", log_entry_reference="", log_creator="",
                  event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0):
         self.id = id
         self.name = name
@@ -42,7 +43,8 @@ class Node:
         return str(self.log_entry_reference)
 
     def get_timestamp(self):
-        # return self.timestamp.strftime("%m/%d/%Y, %H:%M:%S")
+        if isinstance(self.timestamp, datetime.date):
+            return self.timestamp.strftime("%m/%d/%Y, %H:%M:%S")
         return self.timestamp
 
     def set_icon(self, icon):

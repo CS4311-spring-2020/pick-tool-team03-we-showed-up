@@ -20,6 +20,7 @@ from UI.EventConfigurationNew import Ui_Dialog as UiEventConfigNew
 from UI.EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from UI.SPLUNK_Login_Dialog import Ui_Dialog as SPLUNKLoginDialog
+from UI.Create_Relationship_Dialog import Ui_Dialog as RelationshipDialog
 from IngestionFunctionality import IngestionFunctionality as Ingest
 from EventConfiguration import EventConfiguration
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
@@ -281,6 +282,7 @@ class functionality(Ui_PICK):
                 selected_vectors.append(i)
 
         self.table_manager.add_log_entries_to_vectors(selected_entries, self.splunk.logentries, selected_vectors)
+        self.vector_dropdown_select()
         return
 
     def set_column_widths_log_entry_tab(self):
@@ -438,7 +440,24 @@ class functionality(Ui_PICK):
         self.table_manager.populate_vector_table(self.vc_node_table, self.vc_vector_drop_down.currentIndex())
 
     def createrelationship_button_triggered(self):
-        self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
+        ec_dialog = QtWidgets.QDialog()
+        ec_ui = RelationshipDialog()
+        ec_ui.setupUi(ec_dialog)
+        self.table_manager.populate_node_dropdowns(self.vc_vector_drop_down.currentIndex(), ec_ui.child_id_combobox)
+        self.table_manager.populate_node_dropdowns(self.vc_vector_drop_down.currentIndex(), ec_ui.parent_id_combobox)
+
+        ec_ui.create_button.clicked.connect(lambda: self.create_relationship(
+            self.vc_vector_drop_down.currentIndex(),
+            ec_ui.parent_id_combobox.currentIndex(),
+            ec_ui.child_id_combobox.currentIndex(),
+            ec_ui.name_line_edit.text()
+        ))
+        ec_dialog.exec_()
+
+    def create_relationship(self, selected_vector, parent_id, child_id, name):
+        self.table_manager.create_relationship(
+            selected_vector, parent_id=parent_id, child_id=child_id, name=name)
+        # self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
     
     #Open file directory when clicking button '...' in new Event Configuration
@@ -466,6 +485,8 @@ class functionality(Ui_PICK):
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
 
     def update_tables_periodically(self):
+        self.splunk.get_log_count(bypass_check=True)
+        self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
         while True:
             time.sleep(10)
             change = self.splunk.get_log_count()
