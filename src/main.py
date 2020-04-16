@@ -89,6 +89,7 @@ class functionality(Ui_PICK):
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
         self.tableWidget.itemChanged.connect(self.log_table_clicked)
         self.vc_table.itemChanged.connect(self.edit_table_vector_configuration)
+        self.lec_logentry_table.itemChanged.connect(self.edit_table_log_entry)
 
         # SPLUNK
         self.actionNew.triggered.connect(self.open_new_event_config)
@@ -231,6 +232,17 @@ class functionality(Ui_PICK):
                 self.tableWidget.item(i, 5).setCheckState(QtCore.Qt.Unchecked)
 
             self.user_change = True
+
+    def edit_table_log_entry(self, item):
+        if not self.user_change:
+            return
+        self.user_change = False
+        for i in range(self.lec_logentry_table.rowCount()):
+            if self.lec_logentry_table.item(i, 0).isSelected():
+                self.lec_logentry_table.item(i, 0).setCheckState(item.checkState())
+
+        self.user_change = True
+
 
     def edit_table_node(self, item):
         if not self.user_change:
