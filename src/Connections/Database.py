@@ -11,39 +11,38 @@ from pymongo import MongoClient
 
 class Database:
     def __init__(self):
-        #Connection
-		#NOTE: You will need to install mongoDB, make an account in mongoDB and create a cluster
-        client = MongoClient('mongodb+srv://localhost:localhost@cluster0-kycow.mongodb.net/test?retryWrites=true&w=majority')
-        pick_database = client['PICK-Tool-Vector-Database']
-        #Vector
-        vd = Vector();
-		
-        #Push vector to db (Right side of window)
-        UIVectorDBAnalyst.pushButtonclicked.connect(self.insert_vector(pick_database, vd))
+        # Connection
+        # NOTE: You will need to install mongoDB, make an account in mongoDB and create a cluster
+        self.client = MongoClient('mongodb+srv://localhost:localhost@cluster0-kycow.mongodb.net/test?retryWrites=true&w=majority')
+        self.pick_database = self.client['PICK-Tool-Vector-Database']
+        # Vector
+        self.vd = Vector()
+        # Push vector to db (Right side of window)
+        # UIVectorDBAnalyst.pushButton.clicked.connect(self.insert_vector(pick_database, vd))
         #Pull vector to db (Right side)
-        UIVectorDBAnalyst.vdbc_button_pull.clicked.connect(self.update_vector(pick_database, vd))
+        # UIVectorDBAnalyst.vdbc_button_pull.clicked.connect(self.update_vector(pick_database, vd))
         #Push vector to db (Lead)
-        UIVectorDBAnalyst.vdbcl_button_commit.clicked.connect(self.insert_vector(pick_database,vd))
+        # UIVectorDBAnalyst.vdbcl_button_commit.clicked.connect(self.insert_vector(pick_database,vd))
 
     # This method gets the database specified in OpenEvent
     # For this demo the network will be setup this way instead of automatically choosing the event that the lead is working on
-    def retrieve_database():
+    def retrieve_database(self):
         # https://api.mongodb.com/python/current/tutorial.html
         #mongodb+srv://localhost:<localhost>@cluster0-kycow.mongodb.net/test?retryWrites=true&w=majority
         return
 
     #Upload vectors to the database
     #NOTE: since there is no UI to upload log files and event config to db, they are being handled here
-    def insert_vector(db, vd):
+    def insert_vector(self):
         #Collections
         #pick_vectors = pick_database.vectors
-        pick_nodes = db.nodes
+        pick_nodes = self.pick_database.nodes
         #pick_log_files = pick_database.log_files
         #pick_event_config = pick_database.event_config
 
         #Nodes
-        node = vd.get_nodes(vd)
-
+        node = self.vd.get_nodes()
+        result_nodes = pick_nodes
         #insert node vectors in documents
         for i in node:
             node_id = node[i].id
@@ -78,13 +77,13 @@ class Database:
 	
             }
 			
-            result_nodes = pick_nodes.insert_one(node_doc);
+            result_nodes = pick_nodes.insert_one(node_doc)
 			
         #Array with vectors
         #arr_vectors = []
         #arr_logFiles = []
         #arr_eventConfig = []
-		
+
         #populate arr_vectors with vectors from local storage
         #arr_vectors = DemoData().vector_list[0].nodes;
 
@@ -105,21 +104,21 @@ class Database:
         #Display all log files inserted in database
         #for object_logFile in result_logFiles.inserted_logFiles:
             #print('Vector added. The vector Id is ' + str(object_logFile))
-			
+
         #Display all events inserted in database
         #for object_eventConfig in result_eventConfig.inserted_events:
             #print('Vector added. The vector Id is ' + str(object_eventConfig))
 
 
     #Update version of vectors (may not be needed for this demo)
-    def update_vector(db, vd):
+    def update_vector(self):
         #Collection
-        pick_vectors = pick_database.vectors
+        pick_vectors = self.pick_database.vectors
 
         pick_vectors= pick_vectors.find()
         #for vector in vectors:
             #Update local vectors
             #vector_result = pick_vectors.update_one({:}, {:{:}})
 
-    def delete_vector(db, vd):
+    def delete_vector(self):
         pick_vectors = pick_database.vectors

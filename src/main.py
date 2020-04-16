@@ -1,9 +1,7 @@
 import math
-
 from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
 from UI.mainwindow import Ui_PICK
 from UI.choose_Vector_Screen import Ui_Dialog as UI_ChooseVector
 from UI.IP_Error_ConnectionLimitReached import Ui_Dialog as UIConnectionLimit
@@ -46,6 +44,7 @@ class functionality(Ui_PICK):
         self.event_config = event_config
         self.ingest_funct = ingest_funct
         self.network = network
+        self.database = Database()
         pass
 
     def set_splunk(self, splunk):
@@ -404,15 +403,21 @@ class functionality(Ui_PICK):
         ic_dialog.exec_()
 
     def vector_db_button_triggered(self):
+
         vdb_dialog = QtWidgets.QDialog()
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
+            vdb_ui.setupUi(vdb_dialog)
+            vdb_ui.vdbcl_button_commit.clicked.connect(self.database.insert_vector)
         else:
             vdb_ui = UIVectorDBAnalyst()
-        vdb_ui.setupUi(vdb_dialog)
+            vdb_ui.setupUi(vdb_dialog)
+            vdb_ui.vdbc_button_push.clicked.connect(self.database.insert_vector)
+            vdb_ui.vdbc_button_pull.clicked.connect(self.database.update_vector)
+
         vdb_dialog.exec_()
-        db = Database()
-        db.__init__(self)
+
+        # db.__init__(self)
 
     def vector_dropdown_select(self):
         self.user_change = False
