@@ -607,8 +607,10 @@ class Ui_PICK(object):
         self.horizontalLayout_20.addWidget(self.tabWidget)
         PICK.setCentralWidget(self.centralwidget)
         self.menuBar = QtWidgets.QMenuBar(PICK)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1280, 22))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 1280, 20))
         self.menuBar.setObjectName("menuBar")
+        self.menuFile = QtWidgets.QMenu(self.menuBar)
+        self.menuFile.setObjectName("menuFile")
         self.menuHelp = QtWidgets.QMenu(self.menuBar)
         self.menuHelp.setObjectName("menuHelp")
         self.menuSPLUNK = QtWidgets.QMenu(self.menuBar)
@@ -624,6 +626,12 @@ class Ui_PICK(object):
         self.actionExit.setObjectName("actionExit")
         self.actionEdit = QtWidgets.QAction(PICK)
         self.actionEdit.setObjectName("actionEdit")
+        self.menuFile.addAction(self.actionNew)
+        self.menuFile.addAction(self.actionOpen)
+        self.menuFile.addAction(self.actionEdit)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionExit)
+        self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuSPLUNK.menuAction())
         self.menuBar.addAction(self.menuHelp.menuAction())
 
@@ -765,6 +773,7 @@ class Ui_PICK(object):
         self.vc_add_relationship_button.setText(_translate("PICK", "Add Relationship"))
         self.vc_rm_relationship_button.setText(_translate("PICK", "Remove Relationship"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.vc_tab), _translate("PICK", "Vector View"))
+        self.menuFile.setTitle(_translate("PICK", "File"))
         self.menuHelp.setTitle(_translate("PICK", "Help"))
         self.menuSPLUNK.setTitle(_translate("PICK", "SPLUNK"))
         self.actionNew.setText(_translate("PICK", "New"))
@@ -774,14 +783,4 @@ class Ui_PICK(object):
         self.actionExit.setText(_translate("PICK", "Exit"))
         self.actionExit.setShortcut(_translate("PICK", "Ctrl+E"))
         self.actionEdit.setText(_translate("PICK", "Edit Event"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    PICK = QtWidgets.QMainWindow()
-    ui = Ui_PICK()
-    ui.setupUi(PICK)
-    PICK.show()
-    sys.exit(app.exec_())
 
