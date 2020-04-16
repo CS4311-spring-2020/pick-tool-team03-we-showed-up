@@ -109,6 +109,23 @@ class functionality(Ui_PICK):
         self.pushButton_3.clicked.connect(lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
         self.checkBox_lead.stateChanged.connect(self.connect_lead_triggered)
 
+        self.fc_applyfilter_button.clicked.connect(self.filter_log_entries)
+
+    def filter_log_entries(self):
+        if self.fc_start_time.dateTime() > self.fc_end_time.dateTime():
+            print("invalid date range in filtering")
+            return
+
+        # FORMAT IS 10/5/2016:20:00:00
+        print("filtering to keyword: ", self.fc_keyword_line_input.text())
+        self.splunk.set_keyword(self.fc_keyword_line_input.text())
+        #print("Earliest time is: ", self.fc_start_time.dateTime().toPyDateTime().timestamp())
+        #self.splunk.set_earliest_time(self.fc_start_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
+        #print("Latest time is: ", self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
+        # self.splunk.set_latest_time(self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
+
+        self.splunk.get_log_count(bypass_check=True)
+        self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
 
     #SPLUNK - New Event
     def open_new_event_config(self):

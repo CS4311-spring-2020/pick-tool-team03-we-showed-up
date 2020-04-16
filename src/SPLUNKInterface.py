@@ -25,6 +25,11 @@ class SPLUNKInterface:
         self.count = 0
         self.count_changed = False
         self.connected = False
+
+        self.keyword = ""
+        self.earliest_time = "-30y"
+        self.latest_time = "now"
+
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
@@ -32,6 +37,15 @@ class SPLUNKInterface:
             self.logentries = self.get_entries()
             self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
         self.connected = True
+
+    def set_keyword(self, keyword):
+        self.keyword = keyword
+
+    def set_earliest_time(self, earliest_time):
+        self.earliest_time = earliest_time
+
+    def set_latest_time(self, latest_time):
+        self.latest_time = latest_time
 
     def connect_client(self, username="", password=""):
         try:
@@ -77,11 +91,12 @@ class SPLUNKInterface:
         #keep on adding files, but need to know if you need to sleep between path ingestions
         subprocess.run(["add monitor [-source]", path])
 
-    def get_entries(self, keyword=""):
-        kwargs_export = {"earliest_time": "-30y",
-                         "latest_time": "now",
+    def get_entries(self):
+        kwargs_export = {"earliest_time": self.earliest_time,
+                         "latest_time": self.latest_time,
                          "search_mode": "normal"}
-        search_query_export = "search index=" + self.event_config.name
+        print("kwargs is: ", kwargs_export)
+        search_query_export = "search " + self.keyword + " index=" + self.event_config.name
         export_search_results = self.splunkClient.jobs.export(search_query_export, **kwargs_export)
         reader = results.ResultsReader(export_search_results)
 
@@ -119,10 +134,10 @@ class SPLUNKInterface:
         except Exception as e:
             print("Failed to upload, error ", str(e))
 
-    def get_log_count(self):
+    def get_log_count(self, bypass_check=False):
         if not self.connected:
             return 0
-        if self.count_changed and self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount:
+        if (self.count_changed and self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount) or bypass_check:
             try:
                 self.refresh_log_entries()
                 self.count_changed = False
