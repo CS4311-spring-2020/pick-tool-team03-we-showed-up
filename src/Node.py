@@ -56,3 +56,27 @@ class Node:
     def set_icon(self, icon):
         self.icon = icon
         # TODO: set icontype according to this
+
+    def get_visibility_string(self):
+        return str(self.visibility)
+
+    def to_dictionary(self):
+        out_dict = {"id": self.id, "name": self.name, "timestamp": self.get_timestamp(),
+                    "description": self.description, "log entry reference": self.log_entry_reference,
+                    "log creator": self.log_creator, "event type": self.event_type, "source": self.source,
+                    "icon type": self.icon_type, "visibility": self.get_visibility_string(), "x": str(self.x),
+                    "y": str(self.y)}
+        return out_dict
+
+    def create_from_dictionary(dict):
+        if dict["visibility"] == "True":
+            visibility = True
+        else:
+            visibility = False
+
+        timestamp = dict["timestamp"]
+        return Node(id=dict["id"], name=dict["name"], timestamp=timestamp, description=dict["description"],
+                    log_entry_reference=dict["log entry reference"], log_creator=dict["log creator"],
+                    event_type=dict["event type"], source=dict["source"], icon_type=dict["icon type"],
+                    visibility=visibility, x=float(dict["x"]), y=float(dict["y"]))
+

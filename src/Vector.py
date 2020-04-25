@@ -42,3 +42,23 @@ class Vector:
 
     def is_checked_add_log_entry(self):
         return self.checked_add_log_entry_table
+
+    def to_dictionary(self):
+        out_dict = {"name": self.name, "description": self.description,
+                    "checked configuration table": str(self.checked_configuration_table),
+                    "checked add log entry table": str(self.checked_add_log_entry_table)}
+        return out_dict
+
+    def create_from_dictionary(dict):
+        if dict["checked configuration table"] == "True":
+            checked_configuration_table = True
+        else:
+            checked_configuration_table = False
+        if dict["checked add log entry table"] == "True":
+            checked_add_log_entry_table = True
+        else:
+            checked_add_log_entry_table = False
+
+        return Vector(name=dict["name"], description=dict["description"],
+                      checked_add_logentry=checked_add_log_entry_table,
+                      checked_configuration=checked_configuration_table)

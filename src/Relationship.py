@@ -33,3 +33,11 @@ class Relationship:
 
     def get_name(self):
         return self.name
+
+    def to_dictionary(self):
+        out_dict = {"id": self.get_id_str(), "name": self.get_name(),
+                    "child id": str(self.child.get_id()), "parent id": str(self.parent.get_id())}
+        return out_dict
+
+    def create_from_dictionary(dict):
+        return Relationship(id=int(dict["id"]), name=dict["name"])
