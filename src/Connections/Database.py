@@ -1,124 +1,104 @@
-#Connect event config (Team directories)
 from EventConfiguration import EventConfiguration
-from UI.vector_DB_Lead import Ui_Dialog as UIVectorDBLead
-from UI.vector_DB_Analyst import Ui_Dialog as UIVectorDBAnalyst
-#Connect vector table
+from Node import Node
+from Relationship import Relationship
 from Vector import Vector
-#Connect node table 
 
-import pymongo
 from pymongo import MongoClient
 
 class Database:
+    # Make connection and get data to be inserted
     def __init__(self):
-        # Connection
-        # NOTE: You will need to install mongoDB, make an account in mongoDB and create a cluster
-        self.client = MongoClient('mongodb+srv://localhost:localhost@cluster0-kycow.mongodb.net/test?retryWrites=true&w=majority')
+        # Connection to mongo server
+        self.client = MongoClient('mongodb://localhost')
+        # connection to mongo database
         self.pick_database = self.client['PICK-Tool-Vector-Database']
+
+        # Objects
+        # Event configuration
+        self.ec = EventConfiguration()
+        # Node
+        self.node = Node()
+        # Relationship
+        self.relationship = Relationship()
         # Vector
-        self.vd = Vector()
-        # Push vector to db (Right side of window)
-        # UIVectorDBAnalyst.pushButton.clicked.connect(self.insert_vector(pick_database, vd))
-        #Pull vector to db (Right side)
-        # UIVectorDBAnalyst.vdbc_button_pull.clicked.connect(self.update_vector(pick_database, vd))
-        #Push vector to db (Lead)
-        # UIVectorDBAnalyst.vdbcl_button_commit.clicked.connect(self.insert_vector(pick_database,vd))
+        self.vector = Vector();
 
-    # This method gets the database specified in OpenEvent
-    # For this demo the network will be setup this way instead of automatically choosing the event that the lead is working on
-    def retrieve_database(self):
-        # https://api.mongodb.com/python/current/tutorial.html
-        #mongodb+srv://localhost:<localhost>@cluster0-kycow.mongodb.net/test?retryWrites=true&w=majority
-        return
+        # Dictionaries
+        # Event configuration dictionary
+        self.ec_dictionary = self.ec.to_dictionary()
+        # Node dictionary
+        self.node_dictionary = self.node.to_dictionary()
+        # Relationship dictionary
+        self.relationship_dictionary = self.relationship.to_dictionary()
+        # Vector dictionary
+        self.vector_dictionary = self.vector.to_dictionary()
 
-    #Upload vectors to the database
-    #NOTE: since there is no UI to upload log files and event config to db, they are being handled here
+        # Collections
+        # Event configuration collection
+        self.pick_eventconfig = self.pick_database['event_configuration']
+        # Node collection
+        self.pick_nodes = self.pick_database['nodes']
+        # Relationship collection
+        self.pick_relationships = self.pick_database['relationships']
+        # Vector collection
+        self.pick_vectors = self.pick_database['vectors']
+
+    # Retrieve database
+
+    # Insert data to mongo database
     def insert_vector(self):
-        #Collections
-        #pick_vectors = pick_database.vectors
-        pick_nodes = self.pick_database.nodes
-        #pick_log_files = pick_database.log_files
-        #pick_event_config = pick_database.event_config
+        # Insert data to mongodb
+        # Insert event configuration dictionary
+        ec_result = self.pick_eventconfig.insert_one(self.ec_dictionary)
+        print(ec_result)
+        # Insert node dictionary
+        node_result = self.pick_nodes.insert_one(self.node_dictionary)
+        print(node_result)
+        # Insert relationship dictionary
+        relationship_result = self.pick_relationships.insert_one(self.relationship_dictionary)
+        print(relationship_result)
+        # Insert vector dictionary
+        vector_result = self.pick_vectors.insert_one(self.vector_dictionary)
+        print(vector_result)
 
-        #Nodes
-        node = self.vd.get_nodes()
-        result_nodes = pick_nodes
-        #insert node vectors in documents
-        for i in node:
-            node_id = node[i].id
-            node_name = node[i].name
-            node_timestamp = node[i].timestamp
-            node_description = node[i].description
-            node_log_entry_reference = node[i].log_entry_reference
-            node_log_creator = node[i].log_creator
-            node_event_type = node[i].event_type
-            node_source = node[i].source
-            node_icon_type = node[i].icon_type
-            node_visibility = node[i].visibility
-            node_icon = node[i].icon
-            node_x = node[i].x
-            node_y = node[i].y
-	
-            #Node document 
-            node_doc = {
-                id: node_id,
-                name: node_name,
-                timestamp: node_timestamp,
-                description: node_description,
-                log_entry_reference: node_log_entry_reference,
-                log_creator: node_log,
-                event_type: node_event_type,
-                source: node_source,
-                icon_type: node_icon_type,
-                visibility: node_visibility,
-                icon: node_icon,
-                x: node_x,
-                y: node_y
-	
-            }
-			
-            result_nodes = pick_nodes.insert_one(node_doc)
-			
-        #Array with vectors
-        #arr_vectors = []
-        #arr_logFiles = []
-        #arr_eventConfig = []
+    # Update data from mongo database
+    # NOTE: needs consultation with the team since multiple items in the vector can be updated
+    def update_vector(self, update_item):
+        # Update event config
+        ec_result = self.pick_eventconfig.update_one({"name": self.ec_dictionary['name']}, {"$set": {"name": update_item}})
+        # Update node
+        node_result = self.pick_nodes.update_one({"id": self.node_dictionary['id']},
+                                                     {"$set": {"name": update_item}})
+        # Update relationship
+        relationship_result = self.pick_relationships.update_one({"id": self.relationship_dictionary['id']},
+                                                 {"$set": {"name": update_item}})
+        # Update vector
+        vector_result = self.pick_vectors.update_one({"name": self.vector_dictionary['name']},
+                                                                 {"$set": {"description": update_item}})
 
-        #populate arr_vectors with vectors from local storage
-        #arr_vectors = DemoData().vector_list[0].nodes;
+    # Delete data from mongo database
+    # NOTE: needs consultation with the team to determine the field through which the vector will be found
+    # and deleted
+    def delete_vector(self, delete_item):
+        # Delete event config
+        ec_result = self.pick_eventconfig.delete_one({"name": self.ec_dictionary['name']})
+        # Delete node
+        node_result = self.pick_nodes.delete_one({"id": self.node_dictionary['id']})
+        # Delete relationship
+        relationship_result = self.pick_relationships.delete_one({"id": self.relationship_dictionary['id']})
+        # Delete vector
+        vector_result = self.pick_vectors.delete_one({"name": self.vector_dictionary['name']})
 
-        #Use for loop to retrieve vector database
+    # Export vector collection
+    def export_vector_collection(self):
+        # Export vector collection (this is not how you do it though...)
+        pick_datacollection = self.pick_database['pick_collection']
+        pick_collection_result = pick_datacollection.insert_many([self.pick_eventconfig, self.pick_nodes,
+                                                                  self.pick_relationships, self.pick_vectors])
+        return pick_collection_result
 
-        #Save data in bson document and insert it into db
-
-
-        #insert vector array into db
-        #result_vectors = pick_vectors.insert_many(arr_vectors)
-        #result_logFiles = pick_log_files.insert_many(arr_logFiles)
-        #result_eventConfig = pick_event_config.insert_many(arr_eventConfig)
-
-        #Display all vectors inserted in database
-        for object_vector in result_nodes.inserted_nodes:
-            print('Vector added. The vector Id is ' + str(object_vector))
-
-        #Display all log files inserted in database
-        #for object_logFile in result_logFiles.inserted_logFiles:
-            #print('Vector added. The vector Id is ' + str(object_logFile))
-
-        #Display all events inserted in database
-        #for object_eventConfig in result_eventConfig.inserted_events:
-            #print('Vector added. The vector Id is ' + str(object_eventConfig))
-
-
-    #Update version of vectors (may not be needed for this demo)
-    def update_vector(self):
-        #Collection
-        pick_vectors = self.pick_database.vectors
-
-        pick_vectors= pick_vectors.find()
-        #for vector in vectors:
-            #Update local vectors
-            #vector_result = pick_vectors.update_one({:}, {:{:}})
-
-    def delete_vector(self):
-        pick_vectors = pick_database.vectors
+    # Import vector collection
+    #def import_vector_collection(self):
+        # Connect to Lead DB
+        # Get Lead vector collection
+        # Save Lead vector collection in a local vector collection
