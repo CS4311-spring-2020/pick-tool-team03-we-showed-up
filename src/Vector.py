@@ -2,13 +2,15 @@ from Node import Node
 from Relationship import Relationship
 
 class Vector:
-    def __init__(self, name="", description="", relationships=[], checked_configuration=False, checked_add_logentry=False):
+    def __init__(self, name="", description="", relationships=[], checked_configuration=False,
+                 checked_add_logentry=False, object_id=0):
         self.name = name
         self.description = description
         self.nodes = []
         self.relationships = relationships
         self.checked_configuration_table = checked_configuration
         self.checked_add_log_entry_table = checked_add_logentry
+        self.object_id = object_id
         pass
 
     def add_node(self, node=None):
@@ -36,6 +38,12 @@ class Vector:
 
     def set_description(self, description):
         self.description = description
+
+    def get_object_id(self):
+        return self.object_id
+
+    def set_object_id(self, id):
+        self.object_id = id
 
     def is_checked_config(self):
         return self.checked_configuration_table

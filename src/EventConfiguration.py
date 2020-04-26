@@ -3,7 +3,8 @@ from datetime import datetime
 class EventConfiguration:
 
     def __init__(self, name="", description="", starttime="", endtime="", rootpath="", whitefolder="", redfolder="",
-                 bluefolder="", lead=True, leadIP="", connections=0):
+                 bluefolder="", lead=True, leadIP="", connections=0, object_id=0):
+        self.object_id = object_id
         self.name = name
         self.description = description
         self.starttime = starttime
@@ -32,6 +33,12 @@ class EventConfiguration:
 
     def get_end(self):
         return self.endtime
+
+    def get_object_id(self):
+        return self.object_id
+
+    def set_object_id(self, id):
+        self.object_id = id
 
     def to_dictionary(self):
         out_dict = {"name": self.name, "description": self.description,

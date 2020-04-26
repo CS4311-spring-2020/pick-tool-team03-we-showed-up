@@ -1,11 +1,12 @@
 
 
 class Relationship:
-    def __init__(self, name="", id=0, parent=None, child=None):
+    def __init__(self, name="", id=0, parent=None, child=None, object_id=0):
         self.name = name
         self.id = id
         self.parent = parent
         self.child = child
+        self.object_id = object_id
         pass
 
     def get_parent_name(self):
@@ -33,6 +34,12 @@ class Relationship:
 
     def get_name(self):
         return self.name
+
+    def get_object_id(self):
+        return self.object_id
+
+    def set_object_id(self, id):
+        self.object_id = id
 
     def to_dictionary(self):
         out_dict = {"id": self.get_id_str(), "name": self.get_name(),

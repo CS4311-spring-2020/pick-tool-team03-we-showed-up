@@ -1,8 +1,8 @@
 class LogFile:
 
-    def __init__(self, name, path):
+    def __init__(self, name, path, object_id=0):
         self.name = name
-        #system path of the file
+        # system path of the file
         self.path = path
         # Validation status 1 = Validated, 2 = Not-Validated, 3 = Invalid
         self.validation_status = 2
@@ -12,6 +12,8 @@ class LogFile:
         self.acknowledgement_status = False
         # List of line number and errors
         self.errors = []
+
+        self.object_i = object_id
 
         self.marked = False
         pass
@@ -60,3 +62,9 @@ class LogFile:
 
     def add_errors(self, error):
         self.errors.append(error)
+
+    def get_object_id(self):
+        return self.object_id
+
+    def set_object_id(self, id):
+        self.object_id = id

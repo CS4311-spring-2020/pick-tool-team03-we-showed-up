@@ -4,7 +4,7 @@ import datetime
 class Node:
     # Found this in the SRS :( "[SRS 45]	A node shall be part of at least one graph. "
     def __init__(self, id="", name="", timestamp=datetime.datetime.now(), description="", log_entry_reference="", log_creator="",
-                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0):
+                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0, object_id=0):
         self.id = id
         self.name = name
         self.timestamp = timestamp
@@ -18,6 +18,7 @@ class Node:
         self.icon = icon
         self.x = x
         self.y = y
+        self.object_id = object_id
         pass
 
     def is_visible(self):
@@ -59,6 +60,12 @@ class Node:
 
     def get_visibility_string(self):
         return str(self.visibility)
+
+    def get_object_id(self):
+        return self.object_id
+
+    def set_object_id(self, id):
+        self.object_id = id
 
     def to_dictionary(self):
         out_dict = {"id": self.id, "name": self.name, "timestamp": self.get_timestamp(),
