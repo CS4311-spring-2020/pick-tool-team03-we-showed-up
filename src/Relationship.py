@@ -16,7 +16,7 @@ class Relationship:
     def get_parent_id(self):
         if self.parent is None:
             return ""
-        return self.parent.get_id()
+        return self.parent.id
 
     def get_child_name(self):
         if self.child is None:
@@ -26,7 +26,7 @@ class Relationship:
     def get_child_id(self):
         if self.child is None:
             return ""
-        return self.child.get_id()
+        return self.child.id
 
     def get_id_str(self):
         return str(self.id)
@@ -36,7 +36,7 @@ class Relationship:
 
     def to_dictionary(self):
         out_dict = {"id": self.get_id_str(), "name": self.get_name(),
-                    "child id": str(self.child.get_id()), "parent id": str(self.parent.get_id())}
+                    "child id": str(self.get_child_id()), "parent id": str(self.get_parent_id())}
         return out_dict
 
     def create_from_dictionary(dict):
