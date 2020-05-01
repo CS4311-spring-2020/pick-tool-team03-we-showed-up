@@ -3,7 +3,7 @@ from Relationship import Relationship
 
 class Vector:
     def __init__(self, name="", description="", relationships=[], checked_configuration=False,
-                 checked_add_logentry=False, object_id=0):
+                 checked_add_logentry=False, object_id=""):
         self.name = name
         self.description = description
         self.nodes = []
