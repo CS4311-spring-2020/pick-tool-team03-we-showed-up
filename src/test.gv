@@ -1,22 +1,14 @@
 graph {
-    Node1 [label=N1,fillcolor=red]
-    Node2 [label=N2,fillcolor=blue:white:red]
-    Node3 [label=N3]
-    Node4 [label=N4]
-    Node5 [label=N5]
-    Node6 [label=N6]
-    subgraph cluster_sub graph{
-label=Subgraph
-fillcolor=blue:white:red
-    Node7 [label=N7]
-    Node8 [label=N8]
-    }
-    Node9 [label=N9,shape=/home/kali/Desktop/pick-splunk-implementation/src\icon\dbicon.png]
+    Node1 [label=N1979,fillcolor=red]
+    Node2 [label=N1969,fillcolor=blue]
+    Node3 [label=N1954]
+    Node4 [label=N1974]
+    Node5 [label=N1964]
+    Node6 [label=N1959,fillcolor=red]
     Node1 -- Node2
     Node3 -- Node2
     Node2 -- Node4 [width=2]
     Node4 -- Node5 [width=4]
-    Node4 -- Node6 [width=5,color=red]
+    Node4 -- Node6 [width=5]
     Node3 -- Node6 [width=2]
-    Node6 -- Node9 [width=5,color=red]
 }

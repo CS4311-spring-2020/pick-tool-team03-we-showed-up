@@ -11,7 +11,6 @@ from UI.IP_Error_LeadIPNotProvided import Ui_Dialog as UILeadIPNotProvided
 from UI.icon_Configuration_Dialog import Ui_Dialog as UIIconConfigDialog
 from UI.vector_DB_Lead import Ui_Dialog as UIVectorDBLead
 from UI.vector_DB_Analyst import Ui_Dialog as UIVectorDBAnalyst
-from manage_tables import manage_tables
 from SPLUNKInterface import SPLUNKInterface
 from UI.logentrydescription import Ui_Dialog as LogEntryDescription
 from UI.EventConfigurationNew import Ui_Dialog as UiEventConfigNew
@@ -24,14 +23,11 @@ from EventConfiguration import EventConfiguration
 from graph import graph
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
 from Connections.Database import Database
-
 import sys
 import threading
 import time
 from PyQt5.QtGui import QScreen
 from PyQt5.QtGui import QPixmap
-
-rad = 20
 
 
 class functionality(Ui_PICK):
@@ -64,14 +60,19 @@ class functionality(Ui_PICK):
 
         self.vc_graph_widget = graph(self.horizontalLayout_13)
 
-        self.table_manager.add_enforcement_action_report_table(self.tableWidget_2)
-        self.table_manager.add_log_file_table(self.tableWidget)
+        # Set the tables to be managed
+        self.table_manager.set_enforcement_action_report_table(self.tableWidget_2)
+        self.table_manager.set_log_file_table(self.tableWidget)
+        self.table_manager.set_log_entry_table(self.lec_logentry_table)
+        self.table_manager.set_node_table(self.vc_node_table)
+        self.table_manager.set_relationship_table(self.vc_relationship_table)
+        self.table_manager.set_vector_config_table(self.vc_table)
 
-        self.vc_add_button.clicked.connect(self.add_node)
-        self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
-        self.table_manager.populate_relationship_table(self.vc_relationship_table, 0)
-        self.table_manager.populate_vector_table(self.vc_node_table, 0)
-        self.table_manager.populate_vectorconfiguration_table(self.vc_table)
+        # self.vc_add_button.clicked.connect(self.add_node)
+        self.table_manager.populate_logentry_table(self.splunk.logentries)
+        self.table_manager.populate_relationship_table(0)
+        self.table_manager.populate_node_table(0)
+        self.table_manager.populate_vector_configuration_table()
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.vc_vector_drop_down.currentIndexChanged.connect(self.vector_dropdown_select)
         self.button_add_vector.clicked.connect(self.add_vector)
@@ -80,12 +81,7 @@ class functionality(Ui_PICK):
         self.lec_logentry_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
 
-        # Open file directory when clicking button 'export' in vector view
-        # self.nc_export_button.clicked.connect(self.export_graph)
-        # self.ec_export_button.clicked.connect(self.export_graph)
-        # self.vc_export_pushButton.clicked.connect(self.export_graph)
-        # self.log_file_export_pushButton.clicked.connect(self.export_graph)
-        # self.ear_export_pushButton.clicked.connect(self.export_graph)
+        # Open file directory when clicking button 'export' in vector views
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
         self.tableWidget.itemChanged.connect(self.log_table_clicked)
         self.vc_table.itemChanged.connect(self.edit_table_vector_configuration)
@@ -115,7 +111,7 @@ class functionality(Ui_PICK):
         # self.splunk.set_latest_time(self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
 
         self.splunk.get_log_count(bypass_check=True)
-        self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
+        self.table_manager.populate_logentry_table(self.splunk.logentries)
 
     #SPLUNK - New Event
     def open_new_event_config(self):
@@ -193,7 +189,7 @@ class functionality(Ui_PICK):
         self.table_manager.add_vector()
         self.user_change = True
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
-        self.table_manager.populate_vectorconfiguration_table(self.vc_table)
+        self.table_manager.populate_vector_configuration_table()
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
 
     def rightClickLogEntry(self, point):
@@ -205,11 +201,6 @@ class functionality(Ui_PICK):
         menu = QtWidgets.QMenu()
         menu.addAction("Show full description", self.log_entry_description_button_triggered)
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
-
-    def add_node(self):
-        import random
-        #path.lineTo(random.randint(50, 300), random.randint(50, 300))
-        #scene.addItem(Path(path, scene))
 
     def log_table_clicked(self, item):
         if not self.user_change:
@@ -249,7 +240,7 @@ class functionality(Ui_PICK):
             return
         if item.column() == 0:
             self.user_change = False
-            self.table_manager.populate_vector_table(self.vc_node_table, self.vc_vector_drop_down.currentIndex())
+            self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
             self.user_change = True
         elif item.column() == 9:
             self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0), self.vc_vector_drop_down.currentIndex())
@@ -438,8 +429,8 @@ class functionality(Ui_PICK):
         self.user_change = False
         sel_vec = self.vc_vector_drop_down.currentIndex()
         print("Changed vector to: ", sel_vec)
-        self.table_manager.populate_relationship_table(self.vc_relationship_table, sel_vec)
-        self.table_manager.populate_vector_table(self.vc_node_table, sel_vec)
+        self.table_manager.populate_relationship_table(sel_vec)
+        self.table_manager.populate_node_table(sel_vec)
 
         if sel_vec >= 0:
             self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
@@ -459,18 +450,15 @@ class functionality(Ui_PICK):
         return
 
 
-    def export_vector(self):
-        print(self.openSaveDialog())
-
     def openSaveDialog(self):
         option = QFileDialog.Options()
         filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', '"CSV (*.csv)"', options=option)
         filename = str(filename[0])
-        self.table_manager.export_table_to_csv( self.table_manager.fake_data.vector_list[0].nodes, filename=filename)
+        print(filename)
 
     def createnode_button_triggered(self):
         self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())
-        self.table_manager.populate_vector_table(self.vc_node_table, self.vc_vector_drop_down.currentIndex())
+        self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
         sel_vec = self.vc_vector_drop_down.currentIndex()
         self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
         # self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
@@ -496,7 +484,7 @@ class functionality(Ui_PICK):
         self.table_manager.create_relationship(
             selected_vector, parent_id=parent_id, child_id=child_id, name=name)
         # self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
-        self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
+        self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
     
     #Open file directory when clicking button '...' in new Event Configuration
     def open_ingestion_directory_selector(self, textbox_widget=None, team=0):
@@ -530,13 +518,13 @@ class functionality(Ui_PICK):
 
     def update_tables_periodically(self):
         self.splunk.get_log_count(bypass_check=True)
-        self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
+        self.table_manager.populate_logentry_table(self.splunk.logentries)
         while True:
             time.sleep(10)
             change = self.splunk.get_log_count()
             print("Update check")
             if change == 1:
-                self.table_manager.populate_logentry_table(self.lec_logentry_table, self.splunk.logentries)
+                self.table_manager.populate_logentry_table(self.splunk.logentries)
 
     def connect_lead_triggered(self):
         if self.checkBox_lead.isChecked():

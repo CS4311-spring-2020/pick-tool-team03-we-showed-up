@@ -4,7 +4,7 @@ from main import functionality as UIFunctionality
 from EventConfiguration import EventConfiguration
 from IngestionFunctionality import IngestionFunctionality
 from SPLUNKInterface import SPLUNKInterface
-from manage_tables import manage_tables as TableFunctionality
+from TableManager import TableManager as TableManager
 from Connections.Network import Network
 
 from PyQt5 import QtWidgets, QtGui, uic, QtCore
@@ -14,7 +14,7 @@ from PyQt5.QtCore import *
 if __name__ == "__main__":
     event_config = EventConfiguration(name="main")
     splunk = SPLUNKInterface(event_config=event_config)
-    table_manager = TableFunctionality()
+    table_manager = TableManager()
     network = Network()
     ingestion = IngestionFunctionality(splunk=splunk, table_manager=table_manager, event_config=event_config)
     ui_f = UIFunctionality(table_manager=table_manager, splunk=splunk,
