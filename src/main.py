@@ -1,9 +1,7 @@
 import math
 from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from UI.mainwindow import Ui_PICK
-from UI.choose_Vector_Screen import Ui_Dialog as UI_ChooseVector
 from UI.IP_Error_ConnectionLimitReached import Ui_Dialog as UIConnectionLimit
 from UI.IP_Error_duplicateLeadIP import Ui_Dialog as UIDuplicateLeadIP
 from UI.IP_Error_LeadIPBoxSelected import Ui_Dialog as UILeadIPSelected
@@ -11,23 +9,17 @@ from UI.IP_Error_LeadIPNotProvided import Ui_Dialog as UILeadIPNotProvided
 from UI.icon_Configuration_Dialog import Ui_Dialog as UIIconConfigDialog
 from UI.vector_DB_Lead import Ui_Dialog as UIVectorDBLead
 from UI.vector_DB_Analyst import Ui_Dialog as UIVectorDBAnalyst
-from SPLUNKInterface import SPLUNKInterface
 from UI.logentrydescription import Ui_Dialog as LogEntryDescription
 from UI.EventConfigurationNew import Ui_Dialog as UiEventConfigNew
 from UI.EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from UI.SPLUNK_Login_Dialog import Ui_Dialog as SPLUNKLoginDialog
 from UI.Create_Relationship_Dialog import Ui_Dialog as RelationshipDialog
-from IngestionFunctionality import IngestionFunctionality as Ingest
-from EventConfiguration import EventConfiguration
 from graph import graph
-from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
 from Connections.Database import Database
 import sys
 import threading
 import time
-from PyQt5.QtGui import QScreen
-from PyQt5.QtGui import QPixmap
 
 
 class functionality(Ui_PICK):
@@ -192,10 +184,10 @@ class functionality(Ui_PICK):
     def add_vector(self):
         self.user_change = False
         self.table_manager.add_vector()
-        self.user_change = True
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.table_manager.populate_vector_configuration_table()
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+        self.user_change = True
 
     def rightClickLogEntry(self, point):
         index = self.lec_logentry_table.indexAt(point)
@@ -434,6 +426,8 @@ class functionality(Ui_PICK):
         # db.__init__(self)
 
     def vector_dropdown_select(self):
+        if not self.user_change:
+            return
         self.user_change = False
         sel_vec = self.vc_vector_drop_down.currentIndex()
         print("Changed vector to: ", sel_vec)
