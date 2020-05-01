@@ -14,7 +14,7 @@ import csv
 class TableManager:
 
     def __init__(self, enforcement_action_report_table=None, log_file_table=None, log_entry_table=None,
-                 node_table=None, relationship_table=None, vector_config_table=None):
+                 node_table=None, relationship_table=None, vector_config_table=None, log_entries=[]):
         self.enforcement_action_report_table = enforcement_action_report_table
         self.log_file_table = log_file_table
         self.log_entry_table = log_entry_table
@@ -22,6 +22,7 @@ class TableManager:
         self.relationship_table = relationship_table
         self.vector_config_table = vector_config_table
         self.vectors = []
+        self.log_entries = log_entries
         pass
 
     def set_enforcement_action_report_table(self, table):
@@ -44,6 +45,8 @@ class TableManager:
 
     # Takes a list of log entries, populates the table widget with the log entries in the list
     def populate_logentry_table(self, logentries):
+        self.log_entries = logentries
+
         self.log_entry_table.setRowCount(len(logentries))
 
         for i in range(len(logentries)):
@@ -193,10 +196,45 @@ class TableManager:
             self.vectors[row].description = value
         return
 
-    def export_table_to_csv(self, list2d, filename="output.csv"):
+    # def export_table_to_csv(self, table_widget, filename="output.csv"):
+    #     export_list = list()
+    #
+    #     for i in range(table_widget.rowCount()):
+    #         temp_list = list()
+    #         print("Current row is: ", i)
+    #         for j in range(table_widget.columnCount()):
+    #             temp_list.append(table_widget.itemAt(j, i).text())
+    #             print("    col: ", j, " item is: ", table_widget.itemAt(j, i).text())
+    #         export_list.append(temp_list)
+    #
+    #     with open(filename, "w") as f:
+    #         writer = csv.writer(f)
+    #         writer.writerows(export_list)
+
+    def export_log_entry_table(self, filename="Log Entry Table Output.csv"):
+        export_list = list()
+        for log_entry in self.log_entries:
+            export_list.append(log_entry.to_list())
         with open(filename, "w") as f:
             writer = csv.writer(f)
-            writer.writerows(list2d)
+            writer.writerows(export_list)
+
+    def export_node_table(self, vector_num, filename="Node Table Output.csv"):
+        export_list = list()
+        print("Exporting nodes in vector: ", vector_num)
+        for node in self.vectors[vector_num].get_nodes():
+            export_list.append(node.to_list())
+        with open(filename, "w") as f:
+            writer = csv.writer(f)
+            writer.writerows(export_list)
+
+    def export_vector_configuration_table(self, filename="Vector Configuration Table Output.csv"):
+        export_list = list()
+        for vector in self.vectors:
+            export_list.append(vector.to_list())
+        with open(filename, "w") as f:
+            writer = csv.writer(f)
+            writer.writerows(export_list)
 
     def add_log_entries_to_vectors(self, selected_log_entries, log_entries, selected_vectors):
         for i in selected_log_entries:

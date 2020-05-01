@@ -22,3 +22,6 @@ class LogEntry:
         for v in self.vector_list:
             str = str + str(v) + " "
         return str
+
+    def to_list(self):
+        return [str(self.serial), self.timestamp, self.content, self.host, self.source, self.sourcetype]

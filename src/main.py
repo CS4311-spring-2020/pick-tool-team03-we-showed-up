@@ -46,7 +46,7 @@ class functionality(Ui_PICK):
     def set_splunk(self, splunk):
         self.splunk = splunk
 
-    def set_table_manager(selfs, table_manager):
+    def set_table_manager(self, table_manager):
         self.table_manager = table_manager
 
     def set_event_config(self, event_config):
@@ -81,7 +81,10 @@ class functionality(Ui_PICK):
         self.lec_logentry_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
 
-        # Open file directory when clicking button 'export' in vector views
+        self.ec_export_button.clicked.connect(lambda: self.export_table_clicked("log entry"))
+        self.nc_export_button.clicked.connect(lambda: self.export_table_clicked("node"))
+        self.vc_export_pushButton.clicked.connect(lambda: self.export_table_clicked("vector"))
+
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
         self.tableWidget.itemChanged.connect(self.log_table_clicked)
         self.vc_table.itemChanged.connect(self.edit_table_vector_configuration)
@@ -98,6 +101,7 @@ class functionality(Ui_PICK):
         self.fc_applyfilter_button.clicked.connect(self.filter_log_entries)
 
     def filter_log_entries(self):
+        self.user_change = False
         if self.fc_start_time.dateTime() > self.fc_end_time.dateTime():
             print("invalid date range in filtering")
             return
@@ -112,6 +116,7 @@ class functionality(Ui_PICK):
 
         self.splunk.get_log_count(bypass_check=True)
         self.table_manager.populate_logentry_table(self.splunk.logentries)
+        self.user_change = True
 
     #SPLUNK - New Event
     def open_new_event_config(self):
@@ -229,6 +234,7 @@ class functionality(Ui_PICK):
             return
         self.user_change = False
         for i in range(self.lec_logentry_table.rowCount()):
+            print("i is: ", i)
             if self.lec_logentry_table.item(i, 0).isSelected():
                 self.lec_logentry_table.item(i, 0).setCheckState(item.checkState())
 
@@ -250,12 +256,14 @@ class functionality(Ui_PICK):
     def edit_table_vector_configuration(self, item):
         if not self.user_change:
             return
+        self.user_change = False
         if item.column() == 0:
             self.table_manager.edit_vector_table(item.row(), item.column(), (not item.checkState() == 0))
         else:
             self.table_manager.edit_vector_table(item.row(), item.column(), item.text())
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+        self.user_change = True
 
     def resize_ui_components(self, PICK):
         self.set_column_widths_log_entry_tab()
@@ -439,22 +447,18 @@ class functionality(Ui_PICK):
         self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
         self.user_change = True
 
-    #Open file directory when clicking button 'export' in vector view
-    def export_graph(self):
-        print("must export graph")
-        # self.openSaveDialog()
-        # def export_graph_jpg(self, filepath=""):
-        p = QPixmap()
-        self.vc_graph_widget.render(p)
-        p.save("screenshot.jpg", 'jpg')
-        return
-
-
-    def openSaveDialog(self):
+    def export_table_clicked(self, key):
         option = QFileDialog.Options()
-        filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', '"CSV (*.csv)"', options=option)
-        filename = str(filename[0])
-        print(filename)
+        filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', '"Csv (*.csv)"', options=option)
+        if filename is not None:
+            filename = str(filename[0])
+            print("Exporting csv to: ", filename)
+            switcher = {
+                "log entry": lambda: self.table_manager.export_log_entry_table(filename=filename),
+                "node": lambda: self.table_manager.export_node_table(self.vc_vector_drop_down.currentIndex(),
+                                                                     filename=filename),
+                "vector": lambda: self.table_manager.export_vector_configuration_table(filename=filename)}
+            switcher[key]()
 
     def createnode_button_triggered(self):
         self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())
@@ -524,7 +528,9 @@ class functionality(Ui_PICK):
             change = self.splunk.get_log_count()
             print("Update check")
             if change == 1:
+                self.user_change = False
                 self.table_manager.populate_logentry_table(self.splunk.logentries)
+                self.user_change = True
 
     def connect_lead_triggered(self):
         if self.checkBox_lead.isChecked():

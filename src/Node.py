@@ -87,3 +87,6 @@ class Node:
                     event_type=dict["event type"], source=dict["source"], icon_type=dict["icon type"],
                     visibility=visibility, x=float(dict["x"]), y=float(dict["y"]))
 
+    def to_list(self):
+        return [str(self.id), self.get_timestamp(), self.description, self.log_entry_reference,
+                self.log_creator, self.event_type, self.source]
