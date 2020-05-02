@@ -10,7 +10,8 @@ import csv
 class TableManager:
 
     def __init__(self, enforcement_action_report_table=None, log_file_table=None, log_entry_table=None,
-                 node_table=None, relationship_table=None, vector_config_table=None, log_entries=[], vectors=[]):
+                 node_table=None, relationship_table=None, vector_config_table=None, log_entries=[], vectors=[],
+                 undo_manager=None):
         self.enforcement_action_report_table = enforcement_action_report_table
         self.log_file_table = log_file_table
         self.log_entry_table = log_entry_table
@@ -19,6 +20,8 @@ class TableManager:
         self.vector_config_table = vector_config_table
         self.vectors = vectors
         self.log_entries = log_entries
+        self.undo_manager = undo_manager
+        self.is_system_change = False
         pass
 
     def set_enforcement_action_report_table(self, table):
@@ -61,7 +64,12 @@ class TableManager:
 
     # Populates the node table given a vector index
     def populate_node_table(self, vector_num):
+        if self.is_system_change:
+            return
+        print("initialized populating node table")
+        self.is_system_change = True
         if len(self.vectors) == 0 or vector_num < 0 or vector_num >= len(self.vectors):
+            self.is_system_change = False
             return
 
         self.node_table.setRowCount(len(self.vectors[vector_num].get_nodes()))
@@ -81,6 +89,8 @@ class TableManager:
                 self.node_table.item(i, 9).setCheckState(QtCore.Qt.Checked)
             else:
                 self.node_table.item(i, 9).setCheckState(QtCore.Qt.Unchecked)
+        print("finished populating table")
+        self.is_system_change = False
 
     # Populates the vector configuration table with the vectors
     def populate_vector_configuration_table(self):
@@ -183,13 +193,25 @@ class TableManager:
         relationship = Relationship(name=name, id=None, parent=parent, child=child)
         self.vectors[vector_num].add_relationship(relationship)
 
-    def edit_node_table(self, row, column, value, vector_num):
+    def edit_node_table(self, row, column, value, vector_num, from_undo=False):
+        if self.is_system_change:
+            return
+        print("editing node and is system changes is: ", self.is_system_change)
+        undo_val = ""
         if column == 9:
+            undo_val = self.vectors[vector_num].nodes[row].visibility
             self.vectors[vector_num].nodes[row].visibility = value
         elif column == 1:
+            undo_val = self.vectors[vector_num].nodes[row].name
             self.vectors[vector_num].nodes[row].name = value
         elif column == 3:
+            undo_val = self.vectors[vector_num].nodes[row].description
             self.vectors[vector_num].nodes[row].description = value
+
+        if not self.is_system_change and not from_undo:
+            self.undo_manager.add_command("set_node_field", [row, column, undo_val, vector_num])
+        if from_undo:
+            self.populate_node_table(vector_num)
         return
 
     def edit_vector_table(self, row, column, value):

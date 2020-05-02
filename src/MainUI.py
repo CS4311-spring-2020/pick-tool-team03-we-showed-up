@@ -28,12 +28,14 @@ class UIMain(Ui_PICK):
         """
     user_change = True
 
-    def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None, network=None):
+    def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None, network=None,
+                 undo_manager=None):
         self.table_manager = table_manager
         self.splunk = splunk
         self.event_config = event_config
         self.ingest_funct = ingest_funct
         self.network = network
+        self.undo_manager = undo_manager
         self.database = Database()
 
     # Sets the SPLUNK Facade to be referenced throughout the execution of the code
@@ -55,6 +57,8 @@ class UIMain(Ui_PICK):
     # Main setup of the UI,
     def setupUi(self, PICK):
         super().setupUi(PICK)
+
+        self.vc_undo_button.clicked.connect(self.undo_manager.undo)
 
         # Sets the graph widget
         self.vc_graph_widget = graph(self.horizontalLayout_13)
@@ -274,16 +278,16 @@ class UIMain(Ui_PICK):
     def edit_table_node(self, item):
         if not self.user_change:
             return
+        self.user_change = False
         if item.column() == 0:
-            self.user_change = False
             self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
-            self.user_change = True
         elif item.column() == 9:
             self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0),
                                                self.vc_vector_drop_down.currentIndex())
         else:
             self.table_manager.edit_node_table(item.row(), item.column(), item.text(),
                                                self.vc_vector_drop_down.currentIndex())
+        self.user_change = True
 
     def edit_table_vector_configuration(self, item):
         if not self.user_change:
@@ -429,8 +433,10 @@ class UIMain(Ui_PICK):
         self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
         sel_vec = self.vc_vector_drop_down.currentIndex()
-        self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
-        # self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        try:
+            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        except IndexError:
+            print("no vector available")
 
     # Opens a dialog when the create relationship button is clicked
     def create_relationship_button_clicked(self):
@@ -448,7 +454,10 @@ class UIMain(Ui_PICK):
         ))
         ec_dialog.exec_()
         sel_vec = self.vc_vector_drop_down.currentIndex()
-        self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        try:
+            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        except IndexError:
+            print("no vector available")
 
     # helper method that calls the creation of a relationship
     def create_relationship(self, selected_vector, parent_id, child_id, name):

@@ -8,14 +8,20 @@ class UndoRedoManager:
         self.table_manager = table_manager
         self.command_switcher = command_switcher
         self.current_iter = 0
+        self.initialize_command_switcher()
 
     def undo(self):
         print("undo")
-        if self.action_list[self.current_iter][0] == "set_node_field":
-            self.command_switcher["set_node_field"](row=self.action_list[self.current_iter][1][0],
-                                                    column=self.action_list[self.current_iter][1][1],
-                                                    value=self.action_list[self.current_iter][1][2],
-                                                    vector_um=self.action_list[self.current_iter][1][3])
+        try:
+            action = self.action_list.pop()
+        except IndexError:
+            print("No more undos")
+            return
+
+        if action[0] == "set_node_field":
+            self.command_switcher["set_node_field"](row=action[1][0], column=action[1][1], value=action[1][2],
+                                                    vector_num=action[1][3], from_undo=True)
+
 
     def redo(self):
         print("redo")
@@ -26,4 +32,6 @@ class UndoRedoManager:
         }
 
     def add_command(self, command_key, args_list):
+        print("added command: ", command_key, " with args ", args_list)
+        # self.action_list.append([command_key, args_list])
         self.action_list.append([command_key, args_list])

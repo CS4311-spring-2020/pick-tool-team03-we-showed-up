@@ -17,11 +17,12 @@ if __name__ == "__main__":
     event_config = EventConfiguration(name="main")
     splunk = SPLUNKInterface(event_config=event_config)
     table_manager = TableManager(vectors=vectors)
-    undo_redo_manager = UndoRedoManager(table_manager=table_manager)
+    undo_manager = UndoRedoManager(table_manager=table_manager)
+    table_manager.undo_manager = undo_manager
     network = Network()
     ingestion = IngestionFunctionality(splunk=splunk, table_manager=table_manager, event_config=event_config)
     ui_f = UIMain(table_manager=table_manager, splunk=splunk, ingest_funct=ingestion,
-                  event_config=event_config, network=network)
+                  event_config=event_config, network=network, undo_manager=undo_manager)
 
     app = QApplication([])
     PICK = QtWidgets.QMainWindow()
