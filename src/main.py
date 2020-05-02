@@ -50,7 +50,7 @@ class functionality(Ui_PICK):
     def set_splunk(self, splunk):
         self.splunk = splunk
 
-    def set_table_manager(selfs, table_manager):
+    def set_table_manager(self, table_manager):
         self.table_manager = table_manager
 
     def set_event_config(self, event_config):
@@ -423,11 +423,11 @@ class functionality(Ui_PICK):
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbcl_button_commit.clicked.connect(self.database.insert_vector)
+            vdb_ui.vdbcl_button_commit.clicked.connect(self.database.save_event_config_to_database(self.event_config, self.table_manager.vectors))
         else:
             vdb_ui = UIVectorDBAnalyst()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbc_button_push.clicked.connect(self.database.insert_vector)
+            vdb_ui.vdbc_button_push.clicked.connect(self.database.save_vector_to_database())
             vdb_ui.vdbc_button_pull.clicked.connect(self.database.update_vector)
 
         vdb_dialog.exec_()
@@ -497,7 +497,7 @@ class functionality(Ui_PICK):
             selected_vector, parent_id=parent_id, child_id=child_id, name=name)
         # self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_relationship_table(self.vc_relationship_table, self.vc_vector_drop_down.currentIndex())
-    
+
     #Open file directory when clicking button '...' in new Event Configuration
     def open_ingestion_directory_selector(self, textbox_widget=None, team=0):
         directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
@@ -512,7 +512,7 @@ class functionality(Ui_PICK):
                 self.event_config.bluefolder = str(directory)
             elif team ==3:
                 self.event_config.whitefolder = str(directory)
-                
+
             textbox_widget.setPlainText(str(directory))
             # self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
 

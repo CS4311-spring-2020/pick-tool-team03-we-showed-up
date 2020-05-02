@@ -52,9 +52,21 @@ class Vector:
         return self.checked_add_log_entry_table
 
     def to_dictionary(self):
+        # Added node and relationship ids
+        # Populate node object id list
+        node_obj_ids = []
+        for node in self.get_nodes():
+            node_obj_ids.append(str(node.get_object_id()))
+        # Populate relationships object id list
+        relationship_obj_id = []
+        for relation in self.get_relationships():
+            relationship_obj_id.append(str(relation.get_object_id))
+
         out_dict = {"name": self.name, "description": self.description,
                     "checked configuration table": str(self.checked_configuration_table),
-                    "checked add log entry table": str(self.checked_add_log_entry_table)}
+                    "checked add log entry table": str(self.checked_add_log_entry_table),
+                    "node_obj_ids": node_obj_ids,
+                    "relationship_obj_ids": relationship_obj_id}
         return out_dict
 
     def create_from_dictionary(dict):
