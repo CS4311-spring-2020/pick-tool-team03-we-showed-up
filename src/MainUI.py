@@ -22,8 +22,7 @@ import threading
 import time
 
 
-class functionality(Ui_PICK):
-
+class UIMain(Ui_PICK):
     user_change = True
 
     def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None, network=None):
@@ -69,7 +68,7 @@ class functionality(Ui_PICK):
         self.vc_vector_drop_down.currentIndexChanged.connect(self.vector_dropdown_select)
         self.button_add_vector.clicked.connect(self.add_vector)
         self.button_delete_vector.clicked.connect(self.delete_vector)
-        self.vc_add_relationship_button.clicked.connect(self.createrelationship_button_triggered)
+        self.vc_add_relationship_button.clicked.connect(self.create_relationship_button_clicked)
 
         self.lec_logentry_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.lec_logentry_table.customContextMenuRequested.connect(self.rightClickLogEntry)
@@ -88,8 +87,15 @@ class functionality(Ui_PICK):
         self.actionOpen.triggered.connect(self.open_events_config)
         self.actionEdit.triggered.connect(self.edit_event_config)
 
-        self.pushButton_3.clicked.connect(lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
-        self.checkBox_lead.stateChanged.connect(self.connect_lead_triggered)
+        self.button_connect_to_ip.clicked.connect(self.connect_button_clicked)
+        self.nc_iconchange_button.clicked.connect(self.icon_edit_button_clicked)
+        self.vc_push_button.clicked.connect(self.vector_db_button_clicked)
+        self.vc_add_button.clicked.connect(self.create_node_button_clicked)
+        self.lec_add_to_vector_button.clicked.connect(self.add_log_entry_to_vector)
+
+        self.pushButton_3.clicked.connect(
+            lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
+        self.checkBox_lead.stateChanged.connect(self.connect_lead_clicked)
 
         self.fc_applyfilter_button.clicked.connect(self.filter_log_entries)
 
@@ -102,16 +108,16 @@ class functionality(Ui_PICK):
         # FORMAT IS 10/5/2016:20:00:00
         print("filtering to keyword: ", self.fc_keyword_line_input.text())
         self.splunk.set_keyword(self.fc_keyword_line_input.text())
-        #print("Earliest time is: ", self.fc_start_time.dateTime().toPyDateTime().timestamp())
-        #self.splunk.set_earliest_time(self.fc_start_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
-        #print("Latest time is: ", self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
+        # print("Earliest time is: ", self.fc_start_time.dateTime().toPyDateTime().timestamp())
+        # self.splunk.set_earliest_time(self.fc_start_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
+        # print("Latest time is: ", self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
         # self.splunk.set_latest_time(self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
 
         self.splunk.get_log_count(bypass_check=True)
         self.table_manager.populate_logentry_table(self.splunk.logentries)
         self.user_change = True
 
-    #SPLUNK - New Event
+    # Event Configuration Methods
     def open_new_event_config(self):
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigNew()
@@ -123,15 +129,18 @@ class functionality(Ui_PICK):
         ec_ui.textbox_red_team_folder.setPlainText(self.event_config.redfolder)
         ec_ui.textbox_blue_team_folder.setPlainText(self.event_config.bluefolder)
 
-        #save directories of teams
+        # save directories of teams
         ec_ui.button_start_ingestion.clicked.connect(self.start_ingestion)
-        ec_ui.root_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_root_directory, team=0))
-        ec_ui.red_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_red_team_folder, team=1))
-        ec_ui.blue_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_blue_team_folder, team=2))
-        ec_ui.white_team_directory_pushButton.clicked.connect(lambda: self.open_ingestion_directory_selector(ec_ui.textbox_white_team_folder, team=3))
+        ec_ui.root_directory_pushButton.clicked.connect(
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_root_directory, team=0))
+        ec_ui.red_team_directory_pushButton.clicked.connect(
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_red_team_folder, team=1))
+        ec_ui.blue_team_directory_pushButton.clicked.connect(
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_blue_team_folder, team=2))
+        ec_ui.white_team_directory_pushButton.clicked.connect(
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_white_team_folder, team=3))
         ec_dialog.exec_()
 
-    #SPLUNK - Edit Event
     def edit_event_config(self):
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigEdit()
@@ -165,23 +174,23 @@ class functionality(Ui_PICK):
             self.event_config.endtime = ec_ui.date_event_end.dateTime().toPyDateTime()
             ec_ui.event_creation_status_label.setText(text)
 
-    #SPLUNK - Open Event
+    # Open Event
     def open_events_config(self):
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigOpen()
         ec_ui.setupUi(ec_dialog)
-        #call list of indexes and display event
+        # call list of indexes and display event
         events = self.splunk.getIndexList()
         for event in events:
             ec_ui.comboBox.addItem(event)
-        #ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui)
+        # ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui)
         ec_dialog.exec_()
 
     def update_open_event_config(self, ec_ui):
         text = ec_ui.comboBox.currentData
         ec_ui.label_3.setText(text)
 
-    #Vector
+    # Vector
     def add_vector(self):
         self.user_change = False
         self.table_manager.add_vector()
@@ -206,7 +215,7 @@ class functionality(Ui_PICK):
             return
 
         menu = QtWidgets.QMenu()
-        menu.addAction("Show full description", self.log_entry_description_button_triggered)
+        menu.addAction("Show full description", self.log_entry_description_button_clicked)
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
 
     def log_table_clicked(self, item):
@@ -236,12 +245,10 @@ class functionality(Ui_PICK):
             return
         self.user_change = False
         for i in range(self.lec_logentry_table.rowCount()):
-            print("i is: ", i)
             if self.lec_logentry_table.item(i, 0).isSelected():
                 self.lec_logentry_table.item(i, 0).setCheckState(item.checkState())
 
         self.user_change = True
-
 
     def edit_table_node(self, item):
         if not self.user_change:
@@ -251,9 +258,11 @@ class functionality(Ui_PICK):
             self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
             self.user_change = True
         elif item.column() == 9:
-            self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0), self.vc_vector_drop_down.currentIndex())
+            self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0),
+                                               self.vc_vector_drop_down.currentIndex())
         else:
-            self.table_manager.edit_node_table(item.row(), item.column(), item.text(), self.vc_vector_drop_down.currentIndex())
+            self.table_manager.edit_node_table(item.row(), item.column(), item.text(),
+                                               self.vc_vector_drop_down.currentIndex())
 
     def edit_table_vector_configuration(self, item):
         if not self.user_change:
@@ -272,11 +281,6 @@ class functionality(Ui_PICK):
         self.set_column_widths_event_tab()
         self.set_column_widths_vector_view_tab()
 
-        self.button_connect_to_ip.clicked.connect(self.connect_button_triggered)
-        self.nc_iconchange_button.clicked.connect(self.icon_edit_button_triggered)
-        self.vc_push_button.clicked.connect(self.vector_db_button_triggered)
-        self.vc_add_button.clicked.connect(self.createnode_button_triggered)
-        self.lec_add_to_vector_button.clicked.connect(self.add_log_entry_to_vector)
 
     def add_log_entry_to_vector(self):
         selected_entries = []
@@ -369,7 +373,7 @@ class functionality(Ui_PICK):
         for i in range(0, 4):
             self.vc_relationship_table.setColumnWidth(i, column_width)
 
-    def connect_button_triggered(self):
+    def connect_button_clicked(self):
         lead_ip = "64.233. 160.0"  # currently Google's IP
         no_connections = 10  # temporary placeholder for number of connections
 
@@ -406,19 +410,19 @@ class functionality(Ui_PICK):
         else:
             print("successful connection should take place.")
 
-    def icon_edit_button_triggered(self):
+    def icon_edit_button_clicked(self):
         ic_dialog = QtWidgets.QDialog()
         ic_ui = UIIconConfigDialog()
         ic_ui.setupUi(ic_dialog)
         ic_dialog.exec_()
 
-    def log_entry_description_button_triggered(self):
+    def log_entry_description_button_clicked(self):
         ic_dialog = QtWidgets.QDialog()
         ic_ui = LogEntryDescription()
         ic_ui.setupUi(ic_dialog)
         ic_dialog.exec_()
 
-    def vector_db_button_triggered(self):
+    def vector_db_button_clicked(self):
 
         vdb_dialog = QtWidgets.QDialog()
         if self.checkBox_lead.isChecked():
@@ -448,7 +452,10 @@ class functionality(Ui_PICK):
             self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
         sel_vec = self.vc_vector_drop_down.currentIndex()
-        self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        try:
+            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+        except IndexError:
+            print("No vector to be selected")
         self.user_change = True
 
     def export_table_clicked(self, key):
@@ -464,14 +471,14 @@ class functionality(Ui_PICK):
                 "vector": lambda: self.table_manager.export_vector_configuration_table(filename=filename)}
             switcher[key]()
 
-    def createnode_button_triggered(self):
+    def create_node_button_clicked(self):
         self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
         sel_vec = self.vc_vector_drop_down.currentIndex()
         self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
         # self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
-    def createrelationship_button_triggered(self):
+    def create_relationship_button_clicked(self):
         ec_dialog = QtWidgets.QDialog()
         ec_ui = RelationshipDialog()
         ec_ui.setupUi(ec_dialog)
@@ -493,8 +500,7 @@ class functionality(Ui_PICK):
             selected_vector, parent_id=parent_id, child_id=child_id, name=name)
         # self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
         self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
-    
-    #Open file directory when clicking button '...' in new Event Configuration
+
     def open_ingestion_directory_selector(self, textbox_widget=None, team=0):
         directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
         if textbox_widget is None:
@@ -504,24 +510,23 @@ class functionality(Ui_PICK):
                 self.event_config.rootpath = str(directory)
             elif team == 1:
                 self.event_config.redfolder = str(directory)
-            elif team ==2:
+            elif team == 2:
                 self.event_config.bluefolder = str(directory)
-            elif team ==3:
+            elif team == 3:
                 self.event_config.whitefolder = str(directory)
-                
+
             textbox_widget.setPlainText(str(directory))
-            # self.ingest_funct.ingest_directory_to_splunk(directory, self.event_config.name, self.splunk)
 
     def start_ingestion(self):
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.rootpath, self.event_config.name, self.splunk)
         if self.event_config.redfolder == "":
-            self.event_config.redfolder = self.event_config.rootpath+"/red"
+            self.event_config.redfolder = self.event_config.rootpath + "/red"
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, self.event_config.name, self.splunk)
         if self.event_config.bluefolder == "":
-            self.event_config.bluefolder = self.event_config.rootpath+"/blue"
+            self.event_config.bluefolder = self.event_config.rootpath + "/blue"
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, self.event_config.name, self.splunk)
         if self.event_config.whitefolder == "":
-            self.event_config.whitefolder = self.event_config.rootpath+"/white"
+            self.event_config.whitefolder = self.event_config.rootpath + "/white"
         self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
 
     def update_tables_periodically(self):
@@ -536,7 +541,7 @@ class functionality(Ui_PICK):
                 self.table_manager.populate_logentry_table(self.splunk.logentries)
                 self.user_change = True
 
-    def connect_lead_triggered(self):
+    def connect_lead_clicked(self):
         if self.checkBox_lead.isChecked():
             ec_dialog = QtWidgets.QDialog()
             ec_ui = SPLUNKLoginDialog()
@@ -556,7 +561,6 @@ class functionality(Ui_PICK):
         else:
             print("Splunk connection failed")
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)
-
 
 
 if __name__ == "__main__":

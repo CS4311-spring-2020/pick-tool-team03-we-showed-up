@@ -1,6 +1,6 @@
 import sys
 
-from main import functionality as UIFunctionality
+from MainUI import UIMain
 from EventConfiguration import EventConfiguration
 from IngestionFunctionality import IngestionFunctionality
 from SPLUNKInterface import SPLUNKInterface
@@ -19,8 +19,8 @@ if __name__ == "__main__":
     undo_redo_manager = UndoRedoManager(table_manager=table_manager)
     network = Network()
     ingestion = IngestionFunctionality(splunk=splunk, table_manager=table_manager, event_config=event_config)
-    ui_f = UIFunctionality(table_manager=table_manager, splunk=splunk,
-                           ingest_funct=ingestion, event_config=event_config, network=network)
+    ui_f = UIMain(table_manager=table_manager, splunk=splunk, ingest_funct=ingestion,
+                  event_config=event_config, network=network)
 
     app = QApplication([])
     PICK = QtWidgets.QMainWindow()

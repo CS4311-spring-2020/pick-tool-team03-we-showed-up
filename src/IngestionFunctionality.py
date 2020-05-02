@@ -2,7 +2,6 @@ import os
 import shutil
 
 from LogFile import LogFile
-from SPLUNKInterface import SPLUNKInterface
 
 from IngestionSubProcesses.OCRFeeder import ImageFeeder
 from IngestionSubProcesses.AudioTranscriber import AudioRecognition

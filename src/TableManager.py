@@ -1,9 +1,5 @@
 from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-import math
-from demo_data import DemoData
-from random import randint
 from Vector import Vector
 from Node import Node as Node
 from Relationship import Relationship

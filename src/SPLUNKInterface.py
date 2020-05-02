@@ -3,7 +3,7 @@ import os
 import subprocess
 import splunklib.client as client
 import splunklib.results as results
-from logentry import LogEntry
+from LogEntry import LogEntry
 
 
 class SPLUNKInterface:
