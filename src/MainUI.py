@@ -209,7 +209,7 @@ class UIMain(Ui_PICK):
             ec_ui.comboBox.addItem(event)
         # ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui)
         ec_dialog.exec_()
-    
+
     def update_open_event_config(self, ec_ui):
         text = ec_ui.comboBox.currentData
         ec_ui.label_3.setText(text)
@@ -388,11 +388,11 @@ class UIMain(Ui_PICK):
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbcl_button_commit.clicked.connect(self.database.insert_vector)
+            vdb_ui.vdbcl_button_commit.clicked.connect(self.database.save_event_config_to_database(self.event_config, self.table_manager.vectors))
         else:
             vdb_ui = UIVectorDBAnalyst()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbc_button_push.clicked.connect(self.database.insert_vector)
+            vdb_ui.vdbc_button_push.clicked.connect(self.database.save_vector_to_database())
             vdb_ui.vdbc_button_pull.clicked.connect(self.database.update_vector)
 
         vdb_dialog.exec_()
