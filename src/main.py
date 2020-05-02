@@ -68,6 +68,7 @@ class functionality(Ui_PICK):
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.vc_vector_drop_down.currentIndexChanged.connect(self.vector_dropdown_select)
         self.button_add_vector.clicked.connect(self.add_vector)
+        self.button_delete_vector.clicked.connect(self.delete_vector)
         self.vc_add_relationship_button.clicked.connect(self.createrelationship_button_triggered)
 
         self.lec_logentry_table.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -187,6 +188,15 @@ class functionality(Ui_PICK):
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.table_manager.populate_vector_configuration_table()
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+        self.user_change = True
+
+    def delete_vector(self):
+        self.user_change = False
+        self.table_manager.delete_vectors()
+        self.table_manager.populate_vector_configuration_table()
+        self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+        self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
+        self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
         self.user_change = True
 
     def rightClickLogEntry(self, point):

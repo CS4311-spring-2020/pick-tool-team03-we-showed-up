@@ -6,6 +6,7 @@ from IngestionFunctionality import IngestionFunctionality
 from SPLUNKInterface import SPLUNKInterface
 from TableManager import TableManager as TableManager
 from Connections.Network import Network
+from UndoRedoManager import UndoRedoManager
 
 from PyQt5 import QtWidgets, QtGui, uic, QtCore
 from PyQt5.QtWidgets import *
@@ -15,6 +16,7 @@ if __name__ == "__main__":
     event_config = EventConfiguration(name="main")
     splunk = SPLUNKInterface(event_config=event_config)
     table_manager = TableManager()
+    undo_redo_manager = UndoRedoManager(table_manager=table_manager)
     network = Network()
     ingestion = IngestionFunctionality(splunk=splunk, table_manager=table_manager, event_config=event_config)
     ui_f = UIFunctionality(table_manager=table_manager, splunk=splunk,

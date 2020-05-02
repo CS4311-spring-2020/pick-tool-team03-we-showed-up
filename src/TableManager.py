@@ -163,6 +163,15 @@ class TableManager:
         self.vectors.append(Vector(name="Vector " + str(len(self.vectors)+1)))
         print("added vector")
 
+    def delete_vectors(self):
+        to_be_deleted = []
+        for i in range(len(self.vectors)):
+            if self.vectors[i].is_checked_config():
+                to_be_deleted.insert(0, i)
+
+        for i in to_be_deleted:
+            del self.vectors[i]
+
     def create_node(self, vector_num):
         if len(self.vectors) == 0:
             print("No existent vector")
@@ -192,7 +201,7 @@ class TableManager:
             self.vectors[row].checked_configuration_table = value
         elif column == 1:
             self.vectors[row].name = value
-        elif column == 3:
+        elif column == 2:
             self.vectors[row].description = value
         return
 
