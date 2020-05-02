@@ -1,7 +1,7 @@
 
 
 class Relationship:
-    def __init__(self, name="", id=0, parent=None, child=None, object_id=0):
+    def __init__(self, name="", id=0, parent=None, child=None, object_id=""):
         self.name = name
         self.id = id
         self.parent = parent
