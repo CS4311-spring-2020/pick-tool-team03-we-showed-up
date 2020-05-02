@@ -269,9 +269,12 @@ class UIMain(Ui_PICK):
         if not self.user_change:
             return
         self.user_change = False
-        for i in range(self.lec_logentry_table.rowCount()):
-            if self.lec_logentry_table.item(i, 0).isSelected():
-                self.lec_logentry_table.item(i, 0).setCheckState(item.checkState())
+        try:
+            for i in range(self.lec_logentry_table.rowCount()):
+                if self.lec_logentry_table.item(i, 0).isSelected():
+                    self.lec_logentry_table.item(i, 0).setCheckState(item.checkState())
+        except AttributeError:
+            print("edit log entry table triggered pre")
 
         self.user_change = True
 
