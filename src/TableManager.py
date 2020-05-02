@@ -10,14 +10,14 @@ import csv
 class TableManager:
 
     def __init__(self, enforcement_action_report_table=None, log_file_table=None, log_entry_table=None,
-                 node_table=None, relationship_table=None, vector_config_table=None, log_entries=[]):
+                 node_table=None, relationship_table=None, vector_config_table=None, log_entries=[], vectors=[]):
         self.enforcement_action_report_table = enforcement_action_report_table
         self.log_file_table = log_file_table
         self.log_entry_table = log_entry_table
         self.node_table = node_table
         self.relationship_table = relationship_table
         self.vector_config_table = vector_config_table
-        self.vectors = []
+        self.vectors = vectors
         self.log_entries = log_entries
         pass
 

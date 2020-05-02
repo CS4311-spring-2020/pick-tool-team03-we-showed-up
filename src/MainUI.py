@@ -29,7 +29,6 @@ class UIMain(Ui_PICK):
     user_change = True
 
     def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None, network=None):
-        self.vc_graph_widget = graph(self.horizontalLayout_13)
         self.table_manager = table_manager
         self.splunk = splunk
         self.event_config = event_config
@@ -56,6 +55,9 @@ class UIMain(Ui_PICK):
     # Main setup of the UI,
     def setupUi(self, PICK):
         super().setupUi(PICK)
+
+        # Sets the graph widget
+        self.vc_graph_widget = graph(self.horizontalLayout_13)
 
         # Set the tables to be managed
         self.table_manager.set_enforcement_action_report_table(self.tableWidget_2)
