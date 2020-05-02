@@ -42,8 +42,8 @@ class Vector:
     def get_object_id(self):
         return self.object_id
 
-    def set_object_id(self, id):
-        self.object_id = id
+    def set_object_id(self, obj_id):
+        self.object_id = obj_id
 
     def is_checked_config(self):
         return self.checked_configuration_table

@@ -52,22 +52,22 @@ class Database:
     # Insert data to mongo database
     def save_vector_to_database(self, vector):
         # Insert node dictionary
-        for node in vector.get_nodes:
+        for node in vector.get_nodes():
             node_result = self.pick_nodes.insert_one(node.to_dictionary())
             print(node_result.inserted_id)
             node_id = node_result.inserted_id
             self.node.set_object_id(str(node_id))
 
         # Insert relationship dictionary
-        for relationship in vector.get_relationships:
+        for relationship in vector.get_relationships():
             relationship_result = self.pick_relationships.insert_one(relationship.to_dictionary())
             print(relationship_result.inserted_id)
             relationship_id = relationship_result.inserted_id
             self.relationship.set_object_id(str(relationship_id))
 
         result_vect = self.pick_vectors.insert_one(vector.to_dictionary())
-        obj_id = result_vect.object_id
-        Vector.set_obj_id(obj_id)
+        obj_id = result_vect.inserted_id
+        vector.set_object_id(obj_id)
         return obj_id
 
     def save_event_config_to_database(self, event_config, vector_list):
