@@ -291,6 +291,11 @@ class UIMain(Ui_PICK):
         else:
             self.table_manager.edit_node_table(item.row(), item.column(), item.text(),
                                                self.vc_vector_drop_down.currentIndex())
+        try:
+            if self.vc_vector_drop_down.currentIndex() >= 0:
+                self.vc_graph_widget.set_vector(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
+        except IndexError:
+            print("Wrong index of vector")
         self.user_change = True
 
     def edit_table_vector_configuration(self, item):
