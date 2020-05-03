@@ -10,8 +10,7 @@ from QGraphViz.Engines import Dot
 class graph(QWidget): 
     
     qgv = ""
-    
-    
+
     # initializing first instances of vector and QGraphViz aka qgv
     def __init__(self, layout, vector=None):
         self.vector = vector
@@ -25,8 +24,7 @@ class graph(QWidget):
             self.vector = vector
         self.qgv = self.create_QGraphViz()
         self.update_graph(vector)
-    
-    
+
     # checks if there is information in the node and relationship tables
     # and either displays an empty graph or calls update_graph() if there are elements in the tables
     def read_vector_table(self, vector):
@@ -51,8 +49,7 @@ class graph(QWidget):
             self.qgv = qgv
         else:
             self.update_graph(vector)
-        
-       
+
     # creates initial empty graph and reads node and relationship tables every time there is a change
     # creates graphical elements for all nodes and edges
     def update_graph(self,vector):
@@ -102,10 +99,16 @@ class graph(QWidget):
         qgv.save("./gv/" + vector_name + ".gv")
         
         self.layout_u.addWidget(qgv)
-        qgv = qgv
-        
- 
-           
+        self.qgv = qgv
+
+    # Export GGraphViz widget into image
+    def export(self, filename):
+        try:
+            self.qgv.grab().save(filename, "PNG")
+            print("exported graph to: ", filename)
+        except:
+            print("Export of graph failed")
+
     # creates QGraphViz instance
     def create_QGraphViz(self):
         def node_selected(node):

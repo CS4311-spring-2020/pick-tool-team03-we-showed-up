@@ -39,14 +39,14 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="movable">
        <bool>false</bool>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Event</string>
+        <string>Event View</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
@@ -519,7 +519,7 @@
       </widget>
       <widget class="QWidget" name="log_entry_tab">
        <attribute name="title">
-        <string>Log View</string>
+        <string>Log Entry View</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
@@ -1380,7 +1380,7 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>JPG</string>
+                  <string>PNG</string>
                  </property>
                 </item>
                </widget>

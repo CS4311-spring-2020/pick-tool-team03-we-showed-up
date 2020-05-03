@@ -1,6 +1,0 @@
-graph {
-    Node 1 [label=Node 1,fillcolor=red]
-    Node 2 [label=Node 2,fillcolor=blue]
-    Node 3 [label=Node 3,fillcolor=white]
-    Node 4 [label=Node 4,fillcolor=blue]
-}

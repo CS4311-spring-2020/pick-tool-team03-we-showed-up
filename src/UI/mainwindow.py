@@ -599,7 +599,7 @@ class Ui_PICK(object):
         self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(PICK)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(PICK)
 
     def retranslateUi(self, PICK):
@@ -643,7 +643,7 @@ class Ui_PICK(object):
         self.pushButton_3.setText(_translate("PICK", "Validate"))
         self.label_11.setText(_translate("PICK", "File Name:"))
         self.label_12.setText(_translate("PICK", "File"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("PICK", "Event"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("PICK", "Event View"))
         self.fc_groupbox.setTitle(_translate("PICK", "Filter Configuration"))
         self.fc_keyword_line_input.setText(_translate("PICK", "Keyword Search"))
         self.fc_start_time.setDisplayFormat(_translate("PICK", "M/d/yy h:mm:ss AP"))
@@ -675,7 +675,7 @@ class Ui_PICK(object):
         item = self.lec_add_to_vector_table.horizontalHeaderItem(0)
         item.setText(_translate("PICK", "Name"))
         self.lec_add_to_vector_button.setText(_translate("PICK", "Add to Vector"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.log_entry_tab), _translate("PICK", "Log View"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.log_entry_tab), _translate("PICK", "Log Entry View"))
         self.vc_vector_drop_down.setCurrentText(_translate("PICK", "Vector"))
         self.vc_undo_button.setText(_translate("PICK", "Undo"))
         self.vc_redo_button.setText(_translate("PICK", "Redo"))
@@ -713,7 +713,7 @@ class Ui_PICK(object):
         self.nc_zoomin_button.setText(_translate("PICK", "Zoom Out"))
         self.nc_iconchange_button.setText(_translate("PICK", "Change Icon"))
         self.nc_export_dropdown.setItemText(0, _translate("PICK", "CSV"))
-        self.nc_export_dropdown.setItemText(1, _translate("PICK", "JPG"))
+        self.nc_export_dropdown.setItemText(1, _translate("PICK", "PNG"))
         self.nc_export_button.setText(_translate("PICK", "Export"))
         item = self.vc_relationship_table.horizontalHeaderItem(0)
         item.setText(_translate("PICK", "Relationship ID"))
