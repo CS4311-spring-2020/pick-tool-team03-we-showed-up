@@ -223,6 +223,9 @@ class UIMain(Ui_PICK):
         self.table_manager.populate_vector_configuration_table()
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
         self.user_change = True
+        sel_vec = self.vc_vector_drop_down.currentIndex()
+        if sel_vec >= 0:
+                self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
     def delete_vector(self):
         self.user_change = False

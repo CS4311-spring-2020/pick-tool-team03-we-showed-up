@@ -1,0 +1,5 @@
+graph {
+    n456 [label=n456,fillcolor=blue]
+    Node 2 [label=Node 2,fillcolor=white]
+    n3 [label=n3,fillcolor=red]
+}
