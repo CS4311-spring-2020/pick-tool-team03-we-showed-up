@@ -77,7 +77,7 @@ class Database:
             vector_obj_ids.append(self.save_vector_to_database(vector))
         # at this point, the vector_obj_ids list has all the object ids of all the vectors in the event
 
-        ec_dict = event_config.to_dictoinary()
+        ec_dict = event_config.to_dictionary()
         print(ec_dict['name'])
         ec_dict['vector_obj_ids'] = str(vector_obj_ids)
 

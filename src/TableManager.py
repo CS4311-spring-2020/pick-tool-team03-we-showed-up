@@ -66,7 +66,6 @@ class TableManager:
     def populate_node_table(self, vector_num):
         if self.is_system_change:
             return
-        print("initialized populating node table")
         self.is_system_change = True
         if len(self.vectors) == 0 or vector_num < 0 or vector_num >= len(self.vectors):
             self.is_system_change = False
@@ -89,7 +88,6 @@ class TableManager:
                 self.node_table.item(i, 9).setCheckState(QtCore.Qt.Checked)
             else:
                 self.node_table.item(i, 9).setCheckState(QtCore.Qt.Unchecked)
-        print("finished populating table")
         self.is_system_change = False
 
     # Populates the vector configuration table with the vectors
