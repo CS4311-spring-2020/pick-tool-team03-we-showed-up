@@ -2,14 +2,14 @@ from Node import Node
 from Relationship import Relationship
 
 class Vector:
-    def __init__(self, name="", description="", relationships=[], checked_configuration=False,
-                 checked_add_logentry=False, object_id=""):
+    def __init__(self, name="", description="", checked_configuration=False,
+                 checked_add_log_entry=False, object_id=""):
         self.name = name
         self.description = description
         self.nodes = []
-        self.relationships = relationships
+        self.relationships = []
         self.checked_configuration_table = checked_configuration
-        self.checked_add_log_entry_table = checked_add_logentry
+        self.checked_add_log_entry_table = checked_add_log_entry
         self.object_id = object_id
         pass
 
@@ -20,6 +20,7 @@ class Vector:
         self.nodes.append(node)
 
     def add_relationship(self, relationship=None):
+        print("added relationship to vector", self.name)
         id = str(len(self.relationships) + 1)
         if relationship is None:
             relationship = Relationship(name="Relationship" + id, id=id)

@@ -106,6 +106,7 @@ class TableManager:
 
     # Populate the relationship table given a vector index
     def populate_relationship_table(self, vector_num):
+        print('called populate relationship table from vector: ', vector_num)
         if len(self.vectors) == 0 or vector_num < 0 or vector_num >= len(self.vectors):
             return
 

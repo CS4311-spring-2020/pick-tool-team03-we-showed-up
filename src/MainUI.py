@@ -231,6 +231,7 @@ class UIMain(Ui_PICK):
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
         self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
         self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
+        self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
         self.user_change = True
 
     def rightClickLogEntry(self, point):
@@ -404,15 +405,12 @@ class UIMain(Ui_PICK):
         self.user_change = False
         sel_vec = self.vc_vector_drop_down.currentIndex()
         print("Changed vector to: ", sel_vec)
-        self.table_manager.populate_relationship_table(sel_vec)
         self.table_manager.populate_node_table(sel_vec)
+        self.table_manager.populate_relationship_table(sel_vec)
 
-        if sel_vec >= 0:
-            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
-
-        sel_vec = self.vc_vector_drop_down.currentIndex()
         try:
-            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+            if sel_vec >= 0:
+                self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
         except IndexError:
             print("No vector to be selected")
         self.user_change = True
