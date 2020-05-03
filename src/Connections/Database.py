@@ -10,6 +10,7 @@ from bson.json_util import loads
 
 
 class Database:
+
     # Make connection and get data to be inserted
     def __init__(self):
         # Connection to mongo server
