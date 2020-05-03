@@ -223,6 +223,9 @@ class UIMain(Ui_PICK):
         self.table_manager.populate_vector_configuration_table()
         self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
         self.user_change = True
+        sel_vec = self.vc_vector_drop_down.currentIndex()
+        if sel_vec >= 0:
+                self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
     def delete_vector(self):
         self.user_change = False
@@ -291,6 +294,11 @@ class UIMain(Ui_PICK):
         else:
             self.table_manager.edit_node_table(item.row(), item.column(), item.text(),
                                                self.vc_vector_drop_down.currentIndex())
+        try:
+            if self.vc_vector_drop_down.currentIndex() >= 0:
+                self.vc_graph_widget.set_vector(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
+        except IndexError:
+            print("Wrong index of vector")
         self.user_change = True
 
     def edit_table_vector_configuration(self, item):
@@ -419,9 +427,21 @@ class UIMain(Ui_PICK):
     # Method called when a the export button of a table is clicked
     def export_table_clicked(self, key):
         option = QFileDialog.Options()
-        filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', '"Csv (*.csv)"', options=option)
+        if key == "node":
+            filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', 'PNG (*.png)', options=option)
+        else:
+            filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', 'CSV (*.csv)', options=option)
+
         if filename is not None:
             filename = str(filename[0])
+            if filename == '':
+                return
+
+            if self.nc_export_dropdown.currentIndex() == 1:  # if png option was selected
+                print("Export Graph as image")
+                self.vc_graph_widget.export(filename)
+                return
+
             print("Exporting csv to: ", filename)
             switcher = {
                 "log entry": lambda: self.table_manager.export_log_entry_table(filename=filename),
@@ -429,6 +449,7 @@ class UIMain(Ui_PICK):
                                                                      filename=filename),
                 "vector": lambda: self.table_manager.export_vector_configuration_table(filename=filename)}
             switcher[key]()
+
 
     # Calls the creation of a node when the button is clicked
     def create_node_button_clicked(self):
