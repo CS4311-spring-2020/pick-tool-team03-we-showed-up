@@ -198,6 +198,7 @@ class TableManager:
             return
         print("editing node and is system changes is: ", self.is_system_change)
         undo_val = ""
+        special_command = False
         if column == 9:
             undo_val = self.vectors[vector_num].nodes[row].visibility
             self.vectors[vector_num].nodes[row].visibility = value
@@ -207,10 +208,17 @@ class TableManager:
         elif column == 3:
             undo_val = self.vectors[vector_num].nodes[row].description
             self.vectors[vector_num].nodes[row].description = value
+        elif column == 5:
+            undo_val = self.vectors[vector_num].nodes[row].log_creator
+            self.vectors[vector_num].nodes[row].set_log_creator(value)
+            special_command = True
 
         if not self.is_system_change and not from_undo:
             self.undo_manager.add_command("set_node_field", [row, column, undo_val, vector_num])
         if from_undo:
+            self.populate_node_table(vector_num)
+
+        if special_command:
             self.populate_node_table(vector_num)
         return
 

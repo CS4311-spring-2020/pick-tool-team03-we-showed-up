@@ -58,6 +58,12 @@ class Node:
         self.icon = icon
         # TODO: set icontype according to this
 
+    def set_log_creator(self, log_creator):
+        log_creator = log_creator.lower()
+        options = {"blue": "blue", "b": "blue", "red": "red", "r": "red", "white": "white", "w": "white"}
+        if log_creator in options:
+            self.log_creator = options[log_creator]
+
     def get_visibility_string(self):
         return str(self.visibility)
 
