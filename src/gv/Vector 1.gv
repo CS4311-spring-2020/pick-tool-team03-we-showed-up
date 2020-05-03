@@ -1,0 +1,6 @@
+graph {
+    Node 1 [label=Node 1,fillcolor=grey]
+    Node 2 [label=Node 2,fillcolor=grey]
+    Node 3 [label=Node 3,fillcolor=grey]
+    Node 1 -- Node 2
+}

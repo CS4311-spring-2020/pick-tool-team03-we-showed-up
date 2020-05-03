@@ -11,20 +11,24 @@ class graph(QWidget):
     
     qgv = ""
     
+    
+    # initializing first instances of vector and QGraphViz aka qgv
     def __init__(self, layout, vector=None):
         self.vector = vector
         self.qgv = self.create_QGraphViz()
         self.layout_u = layout
         self.read_vector_table(vector)
  
+    # refreshes the qgv every time a change in the nodes or relationships is made
     def set_vector(self, vector):
         if not self.vector == vector:
             self.vector = vector
         self.qgv = self.create_QGraphViz()
-        print("refresh")
         self.update_graph(vector)
     
-        
+    
+    # checks if there is information in the node and relationship tables
+    # and either displays an empty graph or calls update_graph() if there are elements in the tables
     def read_vector_table(self, vector):
         if(vector == None):
             qgv = self.qgv
@@ -40,7 +44,7 @@ class graph(QWidget):
             # Build the graph (the layout engine organizes where the nodes and connections are)
             qgv.build()
             # Save it to a file to be loaded by Graphviz if needed
-            qgv.save("test.gv")
+            qgv.save("./gv/test.gv")
  
             # Add the QGraphViz object to the layout
             self.layout_u.addWidget(qgv)
@@ -48,7 +52,9 @@ class graph(QWidget):
         else:
             self.update_graph(vector)
         
-        
+       
+    # creates initial empty graph and reads node and relationship tables every time there is a change
+    # creates graphical elements for all nodes and edges
     def update_graph(self,vector):
         show_subgraphs=True
         
@@ -60,42 +66,47 @@ class graph(QWidget):
 
         vector_name = vector.name
         
-        
+        # destroys previous graph so it can be populated by the new elements
         if((self.layout_u.count())>0):
                 while self.layout_u.count():
                     child = self.layout_u.takeAt(0)
                     if child.widget() :
                         child.widget().deleteLater()
-                        
-        
+                 
+        n = []
+        # reads node info and creates graphical nodes
         for i in range(len(vector.get_nodes())):
             node_name = (vector.get_nodes()[i].get_name())
             node_type = (vector.get_nodes()[i].get_log_creator())
             
-            print(node_type)
-            
             if node_type == 'red' or node_type =='blue' or node_type == "white":
-                print(type(node_type))
                 color = node_type
                 
             else:
-                print(node_type + "not grey")
                 color = "grey"
                 
+            n.append(self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color))
+
+        # reads relationship information and creates lines between nodes
+        for i in range(len(vector.get_relationships())):
             
-            print("adding node")
-            n = self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color)
+            parent_node = n[int(vector.get_relationships()[i].get_parent_id())-1]
+            child_node = n[int(vector.get_relationships()[i].get_child_id())-1]
+
+            self.qgv.addEdge(parent_node, child_node, {})
+            
+        # builds new graph, saves it in a qgv file, and loads it back onto the widget
             
         qgv.build()
             
-        qgv.save(vector_name + ".gv")
+        qgv.save("./gv/" + vector_name + ".gv")
         
         self.layout_u.addWidget(qgv)
         qgv = qgv
         
  
            
- 
+    # creates QGraphViz instance
     def create_QGraphViz(self):
         def node_selected(node):
             if(qgv.manipulation_mode==QGraphVizManipulationMode.Node_remove_Mode):
@@ -135,7 +146,7 @@ class graph(QWidget):
  
         return qgv
        
- 
+    # Different functionalities for qgv that came with the library
     def manipulate():
         qgv.manipulation_mode=QGraphVizManipulationMode.Nodes_Move_Mode
  
@@ -148,11 +159,6 @@ class graph(QWidget):
         qgv.engine.graph = Graph("MainGraph")
         qgv.build()
         qgv.repaint()
- 
-    def load():
-        fname = QFileDialog.getOpenFileName(qgv, "Open", "", "*.json")
-        if(fname[0]!=""):
-            qgv.loadAJson(fname[0])
  
     def add_node():
         dlg = QDialog()
@@ -235,58 +241,5 @@ class graph(QWidget):
             btn.setChecked(False)
         btnAddEdge.setChecked(True)
  
-    def add_subgraph():
-        dlg = QDialog()
-        dlg.ok=False
-        dlg.subgraph_name=""
-        dlg.subgraph_label=""
-        dlg.subgraph_type="None"
-        # Layouts
-        main_layout = QVBoxLayout()
-        l = QFormLayout()
-        buttons_layout = QHBoxLayout()
+    
  
-        main_layout.addLayout(l)
-        main_layout.addLayout(buttons_layout)
-        dlg.setLayout(main_layout)
- 
-        leSubgraphName = QLineEdit()
-        leSubgraphLabel = QLineEdit()
- 
-        pbOK = QPushButton()
-        pbCancel = QPushButton()
- 
-        pbOK.setText("&OK")
-        pbCancel.setText("&Cancel")
- 
-        l.setWidget(0, QFormLayout.LabelRole, QLabel("Subgraph Name"))
-        l.setWidget(0, QFormLayout.FieldRole, leSubgraphName)
-        l.setWidget(1, QFormLayout.LabelRole, QLabel("Subgraph Label"))
-        l.setWidget(1, QFormLayout.FieldRole, leSubgraphLabel)
- 
-        def ok():
-            dlg.OK=True
-            dlg.subgraph_name = leSubgraphName.text()
-            dlg.subgraph_label = leSubgraphLabel.text()
-            dlg.close()
- 
-        def cancel():
-            dlg.OK=False
-            dlg.close()
- 
-        pbOK.clicked.connect(ok)
-        pbCancel.clicked.connect(cancel)
- 
-        buttons_layout.addWidget(pbOK)
-        buttons_layout.addWidget(pbCancel)
-        dlg.exec_()
- 
-        if dlg.OK and dlg.subgraph_name != '':
-                qgv.addSubgraph(qgv.engine.graph, dlg.subgraph_name, subgraph_type= GraphType.SimpleGraph, label=dlg.subgraph_label)
-                qgv.build()
- 
-    def rem_subgraph():
-        qgv.manipulation_mode=QGraphVizManipulationMode.Subgraph_remove_Mode
-        for btn in buttons_list:
-            btn.setChecked(False)
-        btnRemSubGraph.setChecked(True)
