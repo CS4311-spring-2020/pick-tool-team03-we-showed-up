@@ -40,13 +40,15 @@ class EventConfiguration:
     def set_object_id(self, id):
         self.object_id = id
 
-    def to_dictionary(self):
+    def to_dictionary(self, vector_id_list):
+        temp_vector_id_list = vector_id_list
         out_dict = {"name": self.name, "description": self.description,
                     "starttime": self.starttime,
                     "endtime": self.endtime,
                     "rootpath": self.rootpath, "whitefolder": self.whitefolder,
                     "redfolder": self.redfolder, "bluefolder": self.bluefolder, "lead": self.lead,
-                    "leadIP": self.leadIP, "connections": str(self.connections)}
+                    "leadIP": self.leadIP, "connections": str(self.connections),
+                    "vector_obj_ids": temp_vector_id_list}
         return out_dict
 
     def create_from_dictionary(dict):

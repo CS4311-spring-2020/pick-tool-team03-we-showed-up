@@ -17,26 +17,6 @@ class Database:
         # connection to mongo database
         self.pick_database = self.client['PICK-Tool-Vector-Database']
 
-        # Objects
-        # Event configuration
-        self.ec = EventConfiguration()
-        # Node
-        self.node = Node()
-        # Relationship
-        self.relationship = Relationship()
-        # Vector
-        self.vector = Vector()
-
-        # Dictionaries
-        # Event configuration dictionary
-        self.ec_dictionary = self.ec.to_dictionary()
-        # Node dictionary
-        self.node_dictionary = self.node.to_dictionary()
-        # Relationship dictionary
-        self.relationship_dictionary = self.relationship.to_dictionary()
-        # Vector dictionary
-        self.vector_dictionary = self.vector.to_dictionary()
-
         # Collections
         # Event configuration collection
         self.pick_eventconfig = self.pick_database['event_configuration']
@@ -56,14 +36,14 @@ class Database:
             node_result = self.pick_nodes.insert_one(node.to_dictionary())
             print(node_result.inserted_id)
             node_id = node_result.inserted_id
-            self.node.set_object_id(str(node_id))
+            node.set_object_id(str(node_id))
 
         # Insert relationship dictionary
         for relationship in vector.get_relationships():
             relationship_result = self.pick_relationships.insert_one(relationship.to_dictionary())
             print(relationship_result.inserted_id)
             relationship_id = relationship_result.inserted_id
-            self.relationship.set_object_id(str(relationship_id))
+            relationship.set_object_id(str(relationship_id))
 
         result_vect = self.pick_vectors.insert_one(vector.to_dictionary())
         obj_id = result_vect.inserted_id
@@ -77,7 +57,7 @@ class Database:
             vector_obj_ids.append(self.save_vector_to_database(vector))
         # at this point, the vector_obj_ids list has all the object ids of all the vectors in the event
 
-        ec_dict = event_config.to_dictionary()
+        ec_dict = event_config.to_dictionary(vector_obj_ids)
         print(ec_dict['name'])
         ec_dict['vector_obj_ids'] = str(vector_obj_ids)
 
@@ -85,18 +65,18 @@ class Database:
 
     # Update data from mongo database
     # NOTE: needs consultation with the team since multiple items in the vector can be updated
-    def update_vector(self, node_id, relationship_id, vector_id):
+    def update_vector(self, node, relationship, vector):
         # Update event config
         # NOTE: for update and delete, we take the object_id directly from the objects rather than the dictionary
         # Update node
-        node_result = self.pick_nodes.update_one({"_id": ObjectId(self.node.object_id)},
-                                                 {"$set": {"name": node_id}})
+        node_result = self.pick_nodes.update_one({"_id": ObjectId(node.object_id)},
+                                                 {"$set": {"name": node.get_name()}})
         # Update relationship
-        relationship_result = self.pick_relationships.update_one({"_id": ObjectId(self.relationship.object_id)},
-                                                                 {"$set": {"name": relationship_id}})
+        relationship_result = self.pick_relationships.update_one({"_id": ObjectId(relationship.object_id)},
+                                                                 {"$set": {"name": relationship.get_name()}})
         # Update vector
-        vector_result = self.pick_vectors.update_one({"_id": ObjectId(self.vector.object_id)},
-                                                     {"$set": {"description": vector_id}})
+        vector_result = self.pick_vectors.update_one({"_id": ObjectId(vector.object_id)},
+                                                     {"$set": {"description": vector.name}})
 
     # Retrieve information from database
     def get_vector(self, vector_id):
