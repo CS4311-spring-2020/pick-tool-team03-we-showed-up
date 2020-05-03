@@ -19,6 +19,7 @@ class Relationship:
             return ""
         return self.parent.id
 
+
     def get_child_name(self):
         if self.child is None:
             return ""
