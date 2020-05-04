@@ -122,7 +122,49 @@ class Database:
         for relationid in relation_id_list:
             print(self.get_relationship(relationid))
 
+    def get_event_data(self, event_id):
+        # Run methods to insert data
+        print("event id is: ", event_id)
+        # Retrieve event config
+        ec_test = self.get_event_config(event_id)
+        if ec_test is None:
+            print("Invalid ID")
+            return
+        event_config = EventConfiguration.create_from_dictionary(ec_test)
 
+        # Get Vector ID list
+        vector_id_list = ec_test.get("vector_obj_ids")
+
+        vector_list = []
+        for id in vector_id_list:
+
+            vdict = self.get_vector(id)
+            vector = Vector.create_from_dictionary(vdict)
+            node_id_list = vdict.get("node_obj_ids")
+            relationship_id_list = vdict.get("relationship_obj_ids")
+
+            nodes_map = {}
+            for n_id in node_id_list:
+                ndict = self.get_node(n_id)
+                node = Node.create_from_dictionary(ndict)
+                node.set_object_id(n_id)
+                nodes_map[node.get_id()] = node
+                vector.add_node(node)
+
+            print("relationships list is:", relationship_id_list)
+            for r_id in relationship_id_list:
+                rdict = self.get_relationship(r_id)
+                relationship = Relationship.create_from_dictionary(rdict)
+                relationship.set_object_id(r_id)
+                relationship.child = nodes_map[rdict.get('child id')]
+                relationship.parent = nodes_map[rdict.get('parent id')]
+                vector.add_relationship(relationship)
+                print("relationship name is: ", relationship.name)
+
+            vector_list.append(vector)
+
+        out_map = {"event_config": event_config, "vectors": vector_list}
+        return out_map
 
 
     # Retrieve information from database

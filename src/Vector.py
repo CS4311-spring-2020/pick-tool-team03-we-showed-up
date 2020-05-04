@@ -81,7 +81,7 @@ class Vector:
             checked_add_log_entry_table = False
 
         return Vector(name=dict["name"], description=dict["description"],
-                      checked_add_logentry=checked_add_log_entry_table,
+                      checked_add_log_entry=checked_add_log_entry_table,
                       checked_configuration=checked_configuration_table)
 
     def to_list(self):
