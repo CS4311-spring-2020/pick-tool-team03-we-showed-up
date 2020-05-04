@@ -208,15 +208,27 @@ class UIMain(Ui_PICK):
         ec_ui = UiEventConfigOpen()
         ec_ui.setupUi(ec_dialog)
         # call list of indexes and display event
-        events = self.splunk.getIndexList()
+        events = self.database.get_event_names()
         for event in events:
             ec_ui.comboBox.addItem(event)
-        # ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui)
+        ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui, events))
         ec_dialog.exec_()
 
-    def update_open_event_config(self, ec_ui):
-        text = ec_ui.comboBox.currentData
-        ec_ui.label_3.setText(text)
+    def update_open_event_config(self, ec_ui, event_list):
+        # text = ec_ui.comboBox.currentData()
+        # print(text)
+        # ec_ui.label_3.setText(text)
+        e_map = self.database.get_event_map()
+        selected_event = event_list[ec_ui.comboBox.currentIndex()]
+        print(e_map[selected_event])
+        out_map = self.database.get_event_data(e_map[selected_event])
+        self.table_manager.vectors.clear()
+        self.table_manager.vectors.extend(out_map['vectors'])
+        self.event_config = out_map["event_config"]
+        self.splunk.event_config = out_map["event_config"]
+        self.ingest_funct.event_config = out_map["event_config"]
+        self.table_manager.populate_vector_configuration_table()
+        # event_data_map = self.database.get_event_data()
 
     # Vector
 

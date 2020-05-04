@@ -28,6 +28,17 @@ class Database:
         # Vector collection
         self.pick_vectors = self.pick_database['vectors']
 
+    # Get map containing the event names  as keys and IDs as values
+    def get_event_map(self):
+        event_dicts = list(self.pick_eventconfig.find())
+        event_map = {}
+        for e in event_dicts:
+            event_map[e.get('name')] = e.get('_id')
+        return event_map
+
+    def get_event_names(self):
+        return list(self.get_event_map().keys())
+
     # Insert data to mongo database
     def save_vector_to_database(self, vector):
         # Insert node dictionary

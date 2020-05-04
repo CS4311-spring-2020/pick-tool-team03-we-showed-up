@@ -275,3 +275,8 @@ class TableManager:
             for j in selected_vectors:
                 self.vectors[j].add_node(Node.node_from_log_entry(log_entries[i]))
                 # graph.set_vector(self.vectors[j])
+
+    def populate_all_tables(self):
+        self.populate_vector_configuration_table()
+        self.populate_relationship_table(0)
+        self.populate_node_table(0)

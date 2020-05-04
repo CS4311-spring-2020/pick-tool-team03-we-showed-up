@@ -107,3 +107,6 @@ class Ui_Dialog(object):
         self.label_3.setText(_translate("Dialog", "Event description goes here."))
         self.ok_button.setText(_translate("Dialog", "OK"))
         self.pushButton_2.setText(_translate("Dialog", "Cancel"))
+        self.pushButton_2.clicked.connect(Dialog.reject)
+        self.ok_button.clicked.connect(Dialog.accept)
+
