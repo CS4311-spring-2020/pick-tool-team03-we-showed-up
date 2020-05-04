@@ -24,8 +24,9 @@ class Network:
 
         self.socket = s
         self.serverStatus = True
-        print('hi')
+        print('session token:')
         token = self.splunk.session_token
+        #print(token)
         #20 connections will be accepted per SRS
         self.socket.listen(20)
         print ("socket is listening")
@@ -41,7 +42,9 @@ class Network:
             print ('Got connection from', addr)
 
             # send a thank you message to the client.
-            c.send('Thank you for connecting. Splunk session token is:')
+            #hello_msg = 'Thank you for connecting. Splunk session token is:'.encode()
+            #c.send(hello_msg)
+            token = token.encode()
             c.send(token)
 
             # Close the connection with the client
@@ -61,7 +64,9 @@ class Network:
         s.connect((lead_ip, self.port))
 
         # receive data from the server
-        print (s.recv(1024))
-        print("here?")
+        token = s.recv(1024)
+        print("Info Recieved")
+        token = token.decode()
+        print(token)
         # close the connection
         # s.close()
