@@ -27,13 +27,21 @@ class Node:
 
     def node_from_log_entry(log_entry):
         print("Must create node from given log entry")
+        log_creator = log_entry.source
+        if "red/" in log_entry.source:
+            log_creator = "red"
+        elif "blue/" in log_entry.source:
+            log_creator = "blue"
+        elif "white/" in log_entry.source:
+            log_creator = "white"
+
         id = int(log_entry.serial)
         return Node(
             id=id, name="Node " + str(id),
             timestamp=log_entry.timestamp,
             description=log_entry.content,
             log_entry_reference=log_entry.serial,
-            log_creator=log_entry.source,
+            log_creator=log_creator,
             source=log_entry.source,
             event_type=log_entry.sourcetype,
         )
