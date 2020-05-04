@@ -28,8 +28,6 @@ class Database:
         # Vector collection
         self.pick_vectors = self.pick_database['vectors']
 
-    # Retrieve database
-
     # Insert data to mongo database
     def save_vector_to_database(self, vector):
         # Insert node dictionary
@@ -37,14 +35,14 @@ class Database:
             node_result = self.pick_nodes.insert_one(node.to_dictionary())
             print(node_result.inserted_id)
             node_id = node_result.inserted_id
-            node.set_object_id(str(node_id))
+            node.set_object_id(node_id)
 
         # Insert relationship dictionary
         for relationship in vector.get_relationships():
             relationship_result = self.pick_relationships.insert_one(relationship.to_dictionary())
             print(relationship_result.inserted_id)
             relationship_id = relationship_result.inserted_id
-            relationship.set_object_id(str(relationship_id))
+            relationship.set_object_id(relationship_id)
 
         result_vect = self.pick_vectors.insert_one(vector.to_dictionary())
         obj_id = result_vect.inserted_id
@@ -59,10 +57,14 @@ class Database:
         # at this point, the vector_obj_ids list has all the object ids of all the vectors in the event
 
         ec_dict = event_config.to_dictionary(vector_obj_ids)
-        print(ec_dict['name'])
-        ec_dict['vector_obj_ids'] = str(vector_obj_ids)
+        # print(ec_dict['name'])
+        # ec_dict['vector_obj_ids'] = vector_obj_ids
 
         result = self.pick_eventconfig.insert_one(ec_dict)
+        obj_id = result.inserted_id
+        print(obj_id)
+        event_config.set_object_id(obj_id)
+        print(event_config.object_id)
 
     # Update data from mongo database
     # NOTE: needs consultation with the team since multiple items in the vector can be updated
@@ -79,21 +81,54 @@ class Database:
         vector_result = self.pick_vectors.update_one({"_id": ObjectId(vector.object_id)},
                                                      {"$set": {"description": vector.name}})
 
+    # (TEST) Retrieve data from mongo
+    def get_data(self, ec, vector_list):
+        # Run methods to insert data
+        event_config_data = self.save_event_config_to_database(ec, vector_list)
+
+        print(ec.object_id)
+        # Retrieve event config
+        ec_id_string = str(ec.get_object_id)
+        ec_test = self.get_event_config(ec_id_string)
+        print(ec_test)
+        # Get Vector list
+        vector_id_list = ec_test.get("vector_obj_ids")
+        vectorlist = []
+        for vectorid in vector_id_list:
+            vectorlist.append(self.get_vector(vectorid))
+
+        # Get nodes and relationships
+        node_id_list = []
+        relation_id_list = []
+        for vector in vectorlist:
+            print(vector)
+            node_id_list.append(vector.get("node_obj_ids"))
+            relation_id_list.append(vector.get("relationship_obj_ids"))
+
+        for nodeid in node_id_list:
+            print(self.get_node(nodeid))
+
+        for relationid in relation_id_list:
+            print(self.get_relationship(relationid))
+
+
+
+
     # Retrieve information from database
     def get_vector(self, vector_id):
-        vector_result = self.pick_vectors.find_one({"_id": ObjectId(vector_id)})
+        vector_result = self.pick_vectors.find_one({"_id": ObjectId(str(vector_id))})
         return vector_result
 
     def get_node(self, node_id):
-        node_result = self.pick_nodes.find_one({"_id": ObjectId(node_id)})
+        node_result = self.pick_nodes.find_one({"_id": ObjectId(str(node_id))})
         return node_result
 
     def get_relationship(self, relation_id):
-        relation_result = self.pick_relationships.find_one({"_id": ObjectId(relation_id)})
+        relation_result = self.pick_relationships.find_one({"_id": ObjectId(str(relation_id))})
         return relation_result
 
     def get_event_config(self, ec_id):
-        ec_result = self.pick_eventconfig.find_one({"name": ObjectId(ec_id)})
+        ec_result = self.pick_eventconfig.find_one({"_id": ObjectId(ec_id)})
         return ec_result
 
     # Delete data from mongo database
@@ -101,15 +136,16 @@ class Database:
     # and deleted
     def delete_vector(self, node_id, relationship_id, vector_id, ec_id):
         # Delete node
-        node_result = self.pick_nodes.delete_one({"_id": ObjectId(node_id)})
+        node_result = self.pick_nodes.delete_one({"_id": ObjectId(str(node_id))})
         # Delete relationship
-        relationship_result = self.pick_relationships.delete_one({"_id": ObjectId(relationship_id)})
+        relationship_result = self.pick_relationships.delete_one({"_id": ObjectId(str(relationship_id))})
         # Delete vector
-        vector_result = self.pick_vectors.delete_one({"_id": ObjectId(vector_id)})
+        vector_result = self.pick_vectors.delete_one({"_id": ObjectId(str(vector_id))})
         # Delete event config
-        ec_result = self.pick_eventconfig.delete_one({"_id": ObjectId(ec_id)})
+        ec_result = self.pick_eventconfig.delete_one({"_id": ObjectId(str(ec_id))})
 
     # Serialize dictionaries (event configuration, node, relationship, vector) using JSON
+    # FIXME
     def serialize_eventconfig(self, ec_dictionary):
         temp_ec_dictionary = ec_dictionary
         app_json = dumps(temp_ec_dictionary)
@@ -135,6 +171,7 @@ class Database:
         return app_json
 
     # Deserialize dictionaries (event configuration, node, relationship, vector) using JSON
+    # FIXME
     def deserialize_eventconfig(self, ec_dictionary):
         decoded_ec_dictionary = ec_dictionary
         decode_json_ec = loads(decoded_ec_dictionary)
@@ -163,7 +200,7 @@ class Database:
     def export_vector_collection(self, ec_id):
         # Export vector collection (this is not how you do it though...)
         pick_datacollection = self.pick_database['pick_collection']
-        ec_result = self.pick_eventconfig.find_one({"_id": ObjectId(ec_id)})
+        ec_result = self.pick_eventconfig.find_one({"_id": ObjectId(str(ec_id))})
         pick_collection_result = pick_datacollection.insert_one(ec_result)
         return pick_collection_result
 
