@@ -67,12 +67,15 @@ class SPLUNKInterface:
     # creating a new index (event)
     # need to add date time-frames
     def createEvent(self, event_name, event_description):
-        for index in self.splunkClient.indexes.list():
-            if event_name == index.name:
-                return 1
-        self.event_config.name = event_name
-        self.splunkClient.indexes.create(name=event_name)
-        self.event_description = event_description
+        try:
+            for index in self.splunkClient.indexes.list():
+                if event_name == index.name:
+                    return 1
+            self.event_config.name = event_name
+            self.splunkClient.indexes.create(name=event_name)
+            self.event_description = event_description
+        except AttributeError:
+            return 2
 
     #open an event
     def open_event(self, event_name):

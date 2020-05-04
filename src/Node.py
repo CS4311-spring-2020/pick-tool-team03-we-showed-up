@@ -3,8 +3,9 @@ import datetime
 
 class Node:
     # Found this in the SRS :( "[SRS 45]	A node shall be part of at least one graph. "
-    def __init__(self, id="", name="", timestamp=datetime.datetime.now(), description="", log_entry_reference="", log_creator="",
-                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0, object_id=0x0):
+    def __init__(self, id=0, name="", timestamp=datetime.datetime.now(), description="", log_entry_reference="",
+                 log_creator="", event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0,
+                 object_id=0x0):
         self.id = id
         self.name = name
         self.timestamp = timestamp
@@ -26,7 +27,7 @@ class Node:
 
     def node_from_log_entry(log_entry):
         print("Must create node from given log entry")
-        id = log_entry.serial
+        id = int(log_entry.serial)
         return Node(
             id=id, name="Node " + str(id),
             timestamp=log_entry.timestamp,
@@ -88,7 +89,7 @@ class Node:
             visibility = False
 
         timestamp = dict["timestamp"]
-        return Node(id=dict["id"], name=dict["name"], timestamp=timestamp, description=dict["description"],
+        return Node(id=int(dict["id"]), name=dict["name"], timestamp=timestamp, description=dict["description"],
                     log_entry_reference=dict["log entry reference"], log_creator=dict["log creator"],
                     event_type=dict["event type"], source=dict["source"], icon_type=dict["icon type"],
                     visibility=visibility, x=float(dict["x"]), y=float(dict["y"]))

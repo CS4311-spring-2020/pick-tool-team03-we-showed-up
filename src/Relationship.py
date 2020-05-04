@@ -11,23 +11,22 @@ class Relationship:
 
     def get_parent_name(self):
         if self.parent is None:
-            return ""
+            return "no name"
         return self.parent.name
 
     def get_parent_id(self):
         if self.parent is None:
-            return ""
-        return self.parent.id
-
+            return "no id"
+        return str(self.parent.id)
 
     def get_child_name(self):
         if self.child is None:
-            return ""
+            return "no name"
         return self.child.name
 
     def get_child_id(self):
         if self.child is None:
-            return ""
+            return "no id"
         return self.child.id
 
     def get_id_str(self):
