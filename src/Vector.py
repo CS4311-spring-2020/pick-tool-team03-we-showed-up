@@ -56,12 +56,12 @@ class Vector:
         # Added node and relationship ids
         # Populate node object id list
         node_obj_ids = []
-        for node in self.nodes:
+        for node in self.get_nodes():
             node_obj_ids.append(str(node.get_object_id()))
         # Populate relationships object id list
         relationship_obj_id = []
-        for relation in self.relationships:
-            relationship_obj_id.append(str(relation.get_object_id()))
+        for relation in self.get_relationships():
+            relationship_obj_id.append(str(relation.get_object_id))
 
         out_dict = {"name": self.name, "description": self.description,
                     "checked configuration table": str(self.checked_configuration_table),
@@ -80,8 +80,9 @@ class Vector:
         else:
             checked_add_log_entry_table = False
 
-        return Vector(name=dict["name"], description=dict["description"], checked_configuration=checked_configuration_table,
-                      checked_add_log_entry=checked_add_log_entry_table)
+        return Vector(name=dict["name"], description=dict["description"],
+                      checked_add_logentry=checked_add_log_entry_table,
+                      checked_configuration=checked_configuration_table)
 
     def to_list(self):
         return [self.name, self.description]

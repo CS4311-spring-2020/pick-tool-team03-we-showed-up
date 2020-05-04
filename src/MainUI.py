@@ -182,18 +182,14 @@ class UIMain(Ui_PICK):
 
     # Helper method to be used to notify the SPLUNK tool to create an index
     def call_create_index(self, ec_ui):
-        if ec_ui.dateTimeEdit.dateTime() >= ec_ui.date_event_end.dateTime():
+        if (ec_ui.dateTimeEdit.dateTime() >= ec_ui.date_event_end.dateTime()):
             ec_ui.event_creation_status_label.setText("Sorry, time range is invalid.")
             return
         event_name = ec_ui.textbox_event_name.toPlainText()
         event_description = ec_ui.textbox_event_description.toPlainText()
-
         flag = self.splunk.createEvent(event_name, event_description)
-
         if flag == 1:
             ec_ui.event_creation_status_label.setText("Sorry, event name is taken.")
-        if flag == 2:
-            ec_ui.event_creation_status_label.setText("Sorry, connect to SPLUNK first")
         else:
             text = "Event " + event_name + " added."
             self.event_config.name = event_name
@@ -413,7 +409,7 @@ class UIMain(Ui_PICK):
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbcl_button_commit.clicked.connect(lambda: self.database.save_event_config_to_database(
+            vdb_ui.vdbcl_button_commit.clicked.connect(lambda: self.database.get_data(
                 self.event_config, self.table_manager.vectors))
         else:
             vdb_ui = UIVectorDBAnalyst()
