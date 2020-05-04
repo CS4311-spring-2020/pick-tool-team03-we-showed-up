@@ -3,7 +3,7 @@ from datetime import datetime
 class EventConfiguration:
 
     def __init__(self, name="", description="", starttime="", endtime="", rootpath="", whitefolder="", redfolder="",
-                 bluefolder="", lead=True, leadIP="", connections=0, object_id=""):
+                 bluefolder="", lead=True, leadIP="", connections=0, object_id=0x0):
         self.object_id = object_id
         self.name = name
         self.description = description

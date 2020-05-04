@@ -4,7 +4,7 @@ import datetime
 class Node:
     # Found this in the SRS :( "[SRS 45]	A node shall be part of at least one graph. "
     def __init__(self, id="", name="", timestamp=datetime.datetime.now(), description="", log_entry_reference="", log_creator="",
-                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0, object_id=""):
+                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0, object_id=0x0):
         self.id = id
         self.name = name
         self.timestamp = timestamp
