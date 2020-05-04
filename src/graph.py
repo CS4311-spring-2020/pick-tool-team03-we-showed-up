@@ -74,26 +74,27 @@ class graph(QWidget):
         node_dict = {}
         # reads node info and creates graphical nodes
         for i in range(len(vector.get_nodes())):
-            node_name = (vector.get_nodes()[i].get_name())
-            node_type = (vector.get_nodes()[i].get_log_creator())
-            
-            if node_type == 'red' or node_type =='blue' or node_type == "white":
-                color = node_type
-                
-            else:
-                color = "grey"
-            node_dict[str(vector.get_nodes()[i].get_id())] = self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color)
-            # n.append(self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color))
+            if vector.get_nodes()[i].is_visible():
+                node_name = (vector.get_nodes()[i].get_name())
+                node_type = (vector.get_nodes()[i].get_log_creator())
+
+                if node_type == 'red' or node_type =='blue' or node_type == "white":
+                    color = node_type
+
+                else:
+                    color = "grey"
+                node_dict[str(vector.get_nodes()[i].get_id())] = self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color)
+                # n.append(self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color))
         print(node_dict.keys())
         # reads relationship information and creates lines between nodes
         for i in range(len(vector.get_relationships())):
-            
-            # parent_node = n[int(vector.get_relationships()[i].get_parent_id())-1]
-            # child_node = n[int(vector.get_relationships()[i].get_child_id())-1]
-            parent_node = node_dict[str(vector.get_relationships()[i].get_parent_id())]
-            child_node = node_dict[str(vector.get_relationships()[i].get_child_id())]
+            if vector.get_relationships()[i].parent.is_visible() and vector.get_relationships()[i].child.is_visible():
+                # parent_node = n[int(vector.get_relationships()[i].get_parent_id())-1]
+                # child_node = n[int(vector.get_relationships()[i].get_child_id())-1]
+                parent_node = node_dict[str(vector.get_relationships()[i].get_parent_id())]
+                child_node = node_dict[str(vector.get_relationships()[i].get_child_id())]
 
-            self.qgv.addEdge(parent_node, child_node, {})
+                self.qgv.addEdge(parent_node, child_node, {})
             
         # builds new graph, saves it in a qgv file, and loads it back onto the widget
             
