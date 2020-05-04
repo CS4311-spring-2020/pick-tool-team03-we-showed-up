@@ -30,6 +30,8 @@ class SPLUNKInterface:
         self.earliest_time = "-30y"
         self.latest_time = "now"
 
+        self.session_token = ""
+
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
@@ -58,6 +60,7 @@ class SPLUNKInterface:
                 self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
             self.connected = True
             print("Succesfully connected to SPLUNK: ", username)
+            self.session_token = self.splunkClient.token
             return True
         except Exception as e: 
             print(e)

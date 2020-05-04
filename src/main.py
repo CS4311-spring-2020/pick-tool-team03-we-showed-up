@@ -24,6 +24,7 @@ from EventConfiguration import EventConfiguration
 from graph import graph
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QBrush
 from Connections.Database import Database
+import socket
 
 import sys
 import threading
@@ -369,12 +370,12 @@ class functionality(Ui_PICK):
             self.vc_relationship_table.setColumnWidth(i, column_width)
 
     def connect_button_triggered(self):
-        lead_ip = "64.233. 160.0"  # currently Google's IP
         no_connections = 10  # temporary placeholder for number of connections
 
         bt_dialog = QtWidgets.QDialog()
-
-        if self.textbox_ip.toPlainText() == lead_ip:
+        host_name = socket.gethostname()
+        host_ip = socket.gethostbyname(host_name)
+        if self.textbox_ip.toPlainText() == host_ip:
             print("open same ip error prompt")
             bt_ui = UIDuplicateLeadIP()
             bt_ui.setupUi(bt_dialog)
@@ -404,6 +405,8 @@ class functionality(Ui_PICK):
 
         else:
             print("successful connection should take place.")
+            thread = threading.Thread(target=lambda: self.network.connect_analyst_to_lead(self.textbox_ip.toPlainText()))
+            thread.start()
 
     def icon_edit_button_triggered(self):
         ic_dialog = QtWidgets.QDialog()
@@ -548,6 +551,8 @@ class functionality(Ui_PICK):
             ec_dialog.exec_()
         else:
             print("lead unchecked, must disconnect")
+            self.network.close_server()
+
 
     def connect_lead(self, ec_ui):
         print("Connecting client to Splunk ...")
@@ -555,6 +560,9 @@ class functionality(Ui_PICK):
             # Starts auto-refresh logs thread
             thread = threading.Thread(target=self.update_tables_periodically)
             thread.start()
+            self.network.splunk = self.splunk
+            self.network.start_lead_server()
+            print("here?")
         else:
             print("Splunk connection failed")
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)
