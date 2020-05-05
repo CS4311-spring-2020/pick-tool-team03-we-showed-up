@@ -98,6 +98,7 @@ class UIMain(Ui_PICK):
         self.nc_iconchange_button.clicked.connect(self.icon_edit_button_clicked)
         self.vc_push_button.clicked.connect(self.vector_db_button_clicked)
         self.vc_add_button.clicked.connect(self.create_node_button_clicked)
+        self.vc_vector_drop_down.view().pressed.connect(self.vector_dropdown_clicked)
         self.lec_add_to_vector_button.clicked.connect(self.add_log_entry_to_vector)
 
         # setup of validate button in the enforcement action report table
@@ -115,7 +116,7 @@ class UIMain(Ui_PICK):
 
         # Connects the item change signals to edition functions
         self.vc_node_table.itemChanged.connect(self.edit_table_node)
-        self.tableWidget.itemChanged.connect(self.edit_table_log_giles)
+        self.tableWidget.itemChanged.connect(self.edit_table_log_files)
         self.vc_table.itemChanged.connect(self.edit_table_vector_configuration)
         self.lec_logentry_table.itemChanged.connect(self.edit_table_log_entry)
 
@@ -242,7 +243,7 @@ class UIMain(Ui_PICK):
         self.user_change = True
         sel_vec = self.vc_vector_drop_down.currentIndex()
         if sel_vec >= 0:
-                self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
     def delete_vector(self):
         self.user_change = False
@@ -275,7 +276,7 @@ class UIMain(Ui_PICK):
         menu.addAction("Show full description", self.log_entry_description_button_clicked)
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
 
-    def edit_table_log_giles(self, item):
+    def table_log_giles(self, item):
         if not self.user_change:
             return
         print("changing log table")
@@ -320,10 +321,13 @@ class UIMain(Ui_PICK):
             self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0),
                                                self.vc_vector_drop_down.currentIndex())
         else:
+            sel_vec = self.vc_vector_drop_down.currentIndex()
+            self.vc_graph_widget.save_node_positions(self.table_manager.vectors[sel_vec])
             self.table_manager.edit_node_table(item.row(), item.column(), item.text(),
                                                self.vc_vector_drop_down.currentIndex())
         try:
             if self.vc_vector_drop_down.currentIndex() >= 0:
+                self.vc_graph_widget.save_node_positions(self.table_manager.vectors[sel_vec])
                 self.vc_graph_widget.set_vector(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
         except IndexError:
             print("Wrong index of vector")
@@ -451,6 +455,16 @@ class UIMain(Ui_PICK):
         except IndexError:
             print("No vector to be selected")
         self.user_change = True
+
+     # saves node positions when dropdown is clicked
+    def vector_dropdown_clicked(self):
+        sel_vec = self.vc_vector_drop_down.currentIndex()
+        try:
+            if sel_vec >= 0:
+                self.vc_graph_widget.save_node_positions(self.table_manager.vectors[sel_vec])
+        except IndexError:
+            print("No vector to be selected")
+            self.user_change = True
 
     # Method called when a the export button of a table is clicked
     def export_table_clicked(self, key):

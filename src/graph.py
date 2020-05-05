@@ -70,7 +70,6 @@ class graph(QWidget):
                     if child.widget() :
                         child.widget().deleteLater()
                  
-        n = []
         node_dict = {}
         # reads node info and creates graphical nodes
         for i in range(len(vector.get_nodes())):
@@ -93,18 +92,30 @@ class graph(QWidget):
                 # child_node = n[int(vector.get_relationships()[i].get_child_id())-1]
                 parent_node = node_dict[str(vector.get_relationships()[i].get_parent_id())]
                 child_node = node_dict[str(vector.get_relationships()[i].get_child_id())]
-
                 self.qgv.addEdge(parent_node, child_node, {})
-            
+          
         # builds new graph, saves it in a qgv file, and loads it back onto the widget
             
         qgv.build()
+        
+        for i in range(len(vector.get_nodes())):
+            if vector.get_nodes()[i].x != 0 and vector.get_nodes()[i].is_visible():
+                node_dict[vector.get_nodes()[i].get_id()].pos[0] = vector.get_nodes()[i].x
+                node_dict[vector.get_nodes()[i].get_id()].pos[1] = vector.get_nodes()[i].y
             
         qgv.save("./gv/" + vector_name + ".gv")
         
         self.layout_u.addWidget(qgv)
         self.qgv = qgv
-
+        
+    def save_node_positions(self,vector):
+       i=0
+       if len(vector.get_nodes()) > 0:
+           for node in self.qgv.engine.graph.nodes:
+               vector.get_nodes()[i].x = node.pos[0]
+               vector.get_nodes()[i].y = node.pos[1]
+               i = i+1
+        
     # Export GGraphViz widget into image
     def export(self, filename):
         try:
