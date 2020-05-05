@@ -584,6 +584,12 @@ class UIMain(Ui_PICK):
             ec_ui.push_button_cancel.clicked.connect(lambda: self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked))
             ec_dialog.exec_()
         else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setText("Incorrect Splunk login credentials.")
+            msg.setWindowTitle("Unsuccessful Splunk Connection")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
             print("lead unchecked, must disconnect")
 
     # Helper method that asks the SPLUNK interface to connect given the user's input
