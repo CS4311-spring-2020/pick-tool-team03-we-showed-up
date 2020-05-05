@@ -112,12 +112,16 @@ class graph(QWidget):
         i = 0
         if len(vector.get_nodes()) > 0:
             for node in self.qgv.engine.graph.nodes:
-                if not vector.get_nodes()[i].name == node.name:
-                    i += 1
-                vector.get_nodes()[i].x = node.pos[0]
-                vector.get_nodes()[i].y = node.pos[1]
-                print("saving positions of node:", node.name)
-                i = i+1
+                try:
+                    if not vector.get_nodes()[i].name == node.name:
+                        i += 1
+                    vector.get_nodes()[i].x = node.pos[0]
+                    vector.get_nodes()[i].y = node.pos[1]
+                    print("saving positions of node:", node.name)
+                    i = i+1
+                except:
+                    print("index out of bounds")
+                    return
         
     # Export GGraphViz widget into image
     def export(self, filename):
