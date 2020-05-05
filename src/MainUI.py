@@ -425,7 +425,7 @@ class UIMain(Ui_PICK):
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbcl_button_commit.clicked.connect(lambda: self.database.save_event_config_to_database(
+            vdb_ui.vdbcl_button_commit.clicked.connect(lambda: self.database.update_event(
                 self.event_config, self.table_manager.vectors))
         else:
             vdb_ui = UIVectorDBAnalyst()

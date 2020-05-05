@@ -17,7 +17,7 @@ class Relationship:
     def get_parent_id(self):
         if self.parent is None:
             return ""
-        return self.parent.id
+        return self.parent.get_id()
 
 
     def get_child_name(self):
@@ -28,7 +28,7 @@ class Relationship:
     def get_child_id(self):
         if self.child is None:
             return ""
-        return self.child.id
+        return self.child.get_id()
 
     def get_id_str(self):
         return str(self.id)

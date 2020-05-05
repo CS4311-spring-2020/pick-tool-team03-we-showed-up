@@ -43,24 +43,33 @@ class Database:
     def save_vector_to_database(self, vector):
         # Insert node dictionary
         for node in vector.get_nodes():
-            node_result = self.pick_nodes.insert_one(node.to_dictionary())
-            print(node_result.inserted_id)
-            node_id = node_result.inserted_id
-            node.set_object_id(node_id)
+            self.save_node_to_database(node)
 
         # Insert relationship dictionary
         for relationship in vector.get_relationships():
-            relationship_result = self.pick_relationships.insert_one(relationship.to_dictionary())
-            print(relationship_result.inserted_id)
-            relationship_id = relationship_result.inserted_id
-            relationship.set_object_id(relationship_id)
+            self.save_relationship_to_database(relationship)
 
         result_vect = self.pick_vectors.insert_one(vector.to_dictionary())
         obj_id = result_vect.inserted_id
         vector.set_object_id(obj_id)
         return obj_id
 
-    def save_event_config_to_database(self, event_config, vector_list):
+    def save_node_to_database(self, node):
+        node_result = self.pick_nodes.insert_one(node.to_dictionary())
+        print("saved node with objid:", node_result.inserted_id)
+        node_id = node_result.inserted_id
+        node.set_object_id(node_id)
+        return node.get_object_id()
+
+    def save_relationship_to_database(self, relationship):
+        relationship_result = self.pick_relationships.insert_one(relationship.to_dictionary())
+        print("saved relationship with objid: ", relationship_result.inserted_id)
+        relationship_id = relationship_result.inserted_id
+        relationship.set_object_id(relationship_id)
+        return relationship.get_object_id()
+
+    def save_event_data_to_database(self, event_config, vector_list):
+        print("saving event data of: ", event_config.name)
         vector_obj_ids = list()
 
         for vector in vector_list:
@@ -105,8 +114,6 @@ class Database:
     #         print(self.get_relationship(relationid))
 
     def get_event_data(self, event_id):
-        # Run methods to insert data
-        print("event id is: ", event_id)
         # Retrieve event config
         ec_test = self.get_event_config(event_id)
         if ec_test is None:
@@ -134,8 +141,6 @@ class Database:
                 node.set_object_id(n_id)
                 nodes_map[node.get_id()] = node
                 vector.add_node(node)
-
-            print("relationships list is:", relationship_id_list)
             for r_id in relationship_id_list:
                 rdict = self.get_relationship(r_id)
                 relationship = Relationship.create_from_dictionary(rdict)
@@ -143,7 +148,6 @@ class Database:
                 relationship.child = nodes_map[rdict.get('child id')]
                 relationship.parent = nodes_map[rdict.get('parent id')]
                 vector.add_relationship(relationship)
-                print("relationship name is: ", relationship.name)
 
             vector_list.append(vector)
 
@@ -161,7 +165,6 @@ class Database:
         return node_result
 
     def get_relationship(self, relation_id):
-        print("relation id is: ", relation_id)
         relation_result = self.pick_relationships.find_one({"_id": ObjectId(str(relation_id))})
         return relation_result
 
@@ -171,10 +174,15 @@ class Database:
 
     # Update all the data of the event (event config, vectors, nodes and relationships)
     def update_event(self, event_config, vectors):
+        # if event is not saved, then save it and return
+        if event_config.get_object_id() == 0x0:
+            print("Event wasn't saved, saving it now: ", event_config.name)
+            return self.save_event_data_to_database(event_config, vectors)
+
         print("Updating event: ", event_config.name)
         vector_id_list = list()
         for vector in vectors:
-            vector_id_list.append(vector.get_object_id())
+            vector_id_list.append(self.update_vector(vector))
         self.update_event_config(event_config, vector_id_list)
 
     def update_event_config(self, event_config, vector_id_list):
@@ -187,24 +195,23 @@ class Database:
     # Update data from mongo database
     # NOTE: needs consultation with the team since multiple items in the vector can be updated
     def update_vector(self, vector):
+        print("updating vector:", vector.name)
+        # if node isn't in the database, add it
+        if vector.get_object_id() == 0x0:
+            return self.save_vector_to_database(vector)
         # Update vector
-        vector_dict = self.get_vector(vector.get_object_id())
         node_list = vector.get_nodes()
         relationship_list = vector.get_relationships()
-        counter = 0
+        # update nodes in vector
         for node in node_list:
-            # (TEST) "Update" in nodes
-            node.name = "node no. " + str(counter)
-            counter += 1
             self.update_node(node)
-        counter = 0
+        # update relationships in vector
         for relation in relationship_list:
-            # (TEST) "Update" in relation
-            relation.name = "rel no. " + str(counter)
-            counter += 1
             self.update_relationships(relation)
 
-        vector_result = self.pick_vectors.update_one({"_id": ObjectId(vector_dict.get("_id"))},
+        vector_dict = vector.to_dictionary()
+        print("vector id is: ", vector.object_id)
+        vector_result = self.pick_vectors.update_one({"_id": vector.object_id},
                                                      {"$set": {"name": vector.name, "description": vector.description,
                                                                "checked configuration table": str(
                                                                    vector.checked_configuration_table),
@@ -213,9 +220,15 @@ class Database:
                                                                "node_obj_ids": vector_dict.get("node_obj_ids"),
                                                                "relationship_obj_ids": vector_dict.get(
                                                                    "relationship_obj_ids")}})
-        print(vector_result.raw_result)
+        print("node id list is now", vector_dict.get("node_obj_ids"))
+        return vector.get_object_id()
 
     def update_node(self, node):
+        print("updating node: ", node.name)
+        # if node isn't in the database, add it
+        if node.get_object_id() == 0x0:
+            print("node wasn't in db, adding it:", node.name)
+            return self.save_node_to_database(node)
         node_dict = self.get_node(node.get_object_id())
 
         node_result = self.pick_nodes.update_one({"_id": ObjectId(node_dict.get("_id"))},
@@ -228,17 +241,20 @@ class Database:
                                                            "source": node.source, "icon type": node.icon_type,
                                                            "visibility": node.get_visibility_string(),
                                                            "x": str(node.x), "y": str(node.y)}})
-        print(node_result)
+        return node.get_object_id()
 
     def update_relationships(self, relationship):
+        # if relationship isn't in database, add it
+        if relationship.get_object_id() == 0x0:
+            print("relationship wasn't in db, adding it:", relationship.name)
+            return self.save_relationship_to_database(relationship)
         relation_dict = self.get_relationship(relationship.get_object_id())
 
         relationship_result = self.pick_relationships.update_one({"_id": ObjectId(relation_dict.get("_id"))},
                                                                  {"$set": {"name": relationship.get_name(),
                                                                            "child": relationship.get_child_id(),
                                                                            "parent": relationship.get_parent_id()}})
-        print(relationship_result)
-
+        return relationship.get_object_id()
 
     # Delete data from mongo database
     # NOTE: needs consultation with the team to determine the field through which the vector will be found

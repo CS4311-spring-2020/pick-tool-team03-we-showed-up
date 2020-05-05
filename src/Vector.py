@@ -20,7 +20,6 @@ class Vector:
         self.nodes.append(node)
 
     def add_relationship(self, relationship=None):
-        print("added relationship to vector", self.name)
         id = str(len(self.relationships) + 1)
         if relationship is None:
             relationship = Relationship(name="Relationship" + id, id=id)
