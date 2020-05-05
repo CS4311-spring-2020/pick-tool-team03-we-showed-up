@@ -192,8 +192,10 @@ class UIMain(Ui_PICK):
 
         if flag == 1:
             ec_ui.event_creation_status_label.setText("Sorry, event name is taken.")
-        if flag == 2:
+        elif flag == 2:
             ec_ui.event_creation_status_label.setText("Sorry, connect to SPLUNK first")
+        elif flag == 3:
+            ec_ui.event_creation_status_label.setText("Sorry, valid names should be lowercase and contain no spaces")
         else:
             text = "Event " + event_name + " added."
             self.event_config.name = event_name

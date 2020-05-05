@@ -65,11 +65,8 @@ class Database:
 
         for vector in vector_list:
             vector_obj_ids.append(self.save_vector_to_database(vector))
-        # at this point, the vector_obj_ids list has all the object ids of all the vectors in the event
 
         ec_dict = event_config.to_dictionary(vector_obj_ids)
-        # print(ec_dict['name'])
-        # ec_dict['vector_obj_ids'] = vector_obj_ids
 
         result = self.pick_eventconfig.insert_one(ec_dict)
         obj_id = result.inserted_id
@@ -77,35 +74,35 @@ class Database:
         event_config.set_object_id(obj_id)
         print(event_config.object_id)
 
-    # (TEST) Retrieve data from mongo
-    def get_data(self, ec, vector_list):
-        # Run methods to insert data
-        event_config_data = self.save_event_config_to_database(ec, vector_list)
-
-        print(ec.object_id)
-        # Retrieve event config
-        ec_id_string = str(ec.get_object_id())
-        ec_test = self.get_event_config(ec_id_string)
-        print(ec_test)
-        # Get Vector list
-        vector_id_list = ec_test.get("vector_obj_ids")
-        vectorlist = []
-        for vectorid in vector_id_list:
-            vectorlist.append(self.get_vector(vectorid))
-
-        # Get nodes and relationships
-        node_id_list = []
-        relation_id_list = []
-        for vector in vectorlist:
-            print(vector)
-            node_id_list.append(vector.get("node_obj_ids"))
-            relation_id_list.append(vector.get("relationship_obj_ids"))
-
-        for nodeid in node_id_list:
-            print(self.get_node(nodeid))
-
-        for relationid in relation_id_list:
-            print(self.get_relationship(relationid))
+    # # (TEST) Retrieve data from mongo
+    # def get_data(self, ec, vector_list):
+    #     # Run methods to insert data
+    #     event_config_data = self.save_event_config_to_database(ec, vector_list)
+    #
+    #     print(ec.object_id)
+    #     # Retrieve event config
+    #     ec_id_string = str(ec.get_object_id())
+    #     ec_test = self.get_event_config(ec_id_string)
+    #     print(ec_test)
+    #     # Get Vector list
+    #     vector_id_list = ec_test.get("vector_obj_ids")
+    #     vectorlist = []
+    #     for vectorid in vector_id_list:
+    #         vectorlist.append(self.get_vector(vectorid))
+    #
+    #     # Get nodes and relationships
+    #     node_id_list = []
+    #     relation_id_list = []
+    #     for vector in vectorlist:
+    #         print(vector)
+    #         node_id_list.append(vector.get("node_obj_ids"))
+    #         relation_id_list.append(vector.get("relationship_obj_ids"))
+    #
+    #     for nodeid in node_id_list:
+    #         print(self.get_node(nodeid))
+    #
+    #     for relationid in relation_id_list:
+    #         print(self.get_relationship(relationid))
 
     def get_event_data(self, event_id):
         # Run methods to insert data
