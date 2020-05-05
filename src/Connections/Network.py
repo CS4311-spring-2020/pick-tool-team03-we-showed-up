@@ -13,6 +13,7 @@ class Network:
         self.serverStatus = False
 
         self.splunk = splunk
+        self.token = ""
 
         pass
 
@@ -65,8 +66,12 @@ class Network:
 
         # receive data from the server
         token = s.recv(1024)
-        print("Info Recieved")
+        #print("Info Recieved")
         token = token.decode()
-        print(token)
+        #print(token)
+
+        #connect to splunk instance with token
+        #self.splunk.splunkClient = client.connect(splunkToken=token, [...])
+        self.token = token
         # close the connection
         # s.close()

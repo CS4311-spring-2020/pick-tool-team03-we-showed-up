@@ -405,8 +405,31 @@ class functionality(Ui_PICK):
 
         else:
             print("successful connection should take place.")
-            thread = threading.Thread(target=lambda: self.network.connect_analyst_to_lead(self.textbox_ip.toPlainText()))
+            ec_dialog = QtWidgets.QDialog()
+            ec_ui = SPLUNKLoginDialog()
+            ec_ui.setupUi(ec_dialog)
+            ec_ui.push_button_connect.clicked.connect(lambda: self.connect_analyst(ec_ui))
+            ec_dialog.exec_()
+        return
+
+
+    def connect_analyst(self, ec_ui):
+        print("Connecting client to Splunk ...")
+        thread_analyst = threading.Thread(target=lambda: self.network.connect_analyst_to_lead(self.textbox_ip.toPlainText()))
+        thread_analyst.start()
+        time.sleep(8)
+        token = self.network.token
+        print("token from main is:")
+        print(token)
+        if self.splunk.connect_analyst_with_token(token, ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
+            # Starts auto-refresh logs thread
+            thread = threading.Thread(target=self.update_tables_periodically)
             thread.start()
+        else:
+            print("Splunk connection failed")
+
+
+
 
     def icon_edit_button_triggered(self):
         ic_dialog = QtWidgets.QDialog()
@@ -562,7 +585,6 @@ class functionality(Ui_PICK):
             thread.start()
             self.network.splunk = self.splunk
             self.network.start_lead_server()
-            print("here?")
         else:
             print("Splunk connection failed")
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)
