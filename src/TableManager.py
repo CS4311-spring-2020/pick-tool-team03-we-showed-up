@@ -277,6 +277,6 @@ class TableManager:
                 # graph.set_vector(self.vectors[j])
 
     def populate_all_tables(self):
-        self.populate_vector_configuration_table()
         self.populate_relationship_table(0)
         self.populate_node_table(0)
+        self.populate_vector_configuration_table()

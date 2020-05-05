@@ -77,14 +77,14 @@ class graph(QWidget):
                 node_name = (vector.get_nodes()[i].get_name())
                 node_type = (vector.get_nodes()[i].get_log_creator())
 
-                if node_type == 'red' or node_type =='blue' or node_type == "white":
+                if node_type == 'red' or node_type == 'blue' or node_type == "white":
                     color = node_type
 
                 else:
                     color = "grey"
                 node_dict[str(vector.get_nodes()[i].get_id())] = self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color)
                 # n.append(self.qgv.addNode(qgv.engine.graph, node_name, label=node_name, fillcolor=color))
-        print(node_dict.keys())
+
         # reads relationship information and creates lines between nodes
         for i in range(len(vector.get_relationships())):
             if vector.get_relationships()[i].parent.is_visible() and vector.get_relationships()[i].child.is_visible():
@@ -109,12 +109,15 @@ class graph(QWidget):
         self.qgv = qgv
         
     def save_node_positions(self,vector):
-       i=0
-       if len(vector.get_nodes()) > 0:
-           for node in self.qgv.engine.graph.nodes:
-               vector.get_nodes()[i].x = node.pos[0]
-               vector.get_nodes()[i].y = node.pos[1]
-               i = i+1
+        i = 0
+        if len(vector.get_nodes()) > 0:
+            for node in self.qgv.engine.graph.nodes:
+                if not vector.get_nodes()[i].name == node.name:
+                    i += 1
+                vector.get_nodes()[i].x = node.pos[0]
+                vector.get_nodes()[i].y = node.pos[1]
+                print("saving positions of node:", node.name)
+                i = i+1
         
     # Export GGraphViz widget into image
     def export(self, filename):

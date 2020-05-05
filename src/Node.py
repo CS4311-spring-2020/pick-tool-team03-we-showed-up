@@ -71,6 +71,8 @@ class Node:
         options = {"blue": "blue", "b": "blue", "red": "red", "r": "red", "white": "white", "w": "white"}
         if log_creator in options:
             self.log_creator = options[log_creator]
+        else:
+            self.log_creator = log_creator
 
     def get_visibility_string(self):
         return str(self.visibility)

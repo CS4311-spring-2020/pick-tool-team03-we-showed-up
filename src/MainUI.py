@@ -276,7 +276,7 @@ class UIMain(Ui_PICK):
         menu.addAction("Show full description", self.log_entry_description_button_clicked)
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
 
-    def table_log_giles(self, item):
+    def edit_table_log_files(self, item):
         if not self.user_change:
             return
         print("changing log table")
@@ -327,7 +327,7 @@ class UIMain(Ui_PICK):
                                                self.vc_vector_drop_down.currentIndex())
         try:
             if self.vc_vector_drop_down.currentIndex() >= 0:
-                self.vc_graph_widget.save_node_positions(self.table_manager.vectors[sel_vec])
+                self.vc_graph_widget.save_node_positions(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
                 self.vc_graph_widget.set_vector(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
         except IndexError:
             print("Wrong index of vector")
@@ -434,8 +434,8 @@ class UIMain(Ui_PICK):
         else:
             vdb_ui = UIVectorDBAnalyst()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbc_button_push.clicked.connect(self.database.save_vector_to_database())
-            vdb_ui.vdbc_button_pull.clicked.connect(self.database.update_vector)
+            # vdb_ui.vdbc_button_push.clicked.connect(self.database.save_vector_to_database())
+            # vdb_ui.vdbc_button_pull.clicked.connect(self.database.update_vector)
 
         vdb_dialog.exec_()
 
