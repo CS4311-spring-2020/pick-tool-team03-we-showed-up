@@ -257,7 +257,6 @@ class UIMain(Ui_PICK):
     def vector_deletion_confirmation(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
-
         msg.setText("Are you sure you want to delete the vector(s)?")
         msg.setWindowTitle("Vector Deletion")
         msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)

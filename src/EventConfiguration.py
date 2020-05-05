@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 
 class EventConfiguration:
 
@@ -52,8 +53,14 @@ class EventConfiguration:
         return out_dict
 
     def create_from_dictionary(dict):
-        starttime = datetime.strftime(dict["starttime"], "%m/%d/%Y, %H:%M:%S")
-        endtime = datetime.strftime(dict["endtime"], "%m/%d/%Y, %H:%M:%S")
+        if dict["starttime"] is str:
+            starttime = datetime.strptime(dict["starttime"], "%m/%d/%Y, %H:%M:%S")
+        else:
+            starttime = dict["starttime"]
+        if dict["endtime"] is str:
+            endtime = datetime.strptime(dict["endtime"], "%m/%d/%Y, %H:%M:%S")
+        else:
+            endtime = dict["endtime"]
         return EventConfiguration(name=dict["name"], description=dict["description"],
                                   starttime=starttime, endtime=endtime, rootpath=dict["rootpath"],
                                   whitefolder=dict["whitefolder"], redfolder=dict["redfolder"],

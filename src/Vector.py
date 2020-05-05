@@ -61,7 +61,7 @@ class Vector:
         # Populate relationships object id list
         relationship_obj_id = []
         for relation in self.get_relationships():
-            relationship_obj_id.append(str(relation.get_object_id))
+            relationship_obj_id.append(str(relation.get_object_id()))
 
         out_dict = {"name": self.name, "description": self.description,
                     "checked configuration table": str(self.checked_configuration_table),
