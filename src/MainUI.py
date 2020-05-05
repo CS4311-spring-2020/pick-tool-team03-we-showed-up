@@ -244,13 +244,25 @@ class UIMain(Ui_PICK):
 
     def delete_vector(self):
         self.user_change = False
-        self.table_manager.delete_vectors()
-        self.table_manager.populate_vector_configuration_table()
-        self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
-        self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
-        self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
-        self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
+        if (self.vector_deletion_confirmation() == 1024):
+            print("Deleting vector(s)")
+            self.table_manager.delete_vectors()
+            self.table_manager.populate_vector_configuration_table()
+            self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+            self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
+            self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
+            self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
         self.user_change = True
+
+    def vector_deletion_confirmation(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+
+        msg.setText("Are you sure you want to delete the vector(s)?")
+        msg.setWindowTitle("Vector Deletion")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        retval = msg.exec_()
+        return retval
 
     def rightClickLogEntry(self, point):
         index = self.lec_logentry_table.indexAt(point)
