@@ -372,11 +372,11 @@ class UIMain(Ui_PICK):
 
     # Calls the connection methods once the buttons is clicked
     def connect_button_clicked(self):
-        lead_ip = "64.233. 160.0"  # currently Google's IP
         no_connections = 10  # temporary placeholder for number of connections
 
         bt_dialog = QtWidgets.QDialog()
-
+        host_name = socket.gethostname()
+        host_ip = socket.gethostbyname(host_name)
         if self.textbox_ip.toPlainText() == lead_ip:
             print("open same ip error prompt")
             bt_ui = UIDuplicateLeadIP()
@@ -407,6 +407,27 @@ class UIMain(Ui_PICK):
 
         else:
             print("successful connection should take place.")
+            ec_dialog = QtWidgets.QDialog()
+            ec_ui = SPLUNKLoginDialog()
+            ec_ui.setupUi(ec_dialog)
+            ec_ui.push_button_connect.clicked.connect(lambda: self.connect_analyst(ec_ui))
+            ec_dialog.exec_()
+
+    # Connects analyst to lead
+    def connect_analyst(self, ec_ui):
+        print("Connecting client to Splunk ...")
+        host_ip = self.textbox_ip.toPlainText()
+        print("Host IP is :")
+        print(host_ip)
+        thread_analyst = threading.Thread(target=lambda: self.network.connect_analyst_to_lead(host_ip))
+        thread_analyst.start()
+        time.sleep(10)
+        if self.splunk.connect_analyst_with_token(host_ip, ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
+            # Starts auto-refresh logs thread
+            thread = threading.Thread(target=self.update_tables_periodically)
+            thread.start()
+        else:
+            print("Splunk connection failed")
 
     # Opens the icon edit window
     def icon_edit_button_clicked(self):
@@ -599,6 +620,8 @@ class UIMain(Ui_PICK):
             # Starts auto-refresh logs thread
             thread = threading.Thread(target=self.update_tables_periodically)
             thread.start()
+            self.network.splunk = self.splunk
+            self.network.start_lead_server()
         else:
             print("Splunk connection failed")
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)

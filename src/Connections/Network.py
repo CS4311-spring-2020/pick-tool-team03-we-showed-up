@@ -1,17 +1,18 @@
 # This Python file uses the following encoding: utf-8
 import threading
 import socket
+#from .. import SPLUNKInterface
 
 class Network:
-    def __init__(self):
+    def __init__(self, splunk = None):
         # Ask clients what port they would like to connect through
-        self.port = 8091
-        #local port for now
-        #lead_ip = '127.0.0.1'
+        self.port = 8092
         # Lead socket
         self.socket = socket.socket()
 
         self.serverStatus = False
+
+        self.splunk = splunk
 
         pass
 
@@ -22,13 +23,13 @@ class Network:
         print ("socket binded to %s" %(self.port))
 
         self.socket = s
-        self.serverStatus == True
-
+        self.serverStatus = True
         #20 connections will be accepted per SRS
         self.socket.listen(20)
         print ("socket is listening")
-        thread = threading.Thread(target=self.start_server_thread)
-        thread.start()
+        thread_network = threading.Thread(target=lambda: self.start_server_thread())
+        thread_network.start()
+        return
 
     def start_server_thread(self):
         while (self.serverStatus == True):
@@ -38,7 +39,8 @@ class Network:
             print ('Got connection from', addr)
 
             # send a thank you message to the client.
-            c.send('Thank you for connecting')
+            hello_msg = 'Thank you for connecting.'.encode()
+            c.send(hello_msg)
 
             # Close the connection with the client
             # c.close()
@@ -57,7 +59,13 @@ class Network:
         s.connect((lead_ip, self.port))
 
         # receive data from the server
-        print (s.recv(1024))
-        print("here?")
+        msg = s.recv(1024)
+        #print("Info Recieved")
+        msg = msg.decode()
+        #print(token)
+
+        #connect to splunk instance with token
+        #self.splunk.splunkClient = client.connect(splunkToken=token, [...])
         # close the connection
         # s.close()
+

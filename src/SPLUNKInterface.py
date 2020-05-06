@@ -64,6 +64,24 @@ class SPLUNKInterface:
             print("Login error to SPLUNK")
             return False
 
+    def connect_analyst_with_token(self, host_ip, username="", password=""):
+        try:
+            #self.splunkClient = client.connect(splunkToken=self.session_token, username=self.username, password=self.password)
+            #self.splunkClient = client.connect(splunkToken=self.session_token, [...])
+            #self.splunkClient = client.Service(token="atg232342aa34324a")
+            self.splunkClient = client.connect(host="192.168.0.20",port=8089,username=username,password=password)
+            print("after connection")
+            if len(self.event_config.name) > 1:
+                self.logentries = self.get_entries()
+                self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+            self.connected = True
+            print("Succesfully connected to SPLUNK: ", username)
+            return True
+        except Exception as e:
+            print(e)
+            print("Login error to SPLUNK")
+            return False
+
     # creating a new index (event)
     # need to add date time-frames
     def createEvent(self, event_name, event_description):
