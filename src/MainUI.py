@@ -198,6 +198,8 @@ class UIMain(Ui_PICK):
             ec_ui.event_creation_status_label.setText("Sorry, connect to SPLUNK first")
         elif flag == 3:
             ec_ui.event_creation_status_label.setText("Sorry, valid names should be lowercase and contain no spaces")
+        elif flag == 4:
+             ec_ui.event_creation_status_label.setText("Sorry, only the lead can create an event.")
         else:
             text = "Event " + event_name + " added."
             self.event_config.name = event_name
@@ -423,7 +425,7 @@ class UIMain(Ui_PICK):
         thread_analyst = threading.Thread(target=lambda: self.network.connect_analyst_to_lead(host_ip))
         thread_analyst.start()
         time.sleep(10)
-        if self.splunk.connect_analyst_with_token(host_ip, ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
+        if self.splunk.connect_analyst(host_ip, ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
             # Starts auto-refresh logs thread
             thread = threading.Thread(target=self.update_tables_periodically)
             thread.start()
