@@ -20,6 +20,7 @@ from Connections.Database import Database
 import sys
 import threading
 import time
+import socket
 
 
 class UIMain(Ui_PICK):
@@ -377,7 +378,7 @@ class UIMain(Ui_PICK):
         bt_dialog = QtWidgets.QDialog()
         host_name = socket.gethostname()
         host_ip = socket.gethostbyname(host_name)
-        if self.textbox_ip.toPlainText() == lead_ip:
+        if self.textbox_ip.toPlainText() == host_ip:
             print("open same ip error prompt")
             bt_ui = UIDuplicateLeadIP()
             bt_ui.setupUi(bt_dialog)
