@@ -174,3 +174,15 @@ class Controller:
 
     def edit_vector_configuration_table(self, row, column, value):
         self.table_manager.edit_vector_table(row, column,value, self.event_session.get_vectors())
+
+    def export_log_entry_table(self, filename):
+        export_list = self.event_session.get_log_entries_list()
+        self.table_manager.export_table(export_list, filename=filename)
+
+    def export_node_table(self, filename):
+        export_list = self.event_session.get_selected_nodes_list()
+        self.table_manager.export_table(export_list, filename=filename)
+
+    def export_vector_configuration_table(self, filename):
+        export_list = self.event_session.get_vector_list()
+        self.table_manager.export_table(export_list, filename=filename)

@@ -193,26 +193,7 @@ class TableManager:
             vectors[row].description = value
         return
 
-    def export_log_entry_table(self, log_entries, filename="Log Entry Table Output.csv"):
-        export_list = list()
-        for log_entry in log_entries:
-            export_list.append(log_entry.to_list())
-
-        with open(filename, "w") as f:
-            writer = csv.writer(f)
-            writer.writerows(export_list)
-
-    def export_node_table(self, nodes, filename="Node Table Output.csv"):
-        export_list = list()
-        for node in nodes:
-            export_list.append(node.to_list())
-
-        with open(filename, "w") as f:
-            writer = csv.writer(f)
-            writer.writerows(export_list)
-
-    def export_vector_configuration_table(self, vectors, filename="Vector Configuration Table Output.csv"):
-        export_list = self.event_session.get_vector_list()
+    def export_table(self, export_list, filename="Output.csv"):
         with open(filename, "w") as f:
             writer = csv.writer(f)
             writer.writerows(export_list)

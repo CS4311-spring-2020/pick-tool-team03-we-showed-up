@@ -421,22 +421,18 @@ class UIMain(Ui_PICK):
 
         if filename is not None:
             filename = str(filename[0])
-            if filename == '':
+            if filename == '':  # if no filename just omit
                 return
-
-            if self.nc_export_dropdown.currentIndex() == 1:  # if png option was selected
+            if self.nc_export_dropdown.currentIndex() == 1 and key == "node":  # if png option was selected
                 print("Export Graph as image")
                 self.vc_graph_widget.export(filename)
                 return
-
             print("Exporting csv to: ", filename)
             switcher = {
-                "log entry": lambda: self.table_manager.export_log_entry_table(filename=filename),
-                "node": lambda: self.table_manager.export_node_table(self.vc_vector_drop_down.currentIndex(),
-                                                                     filename=filename),
-                "vector": lambda: self.table_manager.export_vector_configuration_table(filename=filename)}
+                "log entry": lambda: self.controller.export_log_entry_table(filename=filename),
+                "node": lambda: self.controller.export_node_table(filename=filename),
+                "vector": lambda: self.controller.export_vector_configuration_table(filename=filename)}
             switcher[key]()
-
 
     # Calls the creation of a node when the button is clicked
     def create_node_button_clicked(self):
@@ -476,19 +472,6 @@ class UIMain(Ui_PICK):
         else:
             self.controller.update_folder_path(team, directory)
             textbox_widget.setPlainText(str(directory))
-
-    # Called once the start ingestion button is clicked, it sends the user input for folder paths
-    # def start_ingestion(self):
-    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.rootpath, self.event_config.name, self.splunk)
-    #     if self.event_config.redfolder == "":
-    #         self.event_config.redfolder = self.event_config.rootpath + "/red"
-    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, self.event_config.name, self.splunk)
-    #     if self.event_config.bluefolder == "":
-    #         self.event_config.bluefolder = self.event_config.rootpath + "/blue"
-    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, self.event_config.name, self.splunk)
-    #     if self.event_config.whitefolder == "":
-    #         self.event_config.whitefolder = self.event_config.rootpath + "/white"
-    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
 
     # Method to be called by thread, it's in charge of updating the tables if there is something to be changed
     def update_tables_periodically(self):
