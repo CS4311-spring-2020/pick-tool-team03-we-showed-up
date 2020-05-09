@@ -154,7 +154,6 @@ class Database:
         out_map = {"event_config": event_config, "vectors": vector_list}
         return out_map
 
-
     # Retrieve information from database
     def get_vector(self, vector_id):
         vector_result = self.pick_vectors.find_one({"_id": ObjectId(str(vector_id))})

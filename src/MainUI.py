@@ -15,11 +15,14 @@ from UI.EventConfigurationOpen import Ui_Dialog as UiEventConfigOpen
 from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from UI.SPLUNK_Login_Dialog import Ui_Dialog as SPLUNKLoginDialog
 from UI.Create_Relationship_Dialog import Ui_Dialog as RelationshipDialog
-from graph import graph
-from Connections.Database import Database
+from Graph import GraphInterface
+from TableManager import TableManager
 import sys
 import threading
 import time
+# from Controller import Controller
+from EventSession import EventSession
+from Connections.Database import Database
 
 
 class UIMain(Ui_PICK):
@@ -28,40 +31,28 @@ class UIMain(Ui_PICK):
         """
     user_change = True
 
-    def __init__(self, table_manager=None, splunk=None, event_config=None, ingest_funct=None, network=None,
-                 undo_manager=None):
+    def __init__(self, table_manager=TableManager(), controller=None, network=None,
+                 undo_manager=None, event_session=EventSession(), db=Database()):
         self.table_manager = table_manager
-        self.splunk = splunk
-        self.event_config = event_config
-        self.ingest_funct = ingest_funct
         self.network = network
         self.undo_manager = undo_manager
-        self.database = Database()
-
-    # Sets the SPLUNK Facade to be referenced throughout the execution of the code
-    def set_splunk(self, splunk):
-        self.splunk = splunk
+        self.controller = controller
+        self.event_session = event_session
+        self.db = db
 
     # Sets the table manager for this UI to manage all QTableWidget items
     def set_table_manager(self, table_manager):
         self.table_manager = table_manager
 
-    # Sets the ingestion manager to be called for ingestion operations
-    def set_ingestion_funct(self, ingestion_func):
-        self.ingest_funct = ingestion_func
-
-    # Sets the event config to be referenced throughout the session
-    def set_event_config(self, event_config):
-        self.event_config = event_config
-
     # Main setup of the UI,
-    def setupUi(self, PICK):
-        super().setupUi(PICK)
+    def setupUi(self, pick):
+        super().setupUi(pick)
 
         self.vc_undo_button.clicked.connect(self.undo_manager.undo)
 
         # Sets the graph widget
-        self.vc_graph_widget = graph(self.horizontalLayout_13)
+        self.vc_graph_widget = GraphInterface(self.horizontalLayout_13)
+        self.controller.graph = self.vc_graph_widget
 
         # Set the tables to be managed
         self.table_manager.set_enforcement_action_report_table(self.tableWidget_2)
@@ -70,13 +61,14 @@ class UIMain(Ui_PICK):
         self.table_manager.set_node_table(self.vc_node_table)
         self.table_manager.set_relationship_table(self.vc_relationship_table)
         self.table_manager.set_vector_config_table(self.vc_table)
+        self.table_manager.vector_drop_down = self.vc_vector_drop_down
+        self.table_manager.add_to_vector_table = self.lec_add_to_vector_table
 
         # Initial setup of table data
-        self.table_manager.populate_logentry_table(self.splunk.logentries)
-        self.table_manager.populate_relationship_table(0)
-        self.table_manager.populate_node_table(0)
-        self.table_manager.populate_vector_configuration_table()
-        self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
+        self.controller.update_log_entry_table()
+        self.controller.update_vector_tables()
+        self.controller.update_node_and_relationship_tables()
+        self.controller.update_vector_dropdwon()
 
         # Sets actions from the File Menu
         self.actionNew.triggered.connect(self.open_new_event_config)
@@ -92,19 +84,17 @@ class UIMain(Ui_PICK):
         self.button_add_vector.clicked.connect(self.add_vector)
         self.button_delete_vector.clicked.connect(self.delete_vector)
         self.vc_add_relationship_button.clicked.connect(self.create_relationship_button_clicked)
+        self.vc_add_button.clicked.connect(self.controller.create_node)
+        self.lec_add_to_vector_button.clicked.connect(self.add_log_entry_to_vector)
 
         # Setup of network-related buttons
+        self.checkBox_lead.stateChanged.connect(self.connect_lead_clicked)
         self.button_connect_to_ip.clicked.connect(self.connect_button_clicked)
         self.nc_iconchange_button.clicked.connect(self.icon_edit_button_clicked)
         self.vc_push_button.clicked.connect(self.vector_db_button_clicked)
-        self.vc_add_button.clicked.connect(self.create_node_button_clicked)
-        self.vc_vector_drop_down.view().pressed.connect(self.vector_dropdown_clicked)
-        self.lec_add_to_vector_button.clicked.connect(self.add_log_entry_to_vector)
 
         # setup of validate button in the enforcement action report table
-        self.pushButton_3.clicked.connect(
-            lambda: self.ingest_funct.validate_file_anyway(self.event_config.name, self.splunk))
-        self.checkBox_lead.stateChanged.connect(self.connect_lead_clicked)
+        self.pushButton_3.clicked.connect(self.controller.validate_anyway_clicked)
 
         # setup of filter button in Log Entry table
         self.fc_applyfilter_button.clicked.connect(self.filter_log_entries)
@@ -126,17 +116,7 @@ class UIMain(Ui_PICK):
         if self.fc_start_time.dateTime() > self.fc_end_time.dateTime():
             print("invalid date range in filtering")
             return
-
-        # FORMAT IS 10/5/2016:20:00:00
-        print("filtering to keyword: ", self.fc_keyword_line_input.text())
-        self.splunk.set_keyword(self.fc_keyword_line_input.text())
-        # print("Earliest time is: ", self.fc_start_time.dateTime().toPyDateTime().timestamp())
-        # self.splunk.set_earliest_time(self.fc_start_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
-        # print("Latest time is: ", self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
-        # self.splunk.set_latest_time(self.fc_end_time.dateTime().toString("dd/MM/yyyy:hh:mm:ss"))
-
-        self.splunk.get_log_count(bypass_check=True)
-        self.table_manager.populate_logentry_table(self.splunk.logentries)
+        self.controller.update_splunk_filter(self.fc_keyword_line_input.text())
         self.user_change = True
 
     # Event Configuration Methods
@@ -146,21 +126,21 @@ class UIMain(Ui_PICK):
         ec_ui.setupUi(ec_dialog)
         ec_ui.button_save_event.clicked.connect(lambda: self.call_create_index(ec_ui))
 
-        ec_ui.textbox_root_directory.setPlainText(self.event_config.rootpath)
-        ec_ui.textbox_white_team_folder.setPlainText(self.event_config.whitefolder)
-        ec_ui.textbox_red_team_folder.setPlainText(self.event_config.redfolder)
-        ec_ui.textbox_blue_team_folder.setPlainText(self.event_config.bluefolder)
+        ec_ui.textbox_root_directory.setPlainText(self.event_session.get_root_path())
+        ec_ui.textbox_white_team_folder.setPlainText(self.event_session.get_white_team_path())
+        ec_ui.textbox_red_team_folder.setPlainText(self.event_session.get_red_team_path())
+        ec_ui.textbox_blue_team_folder.setPlainText(self.event_session.get_blue_team_path())
 
         # save directories of teams
-        ec_ui.button_start_ingestion.clicked.connect(self.start_ingestion)
+        ec_ui.button_start_ingestion.clicked.connect(self.controller.start_ingestion)
         ec_ui.root_directory_pushButton.clicked.connect(
-            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_root_directory, team=0))
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_root_directory, team="root"))
         ec_ui.red_team_directory_pushButton.clicked.connect(
-            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_red_team_folder, team=1))
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_red_team_folder, team="red"))
         ec_ui.blue_team_directory_pushButton.clicked.connect(
-            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_blue_team_folder, team=2))
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_blue_team_folder, team="blue"))
         ec_ui.white_team_directory_pushButton.clicked.connect(
-            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_white_team_folder, team=3))
+            lambda: self.open_ingestion_directory_selector(ec_ui.textbox_white_team_folder, team="white"))
         ec_dialog.exec_()
 
     # Sends user changes to edit the event configuration
@@ -170,15 +150,15 @@ class UIMain(Ui_PICK):
         ec_ui = UiEventConfigEdit()
         ec_ui.setupUi(ec_dialog)
 
-        ec_ui.textbox_root_directory_edit.setPlainText(self.event_config.rootpath)
-        ec_ui.textbox_white_team_folder.setPlainText(self.event_config.whitefolder)
-        ec_ui.textbox_red_team_folder_edit.setPlainText(self.event_config.redfolder)
-        ec_ui.textbox_blue_team_folder_edit.setPlainText(self.event_config.bluefolder)
+        ec_ui.textbox_root_directory_edit.setPlainText(self.event_session.get_root_path())
+        ec_ui.textbox_white_team_folder.setPlainText(self.event_session.get_white_team_path())
+        ec_ui.textbox_red_team_folder_edit.setPlainText(self.event_session.get_red_team_path())
+        ec_ui.textbox_blue_team_folder_edit.setPlainText(self.event_session.get_blue_team_path())
 
-        events = self.splunk.getIndexList()
+        events = self.db.get_event_names()
         for event in events:
             ec_ui.comboBox.addItem(event)
-        ec_ui.button_save_event.clicked.connect
+        # ec_ui.button_save_event.clicked.connect
         ec_dialog.exec_()
 
     # Helper method to be used to notify the SPLUNK tool to create an index
@@ -188,8 +168,10 @@ class UIMain(Ui_PICK):
             return
         event_name = ec_ui.textbox_event_name.toPlainText()
         event_description = ec_ui.textbox_event_description.toPlainText()
+        start_time = ec_ui.dateTimeEdit.dateTime().toPyDateTime()
+        end_time = ec_ui.date_event_end.dateTime().toPyDateTime()
 
-        flag = self.splunk.createEvent(event_name, event_description)
+        flag = self.controller.create_event(event_name, event_description, start_time, end_time)
 
         if flag == 1:
             ec_ui.event_creation_status_label.setText("Sorry, event name is taken.")
@@ -199,10 +181,6 @@ class UIMain(Ui_PICK):
             ec_ui.event_creation_status_label.setText("Sorry, valid names should be lowercase and contain no spaces")
         else:
             text = "Event " + event_name + " added."
-            self.event_config.name = event_name
-            self.event_config.description = event_description
-            self.event_config.starttime = ec_ui.dateTimeEdit.dateTime().toPyDateTime()
-            self.event_config.endtime = ec_ui.date_event_end.dateTime().toPyDateTime()
             ec_ui.event_creation_status_label.setText(text)
 
     # Open Event
@@ -211,7 +189,7 @@ class UIMain(Ui_PICK):
         ec_ui = UiEventConfigOpen()
         ec_ui.setupUi(ec_dialog)
         # call list of indexes and display event
-        events = self.database.get_event_names()
+        events = self.db.get_event_names()
         for event in events:
             ec_ui.comboBox.addItem(event)
         ec_ui.ok_button.clicked.connect(lambda: self.update_open_event_config(ec_ui, events))
@@ -221,40 +199,25 @@ class UIMain(Ui_PICK):
         # text = ec_ui.comboBox.currentData()
         # print(text)
         # ec_ui.label_3.setText(text)
-        e_map = self.database.get_event_map()
+        e_map = self.db.get_event_map()
         selected_event = event_list[ec_ui.comboBox.currentIndex()]
         print(e_map[selected_event])
-        out_map = self.database.get_event_data(e_map[selected_event])
-        self.table_manager.vectors.clear()
-        self.table_manager.vectors.extend(out_map['vectors'])
-        self.event_config = out_map["event_config"]
-        self.splunk.event_config = out_map["event_config"]
-        self.ingest_funct.event_config = out_map["event_config"]
-        self.table_manager.populate_vector_configuration_table()
+        self.controller.update_event_data(e_map[selected_event])
+        self.controller.update_node_and_relationship_tables()
+        self.controller.update_vector_tables()
+        self.controller.update_vector_dropdwon()
 
     # Vector
-
     def add_vector(self):
         self.user_change = False
-        self.table_manager.add_vector()
-        self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
-        self.table_manager.populate_vector_configuration_table()
-        self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+        self.controller.add_vector()
         self.user_change = True
-        sel_vec = self.vc_vector_drop_down.currentIndex()
-        if sel_vec >= 0:
-            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
 
     def delete_vector(self):
         self.user_change = False
-        if (self.vector_deletion_confirmation() == 1024):
+        if self.vector_deletion_confirmation() == 1024:
             print("Deleting vector(s)")
-            self.table_manager.delete_vectors()
-            self.table_manager.populate_vector_configuration_table()
-            self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
-            self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
-            self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
-            self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
+            self.controller.delete_vector()
         self.user_change = True
 
     def vector_deletion_confirmation(self):
@@ -282,17 +245,17 @@ class UIMain(Ui_PICK):
         print("changing log table")
         if item.column() == 5:
             self.user_change = False
-            self.ingest_funct.logFiles[item.row()].marked = not (item.checkState() == 0)
+            self.event_session.log_files[item.row()].marked = not (item.checkState() == 0)
 
             if not (item.checkState() == 0):
-                self.label_12.setText(self.ingest_funct.logFiles[item.row()].get_name())
-                self.table_manager.populate_enforcement_action_report_table(self.ingest_funct.logFiles[item.row()])
+                self.label_12.setText(self.event_session.get_log_files()[item.row()].get_name())
+                self.table_manager.populate_enforcement_action_report_table(self.event_session.get_log_files()[item.row()])
 
-            numlist = list(range(len(self.ingest_funct.logFiles)))
+            numlist = list(range(len(self.event_session.get_log_files())))
             numlist.remove(item.row())
 
             for i in numlist:
-                self.ingest_funct.logFiles[i].marked = False
+                self.event_session.get_log_files()[i].marked = False
                 self.tableWidget.setItem(i, 5, QTableWidgetItem(""))
                 self.tableWidget.item(i, 5).setCheckState(QtCore.Qt.Unchecked)
 
@@ -316,19 +279,16 @@ class UIMain(Ui_PICK):
             return
         self.user_change = False
         if item.column() == 0:
-            self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
+            self.controller.update_node_table()
         elif item.column() == 9:
-            self.table_manager.edit_node_table(item.row(), item.column(), (not item.checkState() == 0),
-                                               self.vc_vector_drop_down.currentIndex())
+            self.controller.edit_node_table(item.row(), item.column(), (not item.checkState() == 0))
         else:
-            sel_vec = self.vc_vector_drop_down.currentIndex()
-            self.vc_graph_widget.save_node_positions(self.table_manager.vectors[sel_vec])
-            self.table_manager.edit_node_table(item.row(), item.column(), item.text(),
-                                               self.vc_vector_drop_down.currentIndex())
+            self.vc_graph_widget.save_node_positions(self.event_session.get_selected_vector())
+            self.controller.edit_node_table(item.row(), item.column(), item.text())
         try:
             if self.vc_vector_drop_down.currentIndex() >= 0:
-                self.vc_graph_widget.save_node_positions(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
-                self.vc_graph_widget.set_vector(self.table_manager.vectors[self.vc_vector_drop_down.currentIndex()])
+                self.vc_graph_widget.save_node_positions(self.event_session.get_selected_vector())
+                self.vc_graph_widget.set_vector(self.event_session.get_selected_vector())
         except IndexError:
             print("Wrong index of vector")
         self.user_change = True
@@ -338,11 +298,12 @@ class UIMain(Ui_PICK):
             return
         self.user_change = False
         if item.column() == 0:
-            self.table_manager.edit_vector_table(item.row(), item.column(), (not item.checkState() == 0))
+            self.controller.edit_vector_configuration_table(item.row(), item.column(),
+                                                            (not item.checkState() == 0))
         else:
-            self.table_manager.edit_vector_table(item.row(), item.column(), item.text())
-        self.table_manager.populate_vector_dropdowns(self.vc_vector_drop_down)
-        self.table_manager.populate_add_to_vector_table(self.lec_add_to_vector_table)
+            self.controller.edit_vector_configuration_table(item.row(), item.column(), item.text())
+        self.controller.update_vector_tables()
+        self.controller.update_vector_dropdwon()
         self.user_change = True
 
     def resize_ui_components(self, PICK):
@@ -358,16 +319,14 @@ class UIMain(Ui_PICK):
                 selected_entries.append(i)
 
         selected_vectors = []
-
         for i in range(self.lec_add_to_vector_table.rowCount()):
             if not self.lec_add_to_vector_table.item(i, 0).checkState() == 0:
                 print("Checked item at position: ", i)
                 selected_vectors.append(i)
                 # graph(self.horizontalLayout_13).set_vector(manage_tables.vectors[i])
 
-        self.table_manager.add_log_entries_to_vectors(selected_entries, self.splunk.logentries, selected_vectors)
+        self.controller.add_log_entry_to_vector(selected_entries, selected_vectors)
         self.vector_dropdown_select()
-
         return
 
     # Calls the connection methods once the buttons is clicked
@@ -424,13 +383,11 @@ class UIMain(Ui_PICK):
 
     # Opens the VCS window
     def vector_db_button_clicked(self):
-
         vdb_dialog = QtWidgets.QDialog()
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
             vdb_ui.setupUi(vdb_dialog)
-            vdb_ui.vdbcl_button_commit.clicked.connect(lambda: self.database.update_event(
-                self.event_config, self.table_manager.vectors))
+            vdb_ui.vdbcl_button_commit.clicked.connect(self.controller.update_event_db)
         else:
             vdb_ui = UIVectorDBAnalyst()
             vdb_ui.setupUi(vdb_dialog)
@@ -446,25 +403,13 @@ class UIMain(Ui_PICK):
         self.user_change = False
         sel_vec = self.vc_vector_drop_down.currentIndex()
         print("Changed vector to: ", sel_vec)
-        self.table_manager.populate_node_table(sel_vec)
-        self.table_manager.populate_relationship_table(sel_vec)
-
         try:
             if sel_vec >= 0:
-                self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+                self.controller.set_display_vector(sel_vec)
+                self.controller.update_node_and_relationship_tables()
         except IndexError:
             print("No vector to be selected")
         self.user_change = True
-
-     # saves node positions when dropdown is clicked
-    def vector_dropdown_clicked(self):
-        sel_vec = self.vc_vector_drop_down.currentIndex()
-        try:
-            if sel_vec >= 0:
-                self.vc_graph_widget.save_node_positions(self.table_manager.vectors[sel_vec])
-        except IndexError:
-            print("No vector to be selected")
-            self.user_change = True
 
     # Method called when a the export button of a table is clicked
     def export_table_clicked(self, key):
@@ -495,11 +440,11 @@ class UIMain(Ui_PICK):
 
     # Calls the creation of a node when the button is clicked
     def create_node_button_clicked(self):
-        self.table_manager.create_node(self.vc_vector_drop_down.currentIndex())
-        self.table_manager.populate_node_table(self.vc_vector_drop_down.currentIndex())
+        self.controller.create_node()
+        self.controller.update_node_table()
         sel_vec = self.vc_vector_drop_down.currentIndex()
         try:
-            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+            self.vc_graph_widget.set_vector(self.event_session.get_selected_vector())
         except IndexError:
             print("no vector available")
 
@@ -508,70 +453,54 @@ class UIMain(Ui_PICK):
         ec_dialog = QtWidgets.QDialog()
         ec_ui = RelationshipDialog()
         ec_ui.setupUi(ec_dialog)
-        self.table_manager.populate_node_dropdowns(self.vc_vector_drop_down.currentIndex(), ec_ui.child_id_combobox)
-        self.table_manager.populate_node_dropdowns(self.vc_vector_drop_down.currentIndex(), ec_ui.parent_id_combobox)
+        self.controller.update_node_dropdowns(ec_ui.child_id_combobox)
+        self.controller.update_node_dropdowns(ec_ui.parent_id_combobox)
 
-        ec_ui.create_button.clicked.connect(lambda: self.create_relationship(
-            self.vc_vector_drop_down.currentIndex(),
+        ec_ui.create_button.clicked.connect(lambda: self.controller.create_relationship(
             ec_ui.parent_id_combobox.currentIndex(),
             ec_ui.child_id_combobox.currentIndex(),
             ec_ui.name_line_edit.text()
         ))
         ec_dialog.exec_()
-        sel_vec = self.vc_vector_drop_down.currentIndex()
+
         try:
-            self.vc_graph_widget.set_vector(self.table_manager.vectors[sel_vec])
+            self.vc_graph_widget.set_vector(self.event_session.get_selected_vector())
         except IndexError:
             print("no vector available")
 
-    # helper method that calls the creation of a relationship
-    def create_relationship(self, selected_vector, parent_id, child_id, name):
-        self.table_manager.create_relationship(
-            selected_vector, parent_id=parent_id, child_id=child_id, name=name)
-        # self.table_manager.create_relationship(self.vc_vector_drop_down.currentIndex())
-        self.table_manager.populate_relationship_table(self.vc_vector_drop_down.currentIndex())
-
     # Opens a dialog for the user to select the folder to be ingested
-    def open_ingestion_directory_selector(self, textbox_widget=None, team=0):
+    def open_ingestion_directory_selector(self, textbox_widget=None, team="root"):
         directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
         if textbox_widget is None:
             print(directory)
         else:
-            if team == 0:
-                self.event_config.rootpath = str(directory)
-            elif team == 1:
-                self.event_config.redfolder = str(directory)
-            elif team == 2:
-                self.event_config.bluefolder = str(directory)
-            elif team == 3:
-                self.event_config.whitefolder = str(directory)
-
+            self.controller.update_folder_path(team, directory)
             textbox_widget.setPlainText(str(directory))
 
     # Called once the start ingestion button is clicked, it sends the user input for folder paths
-    def start_ingestion(self):
-        self.ingest_funct.ingest_directory_to_splunk(self.event_config.rootpath, self.event_config.name, self.splunk)
-        if self.event_config.redfolder == "":
-            self.event_config.redfolder = self.event_config.rootpath + "/red"
-        self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, self.event_config.name, self.splunk)
-        if self.event_config.bluefolder == "":
-            self.event_config.bluefolder = self.event_config.rootpath + "/blue"
-        self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, self.event_config.name, self.splunk)
-        if self.event_config.whitefolder == "":
-            self.event_config.whitefolder = self.event_config.rootpath + "/white"
-        self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
+    # def start_ingestion(self):
+    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.rootpath, self.event_config.name, self.splunk)
+    #     if self.event_config.redfolder == "":
+    #         self.event_config.redfolder = self.event_config.rootpath + "/red"
+    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.redfolder, self.event_config.name, self.splunk)
+    #     if self.event_config.bluefolder == "":
+    #         self.event_config.bluefolder = self.event_config.rootpath + "/blue"
+    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.bluefolder, self.event_config.name, self.splunk)
+    #     if self.event_config.whitefolder == "":
+    #         self.event_config.whitefolder = self.event_config.rootpath + "/white"
+    #     self.ingest_funct.ingest_directory_to_splunk(self.event_config.whitefolder, self.event_config.name, self.splunk)
 
     # Method to be called by thread, it's in charge of updating the tables if there is something to be changed
     def update_tables_periodically(self):
-        self.splunk.get_log_count(bypass_check=True)
-        self.table_manager.populate_logentry_table(self.splunk.logentries)
+        self.controller.splunk.get_log_count(bypass_check=True)
+        self.controller.update_log_entry_table()
         while True:
             time.sleep(10)
-            change = self.splunk.get_log_count()
+            change = self.controller.splunk.get_log_count()
             print("Update check")
             if change == 1:
                 self.user_change = False
-                self.table_manager.populate_logentry_table(self.splunk.logentries)
+                self.table_manager.populate_log_entry_table(self.event_session.get_log_entries())
                 self.user_change = True
 
     # When the user marks themselves as a lead it calls the relevant operations and sets the state as lead
@@ -595,7 +524,7 @@ class UIMain(Ui_PICK):
     # Helper method that asks the SPLUNK interface to connect given the user's input
     def connect_lead(self, ec_ui):
         print("Connecting client to Splunk ...")
-        if self.splunk.connect_client(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
+        if self.controller.splunk.connect_client(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
             # Starts auto-refresh logs thread
             thread = threading.Thread(target=self.update_tables_periodically)
             thread.start()

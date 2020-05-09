@@ -20,8 +20,7 @@ class UndoRedoManager:
 
         if action[0] == "set_node_field":
             self.command_switcher["set_node_field"](row=action[1][0], column=action[1][1], value=action[1][2],
-                                                    vector_num=action[1][3], from_undo=True)
-
+                                                    from_undo=True)
 
     def redo(self):
         print("redo")

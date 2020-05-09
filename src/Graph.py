@@ -7,7 +7,7 @@ from QGraphViz.DotParser import Graph, GraphType
 from QGraphViz.Engines import Dot
 
  
-class graph(QWidget): 
+class GraphInterface(QWidget):
     
     qgv = ""
 
@@ -108,7 +108,7 @@ class graph(QWidget):
         self.layout_u.addWidget(qgv)
         self.qgv = qgv
         
-    def save_node_positions(self,vector):
+    def save_node_positions(self, vector):
         i = 0
         if len(vector.get_nodes()) > 0:
             for node in self.qgv.engine.graph.nodes:

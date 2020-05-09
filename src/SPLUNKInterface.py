@@ -3,25 +3,18 @@ import os
 import subprocess
 import splunklib.client as client
 import splunklib.results as results
+from EventSession import EventSession
 from LogEntry import LogEntry
 
 
 class SPLUNKInterface:
 
-    def __init__(self, event_config=None):
-        # starting splunk session (need to login)
-        # subprocess.run(["./splunk start", event_name])
-
-        # Event Data.. should we make a class?
-        self.event_config = event_config
-        self.event_description = ""
-        # self.ask_username_password()
+    def __init__(self, event_session=EventSession()):
+        self.event_session = event_session
 
         self.username = ""
         self.password = ""
 
-        self.path = ""
-        self.logentries = []
         self.count = 0
         self.count_changed = False
         self.connected = False
@@ -33,9 +26,9 @@ class SPLUNKInterface:
         if len(self.username) < 1:
             return
         self.splunkClient = client.connect(username=self.username, password=self.password)
-        if len(self.event_config.name) > 1:
-            self.logentries = self.get_entries()
-            self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+        if len(self.event_session.get_event_name()) > 1:
+            self.event_session.log_entries = self.get_entries()
+            self.count = self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount
         self.connected = True
 
     def set_keyword(self, keyword):
@@ -53,9 +46,9 @@ class SPLUNKInterface:
             self.password = password
 
             self.splunkClient = client.connect(username=self.username, password=self.password)
-            if len(self.event_config.name) > 1:
-                self.logentries = self.get_entries()
-                self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+            if len(self.event_session.get_event_name()) > 1:
+                self.event_session.log_entries = self.get_entries()
+                self.count = self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount
             self.connected = True
             print("Succesfully connected to SPLUNK: ", username)
             return True
@@ -66,7 +59,7 @@ class SPLUNKInterface:
 
     # creating a new index (event)
     # need to add date time-frames
-    def createEvent(self, event_name, event_description):
+    def createEvent(self, event_name):
         try:
             for index in self.splunkClient.indexes.list():
                 if event_name == index.name:
@@ -76,16 +69,13 @@ class SPLUNKInterface:
 
         try:
             self.splunkClient.indexes.create(name=event_name)
-            self.event_config.name = event_name
-            self.event_description = event_description
         except:
             return 3
 
     #open an event
     def open_event(self, event_name):
-        self.event_config.name = event_name
-        self.event_description = "Event description for " + event_name + "goes here"
-        return self.event_description
+        self.event_session.set_event_name(event_name)
+        return self.event_name
 
     def getIndexList(self):
         index_list = []
@@ -104,7 +94,7 @@ class SPLUNKInterface:
                          "latest_time": self.latest_time,
                          "search_mode": "normal"}
         print("kwargs is: ", kwargs_export)
-        search_query_export = "search " + self.keyword + " index=" + self.event_config.name
+        search_query_export = "search " + self.keyword + " index=" + self.event_session.get_event_name()
         export_search_results = self.splunkClient.jobs.export(search_query_export, **kwargs_export)
         reader = results.ResultsReader(export_search_results)
 
@@ -119,7 +109,7 @@ class SPLUNKInterface:
         return r_list
 
     def refresh_log_entries(self):
-        self.logentries = self.get_entries()
+        self.event_session.log_entries = self.get_entries()
 
     def entry_from_dict(self, dict_entry):
         log_entry = LogEntry(serial=int(dict_entry['_cd'].replace(":", "")),
@@ -129,10 +119,6 @@ class SPLUNKInterface:
                              source=dict_entry['source'],
                              sourcetype=dict_entry['sourcetype'])
         return log_entry
-
-    def ask_username_password(self):
-        self.username = input("Splunk Username:")
-        self.password = input("Splunk Password:")
 
     def add_file_to_index(self, filepath, index):
         try:
@@ -145,7 +131,7 @@ class SPLUNKInterface:
     def get_log_count(self, bypass_check=False):
         if not self.connected:
             return 0
-        if (self.count_changed and self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount) or bypass_check:
+        if (self.count_changed and self.count == self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount) or bypass_check:
             try:
                 self.refresh_log_entries()
                 self.count_changed = False
@@ -154,9 +140,9 @@ class SPLUNKInterface:
                 print("Unable to refresh log entries, error is: ", str(e))
                 return 0
 
-        if not self.count == self.splunkClient.indexes[self.event_config.name].totalEventCount:
+        if not self.count == self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount:
             self.count_changed = True
-            self.count = self.splunkClient.indexes[self.event_config.name].totalEventCount
+            self.count = self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount
             print("Updated total count atm is: ", self.count)
 
         return 0
