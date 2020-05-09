@@ -26,14 +26,16 @@ class Controller:
         self.graph.set_vector(self.event_session.get_selected_vector())
 
     def update_node_and_relationship_tables(self):
+        self.graph.save_node_positions(self.event_session.get_selected_vector())
         self.update_node_table()
         self.update_relationship_table()
-        self.graph.save_node_positions(self.event_session.get_selected_vector())
         self.graph.set_vector(self.event_session.get_selected_vector())
 
     def update_node_table(self):
+        self.graph.save_node_positions(self.event_session.get_selected_vector())
         nodes = self.event_session.get_selected_nodes()
         self.table_manager.populate_node_table(nodes)
+        self.graph.set_vector(self.event_session.get_selected_vector())
 
     def update_log_entry_table(self):
         try:
