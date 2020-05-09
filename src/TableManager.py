@@ -95,10 +95,8 @@ class TableManager:
             item = QTableWidgetItem("")
 
             if vectors[i].is_checked_config():
-                print("set"+vectors[i].name+"as checked")
                 item.setCheckState(QtCore.Qt.Checked)
             else:
-                print("set" + vectors[i].name + "as unchecked")
                 item.setCheckState(QtCore.Qt.Unchecked)
             self.vector_config_table.setItem(i, 0, item)
             self.vector_config_table.setItem(i, 1, QTableWidgetItem(vectors[i].name))
@@ -177,11 +175,6 @@ class TableManager:
 
         if not self.is_system_change and not from_undo:
             self.undo_manager.add_command("set_node_field", [row, column, undo_val])
-        # if from_undo:
-        #     self.populate_node_table(vector_num)
-        #
-        # if special_command:
-        #     self.populate_node_table(vector_num)
         return
 
     def edit_vector_table(self, row, column, value, vectors):

@@ -1,14 +1,6 @@
-from EventSession import EventSession
-from TableManager import TableManager
-from MainUI import UIMain
-from SPLUNKInterface import SPLUNKInterface
-from IngestionManager import IngestionManager
-from Graph import GraphInterface
-from Connections.Database import Database
-
 class Controller:
     def __init__(self, event_session=None, table_manager=None, splunk=None,
-                 ingestion=None, view=None, graph=None, db=None):
+                 ingestion=None, view=None, graph=None, db=None, undo_manager=None):
         self.event_session = event_session
         self.table_manager = table_manager
         self.splunk = splunk
@@ -16,10 +8,14 @@ class Controller:
         self.view = view
         self.graph = graph
         self.db = db
+        self.undo_manager = undo_manager
         if self.splunk is not None:
             print("connected splunk signal")
             self.splunk.updated_entries.connect(self.update_log_entry_table)
         pass
+        if undo_manager is not None:
+            print("connected undo manager signal")
+            self.undo_manager.updated_nodes.connect(self.update_node_and_relationship_tables)
 
     def set_event_name(self, name):
         self.event_session.set_event_name = name
@@ -32,6 +28,8 @@ class Controller:
     def update_node_and_relationship_tables(self):
         self.update_node_table()
         self.update_relationship_table()
+        self.graph.save_node_positions(self.event_session.get_selected_vector())
+        self.graph.set_vector(self.event_session.get_selected_vector())
 
     def update_node_table(self):
         nodes = self.event_session.get_selected_nodes()
@@ -73,28 +71,7 @@ class Controller:
 
     # Called once the start ingestion button is clicked, it sends the user input for folder paths
     def start_ingestion(self):
-        event_name = self.event_session.get_event_name()
-        root_path = self.event_session.get_root_path()
-        red_folder = self.event_session.get_red_team_path()
-        blue_folder = self.event_session.get_blue_team_path()
-        white_folder = self.event_session.get_white_team_path()
-
-        self.ingestion.ingest_directory_to_splunk(root_path, event_name, self.splunk)
-
-        if red_folder == "":
-            red_folder = root_path + "/red"
-            self.event_session.set_red_team_path(red_folder)
-        self.ingestion.ingest_directory_to_splunk(red_folder, event_name, self.splunk)
-
-        if blue_folder == "":
-            blue_folder = root_path + "/blue"
-            self.event_session.set_blue_team_path(blue_folder)
-        self.ingestion.ingest_directory_to_splunk(blue_folder, event_name, self.splunk)
-
-        if white_folder == "":
-            white_folder = root_path + "/white"
-            self.event_session.set_white_team_path(white_folder)
-        self.ingestion.ingest_directory_to_splunk(white_folder, event_name, self.splunk)
+        self.ingestion.start_ingestion()
 
     def update_event_data(self, object_id):
         event_map = self.db.get_event_data(object_id)
@@ -133,7 +110,6 @@ class Controller:
         self.graph.save_node_positions(self.event_session.get_selected_vector())
         self.graph.set_vector(self.event_session.get_selected_vector())
 
-    # TODO: Add relationship method
     def create_node(self):
         if len(self.event_session.get_vectors()) == 0:
             return

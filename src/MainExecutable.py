@@ -1,5 +1,4 @@
 import sys
-
 from MainUI import UIMain
 from EventConfiguration import EventConfiguration
 from IngestionManager import IngestionManager
@@ -10,10 +9,8 @@ from UndoRedoManager import UndoRedoManager
 from Controller import Controller
 from EventSession import EventSession
 from Connections.Database import Database
-
-from PyQt5 import QtWidgets, QtGui, uic, QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 
 if __name__ == "__main__":
 
@@ -21,7 +18,7 @@ if __name__ == "__main__":
     event_session = EventSession(event_config=event_config)
     splunk = SPLUNKInterface(event_session=event_session)
     table_manager = TableManager()
-    undo_manager = UndoRedoManager(table_manager=table_manager)
+    undo_manager = UndoRedoManager(table_manager=table_manager, event_session=event_session)
     table_manager.undo_manager = undo_manager
     network = Network()
     db = Database()
@@ -30,7 +27,8 @@ if __name__ == "__main__":
                             table_manager=table_manager,
                             splunk=splunk,
                             ingestion=ingestion,
-                            db=db)
+                            db=db,
+                            undo_manager=undo_manager)
     ui_f = UIMain(table_manager=table_manager,
                   event_session=event_session,
                   network=network,

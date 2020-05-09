@@ -1,6 +1,5 @@
 import os
 import shutil
-
 from LogFile import LogFile
 from EventSession import EventSession
 from IngestionSubProcesses.OCRFeeder import ImageFeeder
@@ -22,7 +21,6 @@ class IngestionManager:
         self.event_session.set_start_and_end_times(start_time="2000-02-20 00:00:00", end_time="2021-03-02 00:00:00")
         self.validator = Validator(self.event_session.get_start_time(), self.event_session.get_end_time())
         self.table_manager = table_manager
-
 
     def add_splunk(self, splunk):
         """Replaces the current instance of splunk with a new instance."""
@@ -133,3 +131,26 @@ class IngestionManager:
         self.table_manager.populate_log_file_table(self.event_session.log_files)
         self.table_manager.populate_enforcement_action_report_table(self.event_session.log_files[marked])
 
+    def start_ingestion(self):
+        event_name = self.event_session.get_event_name()
+        root_path = self.event_session.get_root_path()
+        red_folder = self.event_session.get_red_team_path()
+        blue_folder = self.event_session.get_blue_team_path()
+        white_folder = self.event_session.get_white_team_path()
+
+        self.ingest_directory_to_splunk(root_path, event_name, self.splunk)
+
+        if red_folder == "":
+            red_folder = root_path + "/red"
+            self.event_session.set_red_team_path(red_folder)
+        self.ingest_directory_to_splunk(red_folder, event_name, self.splunk)
+
+        if blue_folder == "":
+            blue_folder = root_path + "/blue"
+            self.event_session.set_blue_team_path(blue_folder)
+        self.ingest_directory_to_splunk(blue_folder, event_name, self.splunk)
+
+        if white_folder == "":
+            white_folder = root_path + "/white"
+            self.event_session.set_white_team_path(white_folder)
+        self.ingest_directory_to_splunk(white_folder, event_name, self.splunk)

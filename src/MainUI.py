@@ -16,13 +16,7 @@ from UI.EventConfigurationEdit import Ui_Dialog as UiEventConfigEdit
 from UI.SPLUNK_Login_Dialog import Ui_Dialog as SPLUNKLoginDialog
 from UI.Create_Relationship_Dialog import Ui_Dialog as RelationshipDialog
 from Graph import GraphInterface
-from TableManager import TableManager
 import sys
-import threading
-import time
-# from Controller import Controller
-from EventSession import EventSession
-from Connections.Database import Database
 
 
 class UIMain(Ui_PICK):
@@ -31,8 +25,8 @@ class UIMain(Ui_PICK):
         """
     user_change = True
 
-    def __init__(self, table_manager=TableManager(), controller=None, network=None,
-                 undo_manager=None, event_session=EventSession(), db=Database()):
+    def __init__(self, table_manager=None, controller=None, network=None,
+                 undo_manager=None, event_session=None, db=None):
         self.table_manager = table_manager
         self.network = network
         self.undo_manager = undo_manager
@@ -323,7 +317,6 @@ class UIMain(Ui_PICK):
             if not self.lec_add_to_vector_table.item(i, 0).checkState() == 0:
                 print("Checked item at position: ", i)
                 selected_vectors.append(i)
-                # graph(self.horizontalLayout_13).set_vector(manage_tables.vectors[i])
 
         self.controller.add_log_entry_to_vector(selected_entries, selected_vectors)
         self.vector_dropdown_select()
@@ -556,7 +549,6 @@ class UIMain(Ui_PICK):
 
     def set_column_widths_vector_view_tab(self):
         # for Vector Node table
-        # vnode_table_width = self.vc_node_table.width()
         vnode_table_width = 850
         vnode_table_width -= 5
         column_width = math.floor(vnode_table_width * .1)
@@ -564,7 +556,6 @@ class UIMain(Ui_PICK):
             self.vc_node_table.setColumnWidth(i, column_width)
 
         # for Relationship Table
-        # vrelationship_table_width = self.vc_relationship_table.width()
         vrelationship_table_width = 600
         vrelationship_table_width -= 5
         column_width = math.floor(vrelationship_table_width * .25)

@@ -117,7 +117,6 @@ class GraphInterface(QWidget):
                         i += 1
                     vector.get_nodes()[i].x = node.pos[0]
                     vector.get_nodes()[i].y = node.pos[1]
-                    print("saving positions of node:", node.name)
                     i = i+1
                 except:
                     print("index out of bounds")
