@@ -5,11 +5,16 @@ import splunklib.client as client
 import splunklib.results as results
 from EventSession import EventSession
 from LogEntry import LogEntry
+from PyQt5 import QtCore
+import threading
+import time
 
 
-class SPLUNKInterface:
+class SPLUNKInterface(QtCore.QThread):
+    updated_entries = QtCore.pyqtSignal()
 
     def __init__(self, event_session=EventSession()):
+        super().__init__()
         self.event_session = event_session
 
         self.username = ""
@@ -51,6 +56,8 @@ class SPLUNKInterface:
                 self.count = self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount
             self.connected = True
             print("Succesfully connected to SPLUNK: ", username)
+            thread = threading.Thread(target=self.automatic_update_check)
+            thread.start()
             return True
         except Exception as e: 
             print(e)
@@ -128,13 +135,23 @@ class SPLUNKInterface:
         except Exception as e:
             print("Failed to upload, error ", str(e))
 
-    def get_log_count(self, bypass_check=False):
+    def automatic_update_check(self):
+        print("started automatic check for entries")
+        self.update_entries(bypass_check=True)
+        while True:
+            time.sleep(10)
+            print("update check")
+            self.update_entries()
+
+    def update_entries(self, bypass_check=False):
         if not self.connected:
             return 0
         if (self.count_changed and self.count == self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount) or bypass_check:
             try:
                 self.refresh_log_entries()
                 self.count_changed = False
+                print("entries refreshed")
+                self.updated_entries.emit()
                 return 1
             except Exception as e:
                 print("Unable to refresh log entries, error is: ", str(e))

@@ -16,6 +16,9 @@ class Controller:
         self.view = view
         self.graph = graph
         self.db = db
+        if self.splunk is not None:
+            print("connected splunk signal")
+            self.splunk.updated_entries.connect(self.update_log_entry_table)
         pass
 
     def set_event_name(self, name):
@@ -110,7 +113,7 @@ class Controller:
         # print("Earliest time is: ", start_time.toPyDateTime().timestamp())
         # self.splunk.set_earliest_time(start_time.toString("dd/MM/yyyy:hh:mm:ss"))
 
-        self.splunk.get_log_count(bypass_check=True)
+        self.splunk.update_entries(bypass_check=True)
         self.table_manager.populate_log_entry_table(self.event_session.get_log_entries())
 
     def add_vector(self):
@@ -186,3 +189,11 @@ class Controller:
     def export_vector_configuration_table(self, filename):
         export_list = self.event_session.get_vector_list()
         self.table_manager.export_table(export_list, filename=filename)
+
+    def connect_to_splunk(self, username, password):
+        try:
+            self.splunk.connect_client(username=username, password=password)
+            return True
+        except Exception as e:
+            print(e)
+            return False

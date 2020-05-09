@@ -473,19 +473,6 @@ class UIMain(Ui_PICK):
             self.controller.update_folder_path(team, directory)
             textbox_widget.setPlainText(str(directory))
 
-    # Method to be called by thread, it's in charge of updating the tables if there is something to be changed
-    def update_tables_periodically(self):
-        self.controller.splunk.get_log_count(bypass_check=True)
-        self.controller.update_log_entry_table()
-        while True:
-            time.sleep(10)
-            change = self.controller.splunk.get_log_count()
-            print("Update check")
-            if change == 1:
-                self.user_change = False
-                self.table_manager.populate_log_entry_table(self.event_session.get_log_entries())
-                self.user_change = True
-
     # When the user marks themselves as a lead it calls the relevant operations and sets the state as lead
     def connect_lead_clicked(self):
         if self.checkBox_lead.isChecked():
@@ -507,10 +494,8 @@ class UIMain(Ui_PICK):
     # Helper method that asks the SPLUNK interface to connect given the user's input
     def connect_lead(self, ec_ui):
         print("Connecting client to Splunk ...")
-        if self.controller.splunk.connect_client(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
-            # Starts auto-refresh logs thread
-            thread = threading.Thread(target=self.update_tables_periodically)
-            thread.start()
+        if self.controller.connect_to_splunk(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
+            print("Splunk connected successfully")
         else:
             print("Splunk connection failed")
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)

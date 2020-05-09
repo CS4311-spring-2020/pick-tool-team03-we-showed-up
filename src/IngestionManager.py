@@ -76,12 +76,10 @@ class IngestionManager:
         # Sends the log file list to the table manager to populate the log file table.
         self.table_manager.populate_log_file_table(self.event_session.log_files)
 
-
     def cleanse_files(self):
         """Sends all files to be cleansed."""
         for log_file in self.event_session.log_files:
             Cleanser.reader(log_file.get_name(), log_file.get_folder_path())
-
 
     def validate_files(self):
         """Sends each log file to the validator and updates the log file table with the status of validation."""
@@ -96,7 +94,6 @@ class IngestionManager:
 
             # Update the log file table with the validation status of each log file
             self.table_manager.populate_log_file_table(self.event_session.log_files)
-
 
     def ingest_directory_to_splunk(self, directory, index, splunk, sourcetype="", source=""):
         """Begins the ingestion process using the helper methods to read files, transcribe, cleanse,
@@ -135,3 +132,4 @@ class IngestionManager:
         self.event_session.log_files[marked].mark_ingested()
         self.table_manager.populate_log_file_table(self.event_session.log_files)
         self.table_manager.populate_enforcement_action_report_table(self.event_session.log_files[marked])
+
