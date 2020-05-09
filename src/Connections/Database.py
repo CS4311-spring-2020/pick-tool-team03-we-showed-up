@@ -2,7 +2,6 @@ from EventConfiguration import EventConfiguration
 from Node import Node
 from Relationship import Relationship
 from Vector import Vector
-
 from pymongo import MongoClient
 from bson import Binary, Code, ObjectId
 from bson.json_util import dumps
@@ -10,8 +9,9 @@ from bson.json_util import loads
 
 
 class Database:
+    """This class serves as an interface with the Mongo database in order to retrieve, update and delete the data
+    of the event."""
 
-    # Make connection and get data to be inserted
     def __init__(self):
         # Connection to mongo server
         self.client = MongoClient('mongodb://localhost')
@@ -28,8 +28,8 @@ class Database:
         # Vector collection
         self.pick_vectors = self.pick_database['vectors']
 
-    # Get map containing the event names  as keys and IDs as values
     def get_event_map(self):
+        """Returns map containing the event names as keys and IDs as values."""
         event_dicts = list(self.pick_eventconfig.find())
         event_map = {}
         for e in event_dicts:
@@ -37,10 +37,11 @@ class Database:
         return event_map
 
     def get_event_names(self):
+        """Retrieves the names of the events and exports them as a list."""
         return list(self.get_event_map().keys())
 
-    # Insert data to mongo database
     def save_vector_to_database(self, vector):
+        """Inserts vector into the vector collection of the db."""
         # Insert node dictionary
         for node in vector.get_nodes():
             self.save_node_to_database(node)
@@ -55,6 +56,7 @@ class Database:
         return obj_id
 
     def save_node_to_database(self, node):
+        """Inserts node into the node collection of the db."""
         node_result = self.pick_nodes.insert_one(node.to_dictionary())
         print("saved node with objid:", node_result.inserted_id)
         node_id = node_result.inserted_id
@@ -62,6 +64,7 @@ class Database:
         return node.get_object_id()
 
     def save_relationship_to_database(self, relationship):
+        """Inserts the relationship into the relationship collection of the db."""
         relationship_result = self.pick_relationships.insert_one(relationship.to_dictionary())
         print("saved relationship with objid: ", relationship_result.inserted_id)
         relationship_id = relationship_result.inserted_id
@@ -69,6 +72,7 @@ class Database:
         return relationship.get_object_id()
 
     def save_event_data_to_database(self, event_config, vector_list):
+        """Inserts all the event data into the respective collection of the db."""
         print("saving event data of: ", event_config.name)
         vector_obj_ids = list()
 
@@ -83,37 +87,9 @@ class Database:
         event_config.set_object_id(obj_id)
         print(event_config.object_id)
 
-    # # (TEST) Retrieve data from mongo
-    # def get_data(self, ec, vector_list):
-    #     # Run methods to insert data
-    #     event_config_data = self.save_event_config_to_database(ec, vector_list)
-    #
-    #     print(ec.object_id)
-    #     # Retrieve event config
-    #     ec_id_string = str(ec.get_object_id())
-    #     ec_test = self.get_event_config(ec_id_string)
-    #     print(ec_test)
-    #     # Get Vector list
-    #     vector_id_list = ec_test.get("vector_obj_ids")
-    #     vectorlist = []
-    #     for vectorid in vector_id_list:
-    #         vectorlist.append(self.get_vector(vectorid))
-    #
-    #     # Get nodes and relationships
-    #     node_id_list = []
-    #     relation_id_list = []
-    #     for vector in vectorlist:
-    #         print(vector)
-    #         node_id_list.append(vector.get("node_obj_ids"))
-    #         relation_id_list.append(vector.get("relationship_obj_ids"))
-    #
-    #     for nodeid in node_id_list:
-    #         print(self.get_node(nodeid))
-    #
-    #     for relationid in relation_id_list:
-    #         print(self.get_relationship(relationid))
-
     def get_event_data(self, event_id):
+        """Retrieves the complete event data given an event ID, returns it in a dictionary with the event
+        config and the vectors list"""
         # Retrieve event config
         ec_test = self.get_event_config(event_id)
         if ec_test is None:
@@ -127,7 +103,6 @@ class Database:
 
         vector_list = []
         for id in vector_id_list:
-
             vdict = self.get_vector(id)
             vector = Vector.create_from_dictionary(vdict)
             vector.set_object_id(id)
@@ -154,7 +129,7 @@ class Database:
         out_map = {"event_config": event_config, "vectors": vector_list}
         return out_map
 
-    # Retrieve information from database
+    # Retrieve specific information from database
     def get_vector(self, vector_id):
         vector_result = self.pick_vectors.find_one({"_id": ObjectId(str(vector_id))})
         return vector_result
@@ -171,8 +146,8 @@ class Database:
         ec_result = self.pick_eventconfig.find_one({"_id": ObjectId(ec_id)})
         return ec_result
 
-    # Update all the data of the event (event config, vectors, nodes and relationships)
     def update_event(self, event_config, vectors):
+
         # if event is not saved, then save it and return
         if event_config.get_object_id() == 0x0:
             print("Event wasn't saved, saving it now: ", event_config.name)
@@ -189,10 +164,6 @@ class Database:
         self.pick_eventconfig.replace_one({"_id": event_config.get_object_id()},
                                           event_config.to_dictionary(vector_id_list))
 
-    # Update data from mongo database
-    # NOTE: needs consultation with the team since multiple items in the vector can be updated
-    # Update data from mongo database
-    # NOTE: needs consultation with the team since multiple items in the vector can be updated
     def update_vector(self, vector):
         print("updating vector:", vector.name)
         # if node isn't in the database, add it
@@ -327,9 +298,3 @@ class Database:
         ec_result = self.pick_eventconfig.find_one({"_id": ObjectId(str(ec_id))})
         pick_collection_result = pick_datacollection.insert_one(ec_result)
         return pick_collection_result
-
-    # Import vector collection
-    # def import_vector_collection(self):
-    # Connect to Lead DB
-    # Get Lead vector collection
-    # Save Lead vector collection in a local vector collection

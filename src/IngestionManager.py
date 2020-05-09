@@ -85,7 +85,8 @@ class IngestionManager:
             print("\nValidating: \n", log_file.get_path())
             self.validator.validate_file(log_file)
             if log_file.is_invalid():
-                print("File invalid. With first errors: ", "Line: ", log_file.errors[0][0], " Error: ", log_file.errors[0][1])
+                print("File invalid. With first errors: ", "Line: ", log_file.errors[0][0],
+                      " Error: ", log_file.errors[0][1])
             else:
                 log_file.mark_validated()
                 print("\nFile valid.\n")
@@ -132,6 +133,7 @@ class IngestionManager:
         self.table_manager.populate_enforcement_action_report_table(self.event_session.log_files[marked])
 
     def start_ingestion(self):
+        """Gathers/Sets the paths from red, blue and white teams and sends them to be ingested to SPLUNK."""
         event_name = self.event_session.get_event_name()
         root_path = self.event_session.get_root_path()
         red_folder = self.event_session.get_red_team_path()

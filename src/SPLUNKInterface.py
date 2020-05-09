@@ -93,7 +93,7 @@ class SPLUNKInterface(QtCore.QThread):
 
     def addFilesMonitorDirectory(red_path, blue_path, white_path,  root_path):
         subprocess.run(["./splunk add oneshot", red_path])
-        #keep on adding files, but need to know if you need to sleep between path ingestions
+        # keep on adding files, but need to know if you need to sleep between path ingestions
         subprocess.run(["add monitor [-source]", root_path])
 
     def get_entries(self):

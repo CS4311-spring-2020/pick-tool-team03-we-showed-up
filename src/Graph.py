@@ -118,8 +118,9 @@ class GraphInterface(QWidget):
                     vector.get_nodes()[i].x = node.pos[0]
                     vector.get_nodes()[i].y = node.pos[1]
                     i = i+1
-                except:
-                    print("index out of bounds")
+                except Exception as e:
+                    print("index out of bounds:")
+                    print(e)
                     return
         
     # Export GGraphViz widget into image
@@ -127,8 +128,9 @@ class GraphInterface(QWidget):
         try:
             self.qgv.grab().save(filename, "PNG")
             print("exported graph to: ", filename)
-        except:
-            print("Export of graph failed")
+        except Exception as e:
+            print("Export of graph failed:")
+            print(e)
 
     # creates QGraphViz instance
     def create_QGraphViz(self):
