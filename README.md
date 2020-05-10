@@ -63,6 +63,25 @@ At start up session, you must login to SPLUNK using the Event Configuration to a
 
 ---
 
+## Auditing
+
+The naming convention for the classes will follow the camel-case convention (i.e.,
+UserInterface(PickUI)) and the naming conventions for the methods and variables will follow the snake-case
+convention (i.e., process_image_logs(log_path)). Finally, the SRS, the client feedback from previous demos, 
+and the test plan will be used as a guideline to test the behavior of each UI component in the system to ensure
+that the system is functional in accordance with the clients’ specifications and requirements.
+
+Reports on updates were traced back to the SRS and other documents such as recordings and notes taken during demos to ensure the
+features that were implemented in the software complied with the client’s specifications. The executable file in the
+main repository “MainExecutable.py” underwent black box and sanity testing to ensure, from the
+perspective of the end-user, that the features on the update reports were included and implemented in the main
+executable file, as well as considered the basic usability and accessibility of the application. The tests for the
+project have been explained and the results have been documented in the test plan which is located in the /src
+folder in the GitHub repository.
+
+
+---
+
 ## Acknowledgements
 
 ### Guidance Team and Clients
