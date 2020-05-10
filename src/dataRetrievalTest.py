@@ -19,7 +19,6 @@ class dataRetrievalTest:
         for v in vectors:
             v.name = "vector" + str(counter)
             v.add_node()
-            # print(v.get_nodes())
             counter += 1
 
         db.update_event(ec, vectors)
