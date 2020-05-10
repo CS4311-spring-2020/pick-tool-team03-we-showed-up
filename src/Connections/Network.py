@@ -1,22 +1,24 @@
 # This Python file uses the following encoding: utf-8
 import threading
 import socket
-#from .. import SPLUNKInterface
+
 
 class Network:
-    def __init__(self, splunk = None):
+    """This class will serve to bind the analyst to the lead in order to share a session."""
+    def __init__(self):
         # Ask clients what port they would like to connect through
-        self.port = 8092
+        self.port = 8091
+        #local port for now
+        #lead_ip = '127.0.0.1'
         # Lead socket
         self.socket = socket.socket()
 
         self.serverStatus = False
 
-        self.splunk = splunk
-
         pass
 
     def start_lead_server(self):
+        """Opens up the port to transfer information from the lead computer."""
         s = socket.socket()
         print ("Socket successfully created")
         s.bind(('', self.port))
@@ -24,38 +26,35 @@ class Network:
 
         self.socket = s
         self.serverStatus = True
-        print('session token:')
-        token = self.splunk.session_token
-        #print(token)
+
         #20 connections will be accepted per SRS
         self.socket.listen(20)
         print ("socket is listening")
-        thread_network = threading.Thread(target=lambda: self.start_server_thread(token))
-        thread_network.start()
-        return
+        thread = threading.Thread(target=self.start_server_thread)
+        thread.start()
 
-    def start_server_thread(self,token):
-        while (self.serverStatus == True):
+    def start_server_thread(self):
+        """Method to be used in the thread for persistent listening through the socket."""
+        while self.serverStatus is True:
             print('Hi')
             # Establish connection with client.
             c, addr = self.socket.accept()
             print ('Got connection from', addr)
 
             # send a thank you message to the client.
-            #hello_msg = 'Thank you for connecting. Splunk session token is:'.encode()
-            #c.send(hello_msg)
-            token = token.encode()
-            c.send(token)
+            c.send('Thank you for connecting')
 
             # Close the connection with the client
             # c.close()
 
     def close_server(self):
+        """Closes the socket of the server,"""
         self.socket.close()
         self.serverStatus = False
         self.socket = socket.socket()
 
     def connect_analyst_to_lead(self, lead_ip):
+        """Binds analyst to the lead server."""
         s = socket.socket()
 
         # Define the port on which you want to connect
@@ -64,9 +63,7 @@ class Network:
         s.connect((lead_ip, self.port))
 
         # receive data from the server
-        token = s.recv(1024)
-        print("Info Recieved")
-        token = token.decode()
-        print(token)
+        print (s.recv(1024))
+        print("here?")
         # close the connection
         # s.close()

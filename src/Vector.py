@@ -2,14 +2,14 @@ from Node import Node
 from Relationship import Relationship
 
 class Vector:
-    def __init__(self, name="", description="", relationships=[], checked_configuration=False,
-                 checked_add_logentry=False, object_id=""):
+    def __init__(self, name="", description="", checked_configuration=False,
+                 checked_add_log_entry=False, object_id=0x0):
         self.name = name
         self.description = description
         self.nodes = []
-        self.relationships = relationships
+        self.relationships = []
         self.checked_configuration_table = checked_configuration
-        self.checked_add_log_entry_table = checked_add_logentry
+        self.checked_add_log_entry_table = checked_add_log_entry
         self.object_id = object_id
         pass
 
@@ -42,8 +42,8 @@ class Vector:
     def get_object_id(self):
         return self.object_id
 
-    def set_object_id(self, id):
-        self.object_id = id
+    def set_object_id(self, obj_id):
+        self.object_id = obj_id
 
     def is_checked_config(self):
         return self.checked_configuration_table
@@ -52,12 +52,24 @@ class Vector:
         return self.checked_add_log_entry_table
 
     def to_dictionary(self):
+        """Exports the vector into a dictionary from."""
+        node_obj_ids = []
+        for node in self.get_nodes():
+            node_obj_ids.append(str(node.get_object_id()))
+        # Populate relationships object id list
+        relationship_obj_id = []
+        for relation in self.get_relationships():
+            relationship_obj_id.append(str(relation.get_object_id()))
+
         out_dict = {"name": self.name, "description": self.description,
                     "checked configuration table": str(self.checked_configuration_table),
-                    "checked add log entry table": str(self.checked_add_log_entry_table)}
+                    "checked add log entry table": str(self.checked_add_log_entry_table),
+                    "node_obj_ids": node_obj_ids,
+                    "relationship_obj_ids": relationship_obj_id}
         return out_dict
 
     def create_from_dictionary(dict):
+        """Creates a new vector object from a dictionary."""
         if dict["checked configuration table"] == "True":
             checked_configuration_table = True
         else:
@@ -68,5 +80,9 @@ class Vector:
             checked_add_log_entry_table = False
 
         return Vector(name=dict["name"], description=dict["description"],
-                      checked_add_logentry=checked_add_log_entry_table,
+                      checked_add_log_entry=checked_add_log_entry_table,
                       checked_configuration=checked_configuration_table)
+
+    def to_list(self):
+        """Exports the vector attributes as a list."""
+        return [self.name, self.description]

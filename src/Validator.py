@@ -19,9 +19,8 @@ class Validator:
                 self.date_time_styles.append(date_time_style)
         pass
 
-    #This method takes a singular log file and validates the timestamp.
     def validate_file(self, log_file):
-
+        """This method takes a singular log file and validates the timestamp."""
         line_number = 1
         for line in open(log_file.get_path()):
             invalid_file_info = []

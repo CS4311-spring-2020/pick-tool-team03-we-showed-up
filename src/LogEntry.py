@@ -12,6 +12,7 @@ class LogEntry:
         self.vector_list = vector_list
 
     def add_vector(self, num_vector):
+        """Adds vector number into the vector list."""
         self.vector_list.append(num_vector)
 
     def get_vector_list_str(self):
@@ -22,3 +23,7 @@ class LogEntry:
         for v in self.vector_list:
             str = str + str(v) + " "
         return str
+
+    def to_list(self):
+        """Returns a list of the attributes as strings."""
+        return [str(self.serial), self.timestamp, self.content, self.host, self.source, self.sourcetype]

@@ -22,6 +22,7 @@ class LogFile:
         return self.marked
 
     def mark_ingested(self):
+        """Marks if the log file is ingested or not."""
         self.ingestion_status = True
 
     def get_ingestion_status(self):
@@ -30,6 +31,7 @@ class LogFile:
         return "Not Ingested"
 
     def get_validation_status(self):
+        """Returns the validation status in a string format."""
         if self.validation_status == 1:
             return "Validated"
         elif self.validation_status == 2:

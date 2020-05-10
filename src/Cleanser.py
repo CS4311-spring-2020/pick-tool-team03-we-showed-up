@@ -6,6 +6,7 @@ import os.path
 class Cleanser:
     # Read file
     def reader(filename, filepath):
+        """Reads the lines from the file to be cleansed into a list."""
         filetype = filename[-3:]
         if filetype == "txt" or filetype == "log":
             with open(os.path.join(filepath, filename), "r") as file:
@@ -22,6 +23,7 @@ class Cleanser:
 
     # Write final result
     def write(lineList, filename, filepath):
+        """Writes the cleansed lines into a new document."""
         # Check type of file
         filetype = filename[-3:]
 
@@ -29,7 +31,6 @@ class Cleanser:
         # NOTE: general unwanted characters are cleansed, but there are still a few that need to be added
         if (filetype == "txt"):
             # Path of new file.
-            # NOTE: The file specified in filename has a copy with termination "temp.txt"
             # This is done to allow multiple testing
             file = os.path.join(filepath, filename)
             # Unwanted characters
@@ -52,7 +53,6 @@ class Cleanser:
         # Cleanse .log file
         elif (filetype == "log"):
             # Path of new file.
-            # NOTE: The file specified in file name has a copy with termination "temp.log"
             # This is done to allow multiple testing
             file = os.path.join(filepath, filename)
             with open(file, "w") as outputFile:
@@ -63,7 +63,6 @@ class Cleanser:
         # Cleanse .csv file
         elif (filetype == "csv"):
             # Path of new file.
-            # NOTE: The file specified in filename could not be rewritten and a temporary file was made with termination "temp.csv"
             # This is done to allow multiple testing
             file = os.path.join(filepath, filename)
             with open(file, "w") as outputFile:
@@ -72,10 +71,3 @@ class Cleanser:
                         if i.strip() != "":
                             outputFile.write(i + ", ")
                     outputFile.write("\n")
-
-
-# Testing
-# reader("exp-t1to4-datafile-csv.csv", r"C:\Users\diego\PycharmProjects\tutorial\SWII_Scripts")
-# reader("secure.log", r"C:\Users\diego\PycharmProjects\tutorial\SWII_Scripts")
-# reader("20_CSI_C_input.txt", r"C:\Users\diego\PycharmProjects\tutorial\SWII_Scripts")
-# reader("01_input.txt", r"C:\Users\diego\PycharmProjects\tutorial\SWII_Scripts")

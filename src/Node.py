@@ -4,7 +4,7 @@ import datetime
 class Node:
     # Found this in the SRS :( "[SRS 45]	A node shall be part of at least one graph. "
     def __init__(self, id="", name="", timestamp=datetime.datetime.now(), description="", log_entry_reference="", log_creator="",
-                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0, object_id=""):
+                 event_type="", source="", icon_type="", icon=None, visibility=True, x=0, y=0, object_id=0x0):
         self.id = id
         self.name = name
         self.timestamp = timestamp
@@ -26,13 +26,21 @@ class Node:
 
     def node_from_log_entry(log_entry):
         print("Must create node from given log entry")
-        id = log_entry.serial
+        log_creator = log_entry.source
+        if "red/" in log_entry.source:
+            log_creator = "red"
+        elif "blue/" in log_entry.source:
+            log_creator = "blue"
+        elif "white/" in log_entry.source:
+            log_creator = "white"
+
+        id = int(log_entry.serial)
         return Node(
             id=id, name="Node " + str(id),
             timestamp=log_entry.timestamp,
             description=log_entry.content,
             log_entry_reference=log_entry.serial,
-            log_creator=log_entry.source,
+            log_creator=log_creator,
             source=log_entry.source,
             event_type=log_entry.sourcetype,
         )
@@ -58,6 +66,15 @@ class Node:
         self.icon = icon
         # TODO: set icontype according to this
 
+    def set_log_creator(self, log_creator):
+        """Checks if the log creator is valid and if so it fixes it to the right format."""
+        log_creator = log_creator.lower()
+        options = {"blue": "blue", "b": "blue", "red": "red", "r": "red", "white": "white", "w": "white"}
+        if log_creator in options:
+            self.log_creator = options[log_creator]
+        else:
+            self.log_creator = log_creator
+
     def get_visibility_string(self):
         return str(self.visibility)
 
@@ -68,6 +85,7 @@ class Node:
         self.object_id = id
 
     def to_dictionary(self):
+        """Exports the attributes of the class in a dictionary format."""
         out_dict = {"id": self.id, "name": self.name, "timestamp": self.get_timestamp(),
                     "description": self.description, "log entry reference": self.log_entry_reference,
                     "log creator": self.log_creator, "event type": self.event_type, "source": self.source,
@@ -76,6 +94,7 @@ class Node:
         return out_dict
 
     def create_from_dictionary(dict):
+        """Creates a new node object given a dictionary."""
         if dict["visibility"] == "True":
             visibility = True
         else:
@@ -87,3 +106,7 @@ class Node:
                     event_type=dict["event type"], source=dict["source"], icon_type=dict["icon type"],
                     visibility=visibility, x=float(dict["x"]), y=float(dict["y"]))
 
+    def to_list(self):
+        """Exports the attributes of the class in a list format."""
+        return [str(self.id), self.get_timestamp(), self.description, self.log_entry_reference,
+                self.log_creator, self.event_type, self.source]

@@ -1,9 +1,10 @@
 from datetime import datetime
+import time
 
 class EventConfiguration:
 
     def __init__(self, name="", description="", starttime="", endtime="", rootpath="", whitefolder="", redfolder="",
-                 bluefolder="", lead=True, leadIP="", connections=0, object_id=""):
+                 bluefolder="", lead=True, leadIP="", connections=0, object_id=0x0):
         self.object_id = object_id
         self.name = name
         self.description = description
@@ -17,8 +18,8 @@ class EventConfiguration:
         self.leadIP = leadIP
         self.connections = connections
 
-    # Checks if all the attributes are filled
     def is_complete(self):
+        """Checks if all of the attributes of this class are filled."""
         dict = self.__dict__()
         for i in dict.values():
             if i == "":
@@ -40,18 +41,28 @@ class EventConfiguration:
     def set_object_id(self, id):
         self.object_id = id
 
-    def to_dictionary(self):
+    def to_dictionary(self, vector_id_list):
+        """Returns a dictionary containing all the attribute names as keys and values as dictionary values."""
+        temp_vector_id_list = vector_id_list
         out_dict = {"name": self.name, "description": self.description,
                     "starttime": self.starttime,
                     "endtime": self.endtime,
                     "rootpath": self.rootpath, "whitefolder": self.whitefolder,
                     "redfolder": self.redfolder, "bluefolder": self.bluefolder, "lead": self.lead,
-                    "leadIP": self.leadIP, "connections": str(self.connections)}
+                    "leadIP": self.leadIP, "connections": str(self.connections),
+                    "vector_obj_ids": temp_vector_id_list}
         return out_dict
 
     def create_from_dictionary(dict):
-        starttime = datetime.strftime(dict["starttime"], "%m/%d/%Y, %H:%M:%S")
-        endtime = datetime.strftime(dict["endtime"], "%m/%d/%Y, %H:%M:%S")
+        """Builds a new event configuration given a dictionary."""
+        if dict["starttime"] is str:
+            starttime = datetime.strptime(dict["starttime"], "%m/%d/%Y, %H:%M:%S")
+        else:
+            starttime = dict["starttime"]
+        if dict["endtime"] is str:
+            endtime = datetime.strptime(dict["endtime"], "%m/%d/%Y, %H:%M:%S")
+        else:
+            endtime = dict["endtime"]
         return EventConfiguration(name=dict["name"], description=dict["description"],
                                   starttime=starttime, endtime=endtime, rootpath=dict["rootpath"],
                                   whitefolder=dict["whitefolder"], redfolder=dict["redfolder"],

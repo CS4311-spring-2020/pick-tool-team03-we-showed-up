@@ -39,14 +39,14 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="movable">
        <bool>false</bool>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Event</string>
+        <string>Event View</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
@@ -213,19 +213,6 @@
                  </item>
                  <item>
                   <layout class="QVBoxLayout" name="verticalLayout_18">
-                   <item>
-                    <widget class="QPushButton" name="button__edit_vector">
-                     <property name="minimumSize">
-                      <size>
-                       <width>100</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>Edit</string>
-                     </property>
-                    </widget>
-                   </item>
                    <item>
                     <widget class="QPushButton" name="button_add_vector">
                      <property name="text">
@@ -457,22 +444,6 @@
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="QPushButton" name="pushButton_4">
-                    <property name="minimumSize">
-                     <size>
-                      <width>130</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="tabletTracking">
-                     <bool>true</bool>
-                    </property>
-                    <property name="text">
-                     <string>Cancel</string>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </item>
                 <item row="1" column="0">
@@ -548,7 +519,7 @@
       </widget>
       <widget class="QWidget" name="log_entry_tab">
        <attribute name="title">
-        <string>Log View</string>
+        <string>Log Entry View</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
@@ -632,7 +603,7 @@
                 <widget class="QPushButton" name="fc_applyfilter_button">
                  <property name="minimumSize">
                   <size>
-                   <width>70</width>
+                   <width>100</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -889,9 +860,15 @@
          <layout class="QVBoxLayout" name="verticalLayout_12">
           <item>
            <widget class="QGroupBox" name="ec_groupbox">
+            <property name="minimumSize">
+             <size>
+              <width>170</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="maximumSize">
              <size>
-              <width>150</width>
+              <width>170</width>
               <height>16777215</height>
              </size>
             </property>
@@ -916,21 +893,6 @@
                <item>
                 <property name="text">
                  <string>CSV</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>PDF</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>JPG</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>PNG</string>
                 </property>
                </item>
               </widget>
@@ -958,102 +920,16 @@
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="cc_groupbox">
-            <property name="maximumSize">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="minimumSize">
              <size>
-              <width>150</width>
-              <height>16777215</height>
+              <width>175</width>
+              <height>0</height>
              </size>
             </property>
-            <property name="title">
-             <string>Change Configuration</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <widget class="QLabel" name="ec_changelist_button">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Change List</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QListWidget" name="ec_changelist_list">
-               <property name="minimumSize">
-                <size>
-                 <width>130</width>
-                 <height>150</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>130</width>
-                 <height>150</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
-               <item>
-                <widget class="QPushButton" name="ec_undo_button">
-                 <property name="minimumSize">
-                  <size>
-                   <width>50</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>50</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Undo</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="ec_commit_button">
-                 <property name="minimumSize">
-                  <size>
-                   <width>65</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>65</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Commit</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox">
             <property name="maximumSize">
              <size>
-              <width>150</width>
+              <width>170</width>
               <height>16777215</height>
              </size>
             </property>
@@ -1507,11 +1383,6 @@
                   <string>PNG</string>
                  </property>
                 </item>
-                <item>
-                 <property name="text">
-                  <string>JPG</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>
@@ -1629,7 +1500,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
