@@ -21,25 +21,23 @@ The PICK tool utilizes a series of offline, local extensions needed for successf
 
 The PICK Tool requires a set of required extensions which can be installed using the following commands on the terminal:
 
-**Audio Transcriber**
+**Dependencies**
 
-> pip install SpeechRecognition
-> pip install pocketsphinx
-> sudo apt-get install libasound2-dev
-
-**Database**
-
-> pip install pymongo
-> pip install pymongo[srv]
-
-**Graphing**
-
-> pip intstall QGraphViz
-
-**SPLUNK**
-
-> pip install splunk-python-sdk
-
+|    Purpose                |    Tool       |    Name                    |    Version      |    Command                                       |
+|---------------------------|---------------|----------------------------|-----------------|--------------------------------------------------|
+|    General   Downloads    |    APT        |    PyQT5                   |                 |                                                  |
+|                           |    APT        |    QTDesigner              |                 |    >sudo   apt-get install qttools5-dev-tools    |
+|    SPLUNK                 |    website    |    SPLUNK                  |    8.0.3        |    Follow   instructions on website              |
+|                           |    website    |    splunk-sdk-python       |    1.6.12       |    Follow   instructions on github               |
+|    Database               |               |    MongoDB                 |                 |                                                  |
+|                           |    pip        |    PyMongo                 |                 |    >pip   install pymongo                        |
+|                           |    pip        |    PyMongo(server)         |                 |    >pip   install pymongo[srv]                   |
+|    Graph                  |    pip        |    QGraphViz               |    0.0.45       |    >pip   install QGraphViz                      |
+|    Audio   Transcriber    |    pip        |    Speech   Recognition    |    3.8.1        |    >pip   install SpeechRecognition              |
+|                           |    pip        |    PocketSphinx            |    0.1.17       |    >pip   install pocketsphinx                   |
+|                           |    APT        |    LibraSound2             |    1.2.2-2.1    |    >sudo   apt-get install libasound2            |
+|    OCR   Feeder           |    pip        |    PyTesseract             |    0.3.4        |    >pip install pytesseract                      |
+|                           |    pip        |    Pillow                  |                 |    >pip   install pillow                         |
 ---
 
 ## Running the Code
