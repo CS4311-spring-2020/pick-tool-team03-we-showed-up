@@ -34,12 +34,12 @@ class UIMain(Ui_PICK):
         self.event_session = event_session
         self.db = db
 
-    # Sets the table manager for this UI to manage all QTableWidget items
     def set_table_manager(self, table_manager):
+        """Sets the table manager for this UI to manage all QTableWidget items"""
         self.table_manager = table_manager
 
-    # Main setup of the UI,
     def setupUi(self, pick):
+        """Setups the UI to be used as well as the connections to the signals."""
         super().setupUi(pick)
 
         self.vc_undo_button.clicked.connect(self.undo_manager.undo)
@@ -104,8 +104,8 @@ class UIMain(Ui_PICK):
         self.vc_table.itemChanged.connect(self.edit_table_vector_configuration)
         self.lec_logentry_table.itemChanged.connect(self.edit_table_log_entry)
 
-    # Notifies the SPLUNK Facade to refresh the log entries given the user input
     def filter_log_entries(self):
+        """Notifies the controller to refresh the log entries given the user input"""
         self.user_change = False
         if self.fc_start_time.dateTime() > self.fc_end_time.dateTime():
             print("invalid date range in filtering")
@@ -115,6 +115,7 @@ class UIMain(Ui_PICK):
 
     # Event Configuration Methods
     def open_new_event_config(self):
+        """Opens the new event config dialog"""
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigNew()
         ec_ui.setupUi(ec_dialog)
@@ -140,6 +141,7 @@ class UIMain(Ui_PICK):
     # Sends user changes to edit the event configuration
     # TODO: make it work with database
     def edit_event_config(self):
+        """Opens the dialog to edit the information of the event configuration."""
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigEdit()
         ec_ui.setupUi(ec_dialog)
@@ -157,6 +159,7 @@ class UIMain(Ui_PICK):
 
     # Helper method to be used to notify the SPLUNK tool to create an index
     def call_create_index(self, ec_ui):
+        """Checks if the user information is valid, if so it requests the controller to create a new event and index."""
         if ec_ui.dateTimeEdit.dateTime() >= ec_ui.date_event_end.dateTime():
             ec_ui.event_creation_status_label.setText("Sorry, time range is invalid.")
             return
@@ -179,6 +182,7 @@ class UIMain(Ui_PICK):
 
     # Open Event
     def open_events_config(self):
+        """Opens the dialog to open a previously stored event."""
         ec_dialog = QtWidgets.QDialog()
         ec_ui = UiEventConfigOpen()
         ec_ui.setupUi(ec_dialog)
@@ -234,6 +238,8 @@ class UIMain(Ui_PICK):
         menu.exec_(self.lec_logentry_table.mapToGlobal(point))
 
     def edit_table_log_files(self, item):
+        """When the user changes a field in the log file table it recognizes that value and sends the signal to update
+        the corresponding data entry. Currently limited to selecting one and deselecting the rest."""
         if not self.user_change:
             return
         print("changing log table")
@@ -256,6 +262,8 @@ class UIMain(Ui_PICK):
             self.user_change = True
 
     def edit_table_log_entry(self, item):
+        """When the user changes a field in the log entry table it recognizes that value and sends the signal to update
+                the correspnding data entry. Currently limited to knowing which one is selected."""
         if not self.user_change:
             return
         self.user_change = False
@@ -269,6 +277,8 @@ class UIMain(Ui_PICK):
         self.user_change = True
 
     def edit_table_node(self, item):
+        """When the user changes a field in the node table it recognizes that value and sends the signal to update
+                the correspnding data entry."""
         if not self.user_change:
             return
         self.user_change = False
@@ -288,6 +298,8 @@ class UIMain(Ui_PICK):
         self.user_change = True
 
     def edit_table_vector_configuration(self, item):
+        """When the user changes a field in the vector configuration table it recognizes that value and sends
+        the signal to update the corresponding data entry."""
         if not self.user_change:
             return
         self.user_change = False
@@ -301,11 +313,13 @@ class UIMain(Ui_PICK):
         self.user_change = True
 
     def resize_ui_components(self, PICK):
+        """Resizes the widths of the columns of some tables for a a better view."""
         self.set_column_widths_log_entry_tab()
         self.set_column_widths_event_tab()
         self.set_column_widths_vector_view_tab()
 
     def add_log_entry_to_vector(self):
+        """Will recognize which entries are selected and will call the controller to add them to the selected vectors."""
         selected_entries = []
         for i in range(self.lec_logentry_table.rowCount()):
             if not self.lec_logentry_table.item(i, 0).checkState() == 0:
@@ -322,8 +336,8 @@ class UIMain(Ui_PICK):
         self.vector_dropdown_select()
         return
 
-    # Calls the connection methods once the buttons is clicked
     def connect_button_clicked(self):
+        """Calls the connection methods once the buttons is clicked."""
         lead_ip = "64.233. 160.0"  # currently Google's IP
         no_connections = 10  # temporary placeholder for number of connections
 
@@ -367,15 +381,15 @@ class UIMain(Ui_PICK):
         ic_ui.setupUi(ic_dialog)
         ic_dialog.exec_()
 
-    # Opens the log entry description window
     def log_entry_description_button_clicked(self):
+        """Opens the log entry description window"""
         ic_dialog = QtWidgets.QDialog()
         ic_ui = LogEntryDescription()
         ic_ui.setupUi(ic_dialog)
         ic_dialog.exec_()
 
-    # Opens the VCS window
     def vector_db_button_clicked(self):
+        """Opens the VCS dialog."""
         vdb_dialog = QtWidgets.QDialog()
         if self.checkBox_lead.isChecked():
             vdb_ui = UIVectorDBLead()
@@ -389,8 +403,8 @@ class UIMain(Ui_PICK):
 
         vdb_dialog.exec_()
 
-    # Sends the vector selection from the user
     def vector_dropdown_select(self):
+        """Sends the vector selection from the user to the controller."""
         if not self.user_change:
             return
         self.user_change = False
@@ -404,8 +418,9 @@ class UIMain(Ui_PICK):
             print("No vector to be selected")
         self.user_change = True
 
-    # Method called when a the export button of a table is clicked
     def export_table_clicked(self, key):
+        """Method called when a the export button of a table is clicked, given the key it will recognize which table
+        was selected and in the case of the node table, it will recognize the format from the dropdown."""
         option = QFileDialog.Options()
         if key == "node":
             filename = QFileDialog.getSaveFileName(None, 'Export Graph', '', 'PNG (*.png)', options=option)
@@ -427,8 +442,8 @@ class UIMain(Ui_PICK):
                 "vector": lambda: self.controller.export_vector_configuration_table(filename=filename)}
             switcher[key]()
 
-    # Calls the creation of a node when the button is clicked
     def create_node_button_clicked(self):
+        """Calls the creation of a node when the button is clicked"""
         self.controller.create_node()
         self.controller.update_node_table()
         sel_vec = self.vc_vector_drop_down.currentIndex()
@@ -437,8 +452,8 @@ class UIMain(Ui_PICK):
         except IndexError:
             print("no vector available")
 
-    # Opens a dialog when the create relationship button is clicked
     def create_relationship_button_clicked(self):
+        """Opens a dialog when the create relationship button is clicked"""
         ec_dialog = QtWidgets.QDialog()
         ec_ui = RelationshipDialog()
         ec_ui.setupUi(ec_dialog)
@@ -457,8 +472,8 @@ class UIMain(Ui_PICK):
         except IndexError:
             print("no vector available")
 
-    # Opens a dialog for the user to select the folder to be ingested
     def open_ingestion_directory_selector(self, textbox_widget=None, team="root"):
+        """Opens a dialog for the user to select the folder to be ingested"""
         directory = QFileDialog.getExistingDirectory(None, 'Select a folder:', 'C:\\', QFileDialog.ShowDirsOnly)
         if textbox_widget is None:
             print(directory)
@@ -466,8 +481,8 @@ class UIMain(Ui_PICK):
             self.controller.update_folder_path(team, directory)
             textbox_widget.setPlainText(str(directory))
 
-    # When the user marks themselves as a lead it calls the relevant operations and sets the state as lead
     def connect_lead_clicked(self):
+        """When the user marks themselves as a lead it calls the relevant operations and sets the state as lead"""
         if self.checkBox_lead.isChecked():
             ec_dialog = QtWidgets.QDialog()
             ec_ui = SPLUNKLoginDialog()
@@ -484,8 +499,8 @@ class UIMain(Ui_PICK):
             msg.exec_()
             print("lead unchecked, must disconnect")
 
-    # Helper method that asks the SPLUNK interface to connect given the user's input
     def connect_lead(self, ec_ui):
+        """Helper method that asks the SPLUNK interface to connect given the user's input"""
         print("Connecting client to Splunk ...")
         if self.controller.connect_to_splunk(ec_ui.line_edit_username.text(), ec_ui.line_edit_password.text()):
             print("Splunk connected successfully")
@@ -494,7 +509,7 @@ class UIMain(Ui_PICK):
             self.checkBox_lead.setCheckState(QtCore.Qt.Unchecked)
 
     def set_column_widths_log_entry_tab(self):
-        # Sets columns width for the log entry table
+        """Sets columns width for the log entry table"""
         # logentry_table_width = self.lec_logentry_table.width()
         logentry_table_width = 1036
         logentry_table_width -= 5
@@ -510,7 +525,7 @@ class UIMain(Ui_PICK):
         self.lec_logentry_table.setColumnWidth(4, column_width)
 
     def set_column_widths_event_tab(self):
-        # for Vector Configuration table
+        """Sets the columns widths for the tables in the event tab table"""
         # vc_table_width = self.vc_table.width()
         vc_table_width = 440
         vc_table_width -= 5
@@ -548,6 +563,7 @@ class UIMain(Ui_PICK):
         self.tableWidget.setColumnWidth(5, column_width)
 
     def set_column_widths_vector_view_tab(self):
+        """Sets the columns widths for the tables in the vector view tab table"""
         # for Vector Node table
         vnode_table_width = 850
         vnode_table_width -= 5

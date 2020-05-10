@@ -16,6 +16,7 @@ class UndoRedoManager(QtCore.QThread):
         self.initialize_command_switcher()
 
     def undo(self):
+        """Undos an user action given the last action pushed into the stack."""
         print("undo")
         try:
             action = self.action_list.pop()
@@ -32,11 +33,13 @@ class UndoRedoManager(QtCore.QThread):
         print("redo")
 
     def initialize_command_switcher(self):
+        """Initializes the command switcher to be used in the undo and redo"""
         self.command_switcher = {
             "set_node_field": self.table_manager.edit_node_table
         }
 
     def add_command(self, command_key, args_list):
+        """Adds a command into the undo stack along with its arguments."""
         print("added command: ", command_key, " with args ", args_list)
         # self.action_list.append([command_key, args_list])
         self.action_list.append([command_key, args_list])

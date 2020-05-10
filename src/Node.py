@@ -67,6 +67,7 @@ class Node:
         # TODO: set icontype according to this
 
     def set_log_creator(self, log_creator):
+        """Checks if the log creator is valid and if so it fixes it to the right format."""
         log_creator = log_creator.lower()
         options = {"blue": "blue", "b": "blue", "red": "red", "r": "red", "white": "white", "w": "white"}
         if log_creator in options:
@@ -84,6 +85,7 @@ class Node:
         self.object_id = id
 
     def to_dictionary(self):
+        """Exports the attributes of the class in a dictionary format."""
         out_dict = {"id": self.id, "name": self.name, "timestamp": self.get_timestamp(),
                     "description": self.description, "log entry reference": self.log_entry_reference,
                     "log creator": self.log_creator, "event type": self.event_type, "source": self.source,
@@ -92,6 +94,7 @@ class Node:
         return out_dict
 
     def create_from_dictionary(dict):
+        """Creates a new node object given a dictionary."""
         if dict["visibility"] == "True":
             visibility = True
         else:
@@ -104,5 +107,6 @@ class Node:
                     visibility=visibility, x=float(dict["x"]), y=float(dict["y"]))
 
     def to_list(self):
+        """Exports the attributes of the class in a list format."""
         return [str(self.id), self.get_timestamp(), self.description, self.log_entry_reference,
                 self.log_creator, self.event_type, self.source]

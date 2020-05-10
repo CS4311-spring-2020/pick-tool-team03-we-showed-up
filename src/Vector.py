@@ -52,8 +52,7 @@ class Vector:
         return self.checked_add_log_entry_table
 
     def to_dictionary(self):
-        # Added node and relationship ids
-        # Populate node object id list
+        """Exports the vector into a dictionary from."""
         node_obj_ids = []
         for node in self.get_nodes():
             node_obj_ids.append(str(node.get_object_id()))
@@ -70,6 +69,7 @@ class Vector:
         return out_dict
 
     def create_from_dictionary(dict):
+        """Creates a new vector object from a dictionary."""
         if dict["checked configuration table"] == "True":
             checked_configuration_table = True
         else:
@@ -84,4 +84,5 @@ class Vector:
                       checked_configuration=checked_configuration_table)
 
     def to_list(self):
+        """Exports the vector attributes as a list."""
         return [self.name, self.description]

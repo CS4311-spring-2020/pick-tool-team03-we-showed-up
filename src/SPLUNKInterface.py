@@ -46,6 +46,7 @@ class SPLUNKInterface(QtCore.QThread):
         self.latest_time = latest_time
 
     def connect_client(self, username="", password=""):
+        """Connects the client to SPLUNk given the credentials and then """
         try:
             self.username = username
             self.password = password
@@ -64,9 +65,9 @@ class SPLUNKInterface(QtCore.QThread):
             print("Login error to SPLUNK")
             return False
 
-    # creating a new index (event)
-    # need to add date time-frames
+
     def createEvent(self, event_name):
+        """Creates a new index with the event name."""
         try:
             for index in self.splunkClient.indexes.list():
                 if event_name == index.name:
@@ -97,6 +98,7 @@ class SPLUNKInterface(QtCore.QThread):
         subprocess.run(["add monitor [-source]", root_path])
 
     def get_entries(self):
+        """get the entries given the filter configuration."""
         kwargs_export = {"earliest_time": self.earliest_time,
                          "latest_time": self.latest_time,
                          "search_mode": "normal"}
@@ -116,9 +118,11 @@ class SPLUNKInterface(QtCore.QThread):
         return r_list
 
     def refresh_log_entries(self):
+        """Refreshes the log entries/"""
         self.event_session.log_entries = self.get_entries()
 
     def entry_from_dict(self, dict_entry):
+        """Creates a new log entry given the dictionary gathered from SPLUNK."""
         log_entry = LogEntry(serial=int(dict_entry['_cd'].replace(":", "")),
                              timestamp=dict_entry['_time'],
                              content=dict_entry['_raw'],
@@ -128,6 +132,7 @@ class SPLUNKInterface(QtCore.QThread):
         return log_entry
 
     def add_file_to_index(self, filepath, index):
+        """Adds a file to the index of the event."""
         try:
             curr_ind = self.splunkClient.indexes[index]
             curr_ind.upload(filepath)
@@ -136,6 +141,7 @@ class SPLUNKInterface(QtCore.QThread):
             print("Failed to upload, error ", str(e))
 
     def automatic_update_check(self):
+        """Starts the automatic update thread to look for changes in log entries."""
         print("started automatic check for entries")
         self.update_entries(bypass_check=True)
         while True:
@@ -144,6 +150,7 @@ class SPLUNKInterface(QtCore.QThread):
             self.update_entries()
 
     def update_entries(self, bypass_check=False):
+        """Checks if the log count in the index changed and if so it updates the log entries."""
         if not self.connected:
             return 0
         if (self.count_changed and self.count == self.splunkClient.indexes[self.event_session.get_event_name()].totalEventCount) or bypass_check:

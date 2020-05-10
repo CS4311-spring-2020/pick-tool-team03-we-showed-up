@@ -131,23 +131,27 @@ class Database:
 
     # Retrieve specific information from database
     def get_vector(self, vector_id):
+        """Retrieves a vector object from the database."""
         vector_result = self.pick_vectors.find_one({"_id": ObjectId(str(vector_id))})
         return vector_result
 
     def get_node(self, node_id):
+        """Retrieves a node object from the database."""
         node_result = self.pick_nodes.find_one({"_id": ObjectId(str(node_id))})
         return node_result
 
     def get_relationship(self, relation_id):
+        """Retrieves a relationship object from the database."""
         relation_result = self.pick_relationships.find_one({"_id": ObjectId(str(relation_id))})
         return relation_result
 
     def get_event_config(self, ec_id):
+        """Retrieves an event configuration object from the database."""
         ec_result = self.pick_eventconfig.find_one({"_id": ObjectId(ec_id)})
         return ec_result
 
     def update_event(self, event_config, vectors):
-
+        """Updates the event data from the db, if the data doesn't exist it will just save a new copy."""
         # if event is not saved, then save it and return
         if event_config.get_object_id() == 0x0:
             print("Event wasn't saved, saving it now: ", event_config.name)
@@ -160,11 +164,13 @@ class Database:
         self.update_event_config(event_config, vector_id_list)
 
     def update_event_config(self, event_config, vector_id_list):
+        """Updates the event config copy given an event config object."""
         print(event_config.get_object_id())
         self.pick_eventconfig.replace_one({"_id": event_config.get_object_id()},
                                           event_config.to_dictionary(vector_id_list))
 
     def update_vector(self, vector):
+        """Updates a vector in the database given a vector object."""
         print("updating vector:", vector.name)
         # if node isn't in the database, add it
         if vector.get_object_id() == 0x0:
@@ -194,6 +200,7 @@ class Database:
         return vector.get_object_id()
 
     def update_node(self, node):
+        """Updates a node in the database given a node object."""
         print("updating node: ", node.name)
         # if node isn't in the database, add it
         if node.get_object_id() == 0x0:
@@ -214,6 +221,7 @@ class Database:
         return node.get_object_id()
 
     def update_relationships(self, relationship):
+        """Updates a relationship in the database given the relationship object."""
         # if relationship isn't in database, add it
         if relationship.get_object_id() == 0x0:
             print("relationship wasn't in db, adding it:", relationship.name)
@@ -230,6 +238,7 @@ class Database:
     # NOTE: needs consultation with the team to determine the field through which the vector will be found
     # and deleted
     def delete_vector(self, node_id, relationship_id, vector_id, ec_id):
+        """Delete a vector from the database."""
         # Delete node
         node_result = self.pick_nodes.delete_one({"_id": ObjectId(str(node_id))})
         # Delete relationship
@@ -242,24 +251,28 @@ class Database:
     # Serialize dictionaries (event configuration, node, relationship, vector) using JSON
     # FIXME
     def serialize_eventconfig(self, ec_dictionary):
+        """Serializes the event config dictionary into a json string."""
         temp_ec_dictionary = ec_dictionary
         app_json = dumps(temp_ec_dictionary)
         print(app_json)
         return app_json
 
     def serialize_node(self, node_dictionary):
+        """Serializes the node config dictionary into a json string."""
         temp_node_dictionary = node_dictionary
         app_json = dumps(temp_node_dictionary)
         print(app_json)
         return app_json
 
     def serialize_relationship(self, relationship_dictionary):
+        """Serializes the relationship config dictionary into a json string."""
         temp_relationship_dictionary = relationship_dictionary
         app_json = dumps(temp_relationship_dictionary)
         print(app_json)
         return app_json
 
     def serialize_vector(self, vector_dictionary):
+        """Serializes the vector config dictionary into a json string."""
         temp_vector_dictionary = vector_dictionary
         app_json = dumps(temp_vector_dictionary)
         print(app_json)
@@ -268,24 +281,28 @@ class Database:
     # Deserialize dictionaries (event configuration, node, relationship, vector) using JSON
     # FIXME
     def deserialize_eventconfig(self, ec_dictionary):
+        """Deserializes the event config json string."""
         decoded_ec_dictionary = ec_dictionary
         decode_json_ec = loads(decoded_ec_dictionary)
         print(decode_json_ec)
         return decode_json_ec
 
     def deserialize_node(self, node_dictionary):
+        """Deserializes the node json string."""
         decoded_node_dictionary = node_dictionary
         decode_json_node = loads(decoded_node_dictionary)
         print(decode_json_node)
         return decode_json_node
 
     def deserialize_relationship(self, relationship_dictionary):
+        """Deserializes the relationship json string."""
         decoded_relationship_dictionary = relationship_dictionary
         decode_json_rel = loads(decoded_relationship_dictionary)
         print(decode_json_rel)
         return decode_json_rel
 
     def deserialize_vector(self, vector_dictionary):
+        """Deserializes the vector json string."""
         decode_vector_dictionary = vector_dictionary
         decode_json_vec = loads(decode_vector_dictionary)
         print(decode_json_vec)

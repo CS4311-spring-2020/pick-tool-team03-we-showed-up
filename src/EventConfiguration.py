@@ -18,8 +18,8 @@ class EventConfiguration:
         self.leadIP = leadIP
         self.connections = connections
 
-    # Checks if all the attributes are filled
     def is_complete(self):
+        """Checks if all of the attributes of this class are filled."""
         dict = self.__dict__()
         for i in dict.values():
             if i == "":
@@ -42,6 +42,7 @@ class EventConfiguration:
         self.object_id = id
 
     def to_dictionary(self, vector_id_list):
+        """Returns a dictionary containing all the attribute names as keys and values as dictionary values."""
         temp_vector_id_list = vector_id_list
         out_dict = {"name": self.name, "description": self.description,
                     "starttime": self.starttime,
@@ -53,6 +54,7 @@ class EventConfiguration:
         return out_dict
 
     def create_from_dictionary(dict):
+        """Builds a new event configuration given a dictionary."""
         if dict["starttime"] is str:
             starttime = datetime.strptime(dict["starttime"], "%m/%d/%Y, %H:%M:%S")
         else:

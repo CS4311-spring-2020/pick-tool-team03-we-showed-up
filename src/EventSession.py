@@ -83,46 +83,55 @@ class EventSession:
         return self.vectors
 
     def get_selected_vector(self):
+        """Returns the selected vector."""
         if self.selected_vector >= len(self.vectors):
             return Vector()
         return self.vectors[self.selected_vector]
 
     def get_selected_nodes(self):
+        """Returns the nodes of the selected vector."""
         if self.selected_vector >= len(self.vectors):
             return list()
         return self.vectors[self.selected_vector].get_nodes()
 
     def get_selected_relationships(self):
+        """Returns the relationships of the selected vector."""
         if self.selected_vector >= len(self.vectors):
             return list()
         return self.vectors[self.selected_vector].get_relationships()
 
     def get_vectors_num(self):
+        """Returns the vector count."""
         return len(self.vectors)
 
     def get_vector_at(self, num_vector):
+        """Gets a vector at the specified postion."""
         if 0 <= num_vector < len(self.vectors):
             return self.vectors[num_vector]
 
     def get_vector_list(self):
+        """Gets the vectors in a 2d list format."""
         export_list = list()
         for vector in self.vectors:
             export_list.append(vector.to_list())
         return export_list
 
     def get_selected_nodes_list(self):
+        """Gets the nodes from the selected vector in a 2d list format."""
         export_list = list()
         for node in self.get_selected_nodes():
             export_list.append(node.to_list())
         return export_list
 
     def get_log_entries_list(self):
+        """Gets the log entries in a 2d list format."""
         export_list = list()
         for log_entry in self.log_entries:
             export_list.append(log_entry.to_list())
         return export_list
 
     def select_vector(self, selection):
+        """Sets the selected vector."""
         if 0 <= selection < len(self.vectors):
             self.selected_vector = selection
 
@@ -131,6 +140,7 @@ class EventSession:
         print("added vector")
 
     def delete_vectors(self):
+        """Deletes the selected vectors from the vectors list."""
         to_be_deleted = []
         for i in range(len(self.vectors)):
             if self.vectors[i].is_checked_config():
@@ -140,17 +150,20 @@ class EventSession:
             del self.vectors[i]
 
     def create_node(self):
+        """Appends a blank node into the selected vector's node list."""
         if len(self.vectors) == 0:
             print("No existent vector")
             return
         self.vectors[self.selected_vector].add_node()
 
     def add_log_entries_to_vectors(self, selected_log_entries, log_entries, selected_vectors):
+        """Adds the selected entries as nodes into the selected vectors."""
         for i in selected_log_entries:
             for j in selected_vectors:
                 self.vectors[j].add_node(Node.node_from_log_entry(log_entries[i]))
 
     def create_relationship(self, parent_id=None, child_id=None, name=""):
+        """Creates a relationship in the selected Vector, the relationship will reference the parent and child nodes."""
         if len(self.vectors) == 0:
             print("No existent vector")
             return

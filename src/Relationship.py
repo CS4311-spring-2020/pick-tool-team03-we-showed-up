@@ -43,9 +43,11 @@ class Relationship:
         self.object_id = id
 
     def to_dictionary(self):
+        """Exports a dictionary of the attributes of the object."""
         out_dict = {"id": self.get_id_str(), "name": self.get_name(),
                     "child id": str(self.get_child_id()), "parent id": str(self.get_parent_id())}
         return out_dict
 
     def create_from_dictionary(dict):
+        """Creates a new relationship object given a dictionary format."""
         return Relationship(id=int(dict["id"]), name=dict["name"])

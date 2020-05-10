@@ -45,8 +45,8 @@ class TableManager:
     def set_vector_config_table(self, table):
         self.vector_config_table = table
 
-    # Takes a list of log entries, populates the table widget with the log entries in the list
     def populate_log_entry_table(self, log_entries):
+        """Takes a list of log entries, populates the table widget with the log entries in the list"""
         self.log_entry_table.setRowCount(len(log_entries))
 
         for i in range(len(log_entries)):
@@ -63,8 +63,8 @@ class TableManager:
 
             self.log_entry_table.setItem(i, 4, QTableWidgetItem(log_entries[i].get_vector_list_str()))
 
-    # Populates the node table given a vector index
     def populate_node_table(self, nodes):
+        """Populates the node table given the nodes."""
         if self.is_system_change:
             return
         self.is_system_change = True
@@ -88,8 +88,8 @@ class TableManager:
                 self.node_table.item(i, 9).setCheckState(QtCore.Qt.Unchecked)
         self.is_system_change = False
 
-    # Populates the vector configuration table with the vectors
     def populate_vector_configuration_table(self, vectors):
+        """Populates the vector configuration table with the vectors"""
         self.vector_config_table.setRowCount(len(vectors))
         for i in range(len(vectors)):
             item = QTableWidgetItem("")
@@ -102,8 +102,8 @@ class TableManager:
             self.vector_config_table.setItem(i, 1, QTableWidgetItem(vectors[i].name))
             self.vector_config_table.setItem(i, 2, QTableWidgetItem(vectors[i].description))
 
-    # Populate the relationship table given a vector index
     def populate_relationship_table(self, relationships):
+        """Populates the relationship table."""
         self.relationship_table.setRowCount(len(relationships))
         for i in range(len(relationships)):
             self.relationship_table.setItem(i, 0, QTableWidgetItem(relationships[i].get_id_str()))
@@ -111,19 +111,20 @@ class TableManager:
             self.relationship_table.setItem(i, 2, QTableWidgetItem(relationships[i].get_parent_id()))
             self.relationship_table.setItem(i, 3, QTableWidgetItem(relationships[i].get_child_id()))
 
-    # Populates the selected combo_box with the vector names
     def populate_vector_dropdowns(self, vectors):
+        """Populates the selected combo_box with the vector names"""
         self.vector_drop_down.clear()
         for i in range(len(vectors)):
             self.vector_drop_down.addItem(vectors[i].name)
 
-    # Populates the selected combo_box with the node names
     def populate_node_dropdowns(self, combo_box, nodes):
+        """Populates the selected combo_box with the node names"""
         combo_box.clear()
         for i in range(len(nodes)):
             combo_box.addItem(nodes[i].name)
 
     def populate_add_to_vector_table(self, vectors):
+        """Populates the table with the vector names"""
         self.add_to_vector_table.setRowCount(len(vectors))
         for i in range(len(vectors)):
             self.add_to_vector_table.setItem(i, 0, QTableWidgetItem(vectors[i].name))
@@ -133,6 +134,7 @@ class TableManager:
                 self.add_to_vector_table.item(i, 0).setCheckState(QtCore.Qt.Unchecked)
 
     def populate_log_file_table(self, log_files):
+        """Populates the table with the information of the log file."""
         self.log_file_table.setRowCount(len(log_files))
         for i in range(len(log_files)):
             self.log_file_table.setItem(i, 0, QTableWidgetItem(log_files[i].name))
@@ -148,12 +150,14 @@ class TableManager:
                 self.log_file_table.item(i, 5).setCheckState(QtCore.Qt.Unchecked)
 
     def populate_enforcement_action_report_table(self, log_file):
+        """Populates the enforcement action report with the error list from the log file."""
         self.enforcement_action_report_table.setRowCount(len(log_file.errors))
         for i in range(len(log_file.errors)):
             self.enforcement_action_report_table.setItem(i, 0, QTableWidgetItem(str(log_file.errors[i][0])))
             self.enforcement_action_report_table.setItem(i, 1, QTableWidgetItem(log_file.errors[i][1]))
 
     def edit_node_table(self, row, column, value, nodes, from_undo=False):
+        """Checks the edition done by the user and updates the node."""
         if self.is_system_change:
             return
         print("editing node and is system changes is: ", self.is_system_change)
@@ -178,6 +182,7 @@ class TableManager:
         return
 
     def edit_vector_table(self, row, column, value, vectors):
+        """Checks the edition done by the user and updates the vecotr."""
         if column == 0:
             vectors[row].checked_configuration_table = value
         elif column == 1:
@@ -187,6 +192,7 @@ class TableManager:
         return
 
     def export_table(self, export_list, filename="Output.csv"):
+        """Exports a 2d list as a CSV file."""
         with open(filename, "w") as f:
             writer = csv.writer(f)
             writer.writerows(export_list)

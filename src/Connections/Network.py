@@ -2,7 +2,9 @@
 import threading
 import socket
 
+
 class Network:
+    """This class will serve to bind the analyst to the lead in order to share a session."""
     def __init__(self):
         # Ask clients what port they would like to connect through
         self.port = 8091
@@ -16,13 +18,14 @@ class Network:
         pass
 
     def start_lead_server(self):
+        """Opens up the port to transfer information from the lead computer."""
         s = socket.socket()
         print ("Socket successfully created")
         s.bind(('', self.port))
         print ("socket binded to %s" %(self.port))
 
         self.socket = s
-        self.serverStatus == True
+        self.serverStatus = True
 
         #20 connections will be accepted per SRS
         self.socket.listen(20)
@@ -31,7 +34,8 @@ class Network:
         thread.start()
 
     def start_server_thread(self):
-        while (self.serverStatus == True):
+        """Method to be used in the thread for persistent listening through the socket."""
+        while self.serverStatus is True:
             print('Hi')
             # Establish connection with client.
             c, addr = self.socket.accept()
@@ -44,11 +48,13 @@ class Network:
             # c.close()
 
     def close_server(self):
+        """Closes the socket of the server,"""
         self.socket.close()
         self.serverStatus = False
         self.socket = socket.socket()
 
     def connect_analyst_to_lead(self, lead_ip):
+        """Binds analyst to the lead server."""
         s = socket.socket()
 
         # Define the port on which you want to connect

@@ -17,17 +17,17 @@ class GraphInterface(QWidget):
         self.qgv = self.create_QGraphViz()
         self.layout_u = layout
         self.read_vector_table(vector)
- 
-    # refreshes the qgv every time a change in the nodes or relationships is made
+
     def set_vector(self, vector):
+        """Refreshes the qgv every time a change in the nodes or relationships is made"""
         if not self.vector == vector:
             self.vector = vector
         self.qgv = self.create_QGraphViz()
         self.update_graph(vector)
 
-    # checks if there is information in the node and relationship tables
-    # and either displays an empty graph or calls update_graph() if there are elements in the tables
     def read_vector_table(self, vector):
+        """checks if there is information in the node and relationship tables and either displays an empty graph
+        or calls update_graph() if there are elements in the tables"""
         if(vector == None):
             qgv = self.qgv
             show_subgraphs=True
@@ -50,9 +50,9 @@ class GraphInterface(QWidget):
         else:
             self.update_graph(vector)
 
-    # creates initial empty graph and reads node and relationship tables every time there is a change
-    # creates graphical elements for all nodes and edges
     def update_graph(self,vector):
+        """creates initial empty graph and reads node and relationship tables every time there is a change creates
+        graphical elements for all nodes and edges"""
         show_subgraphs=True
         
         qgv =self.qgv
@@ -109,6 +109,7 @@ class GraphInterface(QWidget):
         self.qgv = qgv
         
     def save_node_positions(self, vector):
+        """Saves the postions of the nodes inside the Node objects of the Vector."""
         i = 0
         if len(vector.get_nodes()) > 0:
             for node in self.qgv.engine.graph.nodes:
@@ -122,9 +123,9 @@ class GraphInterface(QWidget):
                     print("index out of bounds:")
                     print(e)
                     return
-        
-    # Export GGraphViz widget into image
+
     def export(self, filename):
+        """Exports the QGraphViz widget into a PNG file."""
         try:
             self.qgv.grab().save(filename, "PNG")
             print("exported graph to: ", filename)

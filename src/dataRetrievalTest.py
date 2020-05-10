@@ -6,6 +6,7 @@ from Connections.Database import Database
 from time import  sleep
 
 class dataRetrievalTest:
+    """Simple class to test the persistence of the data of an event and retrieval."""
     if __name__ == "__main__":
         db = Database()
         event_map = db.get_event_map()
