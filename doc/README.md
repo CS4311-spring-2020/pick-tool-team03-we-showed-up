@@ -48,7 +48,7 @@ After following instruction setup up for SPLUNK up. There are a couple things to
 
 ### Adding users to an account:
 
-Open up the SPLUNK web application, go to Settings > Users then add the user name and a password for each analyst that will connect.
+Open up the SPLUNK web application, go to ```Settings > Users``` then add the user name and a password for each analyst that will connect.
 
 ### Other notes:
 
