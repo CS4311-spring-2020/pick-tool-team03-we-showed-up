@@ -42,7 +42,19 @@ The PICK Tool requires a set of required extensions which can be installed using
 |                           |    pip        |    Pillow                  |                 |    >pip   install pillow                         |
 ---
 
+## SPLUNK
 
+After following instruction setup up for SPLUNK up. There are a couple things to note:
+
+### Adding users to an account:
+
+Open up the SPLUNK web application, go to Settings > Users then add the user name and a password for each analyst that will connect.
+
+### Other notes:
+
+As our application retrieves the log entries as a stream per the clients, there is no capability implemented to modify the descriptions for the individual entries.
+
+---
 ## Build
 
 To build the main UI python inside the UI folder, run  ```pyuic -x mainwindow.ui -o mainwindow.py``` 
