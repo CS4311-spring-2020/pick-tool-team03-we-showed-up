@@ -2,7 +2,7 @@
 
 ## About
 
-The Prevent, Mitigate, Recovery (PMR) Insight Collective Knowledge (PICK) tool is a closed platform dedicated to allow the ingestion of log entires of different formats, to be suffeciently ingested in the SPLUNK application.
+The PICK tool is a closed platform software dedicated to allow the ingestion of log entries of different formats by cleansing and transcribing log files before sending them to be ingested in the SPLUNK application, and allowing analysts to manipulate the log entries to create a graph out of them in order to tell a story of the events in a more cohesive way rather than using several applications which is time consuming.
 
 ---
 
